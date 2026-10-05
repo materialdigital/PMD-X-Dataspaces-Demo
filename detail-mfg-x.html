@@ -153,41 +153,41 @@
     <div class="detail-section">
       <h2>4. Output — Steel Properties as PMDCO Qualities</h2>
       <p>
-        The CONSTRUCT produces a compact graph where qualities are linked directly to the component
-        (no intermediate material node, unlike the Catena-X pipeline). Values use <code>pmd:PMD_0000006</code>
-        for the numeric value and <code>obo:IAO_0000039</code> for the unit — a different pattern from
-        the CatX QUDT binding, which is why the cross-dataspace SPARQL query needs a UNION.
+        The CONSTRUCT produces a graph where a material entity holds the steel qualities via
+        <code>obo:RO_0000086</code> — the same structural pattern as the Catena-X pipeline.
+        Each quality is linked to an OBI measurement datum which carries a QUDT QuantityValue
+        with <code>qudt:numericValue</code>. Because both pipelines land on this shared predicate
+        chain, the cross-dataspace query can traverse both graphs with a single path — no UNION.
       </p>
       <pre class="code-block"><span class="kw">@prefix</span> obo:  &lt;http://purl.obolibrary.org/obo/&gt; .
-<span class="kw">@prefix</span> pmd:  &lt;https://w3id.org/pmd/co/&gt; .
-<span class="kw">@prefix</span> qudt: &lt;http://qudt.org/schema/qudt/&gt; .
+<span class="kw">@prefix</span> qudt: &lt;https://qudt.org/schema/qudt/&gt; .
 <span class="kw">@prefix</span> tto:  &lt;https://w3id.org/pmd/tto/&gt; .
 
-<span class="cm"># Component directly has qualities (no separate material node)</span>
-&lt;https://mfg-x.2024.2de/dsp/assets/component-87654321&gt;
-    <span class="kw">a</span> obo:BFO_0000030, pmd:PMD_0020096 ;
+<span class="cm"># Material entity (linked from component in assembly graph)</span>
+&lt;http://www.example.org/#316-4401_material&gt;
+    rdfs:label <span class="str">"Steel 316/4401"</span> ;
     obo:RO_0000086
       &lt;…/tensile_strength_quality&gt;,
       &lt;…/yield_strength_quality&gt;,
       &lt;…/elon_af_quality&gt; .
 
-<span class="cm"># Tensile strength</span>
-&lt;…/tensile_strength_quality&gt; <span class="kw">a</span> pmd:PMD_0000848, tto:TTO_0000053 ;
-    obo:OBI_0001938 &lt;…/tensile_strength_value&gt; .
+<span class="cm"># Tensile strength quality — typed with TTO class</span>
+&lt;…/tensile_strength_quality&gt;
+    <span class="kw">a</span> tto:TTO_0000053 ;              <span class="cm"># tensile strength</span>
+    obo:IAO_0000417 &lt;…/tensile_strength_datum&gt; .
 
-&lt;…/tensile_strength_value&gt; <span class="kw">a</span> obo:OBI_0001931 ;
-    obo:IAO_0000039 qudt:MegaPA ;
-    pmd:PMD_0000006 <span class="str">"632"</span> .          <span class="cm"># numeric value as string literal</span>
+&lt;…/tensile_strength_datum&gt;
+    <span class="kw">a</span> obo:OBI_0001931 ;
+    obo:OBI_0001938 &lt;…/tensile_strength_qv&gt; .
 
-<span class="cm"># Yield strength</span>
-&lt;…/yield_strength_value&gt;
-    obo:IAO_0000039 qudt:MegaPA ;
-    pmd:PMD_0000006 <span class="str">"276"</span> .
+&lt;…/tensile_strength_qv&gt;
+    qudt:numericValue <span class="str">"632"</span> .          <span class="cm"># same predicate as Catena-X</span>
 
-<span class="cm"># Elongation at fracture</span>
-&lt;…/elon_af_value&gt;
-    obo:IAO_0000039 qudt:PERCENT ;
-    pmd:PMD_0000006 <span class="str">"60"</span> .</pre>
+<span class="cm"># Yield strength: TTO_0000009</span>
+&lt;…/yield_strength_qv&gt; qudt:numericValue <span class="str">"276"</span> .
+
+<span class="cm"># Elongation at fracture: TTO_0000033</span>
+&lt;…/elon_af_qv&gt; qudt:numericValue <span class="str">"60"</span> .</pre>
       <a href="https://dataportal.material-digital.de/dataset/a725c4a1-a463-47f8-bad3-fe84b73ef0d3/resource/929c0b99-ebfb-4aaf-99c5-ae29285ace71/download/inspectiondocument_316_4401_alloy_pmdcore.ttl" class="source-link" target="_blank" rel="noopener noreferrer">View output TTL on data portal ↗</a>
     </div>
 
@@ -202,7 +202,7 @@
       <a href="https://www.material-digital.de" target="_blank" rel="noopener noreferrer">Platform MaterialDigital</a>
     </div>
     <div class="footer-built">
-      Built with: PMDCO · Apache Jena Fuseki · RDFConverter · YARRRML · AAS2KG
+      Built with: PMDCO · Oxigraph WASM · RDFConverter · YARRRML · AAS2KG
     </div>
   </div>
 </footer>
