@@ -946,7 +946,8 @@ footer {
 .wf-node.dep-missing .wf-dep-badge { display: block; }
 
 /* Mark complete button inside modal */
-.modal-complete-btn {
+.modal-complete-btn,
+.step-complete-btn {
   background: #22c55e;
   color: #fff;
   border: none;
@@ -958,5 +959,68 @@ footer {
   font-family: inherit;
   transition: background 0.15s;
 }
-.modal-complete-btn:hover { background: #16a34a; }
+.modal-complete-btn:hover,
+.step-complete-btn:hover { background: #16a34a; }
+
+/* ── Step-modal UI ── */
+.step-header {
+  margin-bottom: 1rem;
+}
+.step-counter {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.step-timer-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.step-timer-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  animation: step-fill linear forwards;
+}
+@keyframes step-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+.step-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.6rem;
+}
+.step-body-text {
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  line-height: 1.55;
+}
+.step-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  width: 100%;
+}
+.step-skip-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.step-skip-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-primary);
+  transition: background 0.15s;
+}
+.step-skip-btn:hover { background: var(--surface-hover); }
 

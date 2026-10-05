@@ -134,16 +134,145 @@ async function resetAllNodes() {
   });
 }
 
+// ── Step-modal content ────────────────────────────────────────────────────────
+const STEP_DURATION = 20000;
+let stepTimer = null;
+
+const MODAL_STEPS = {
+  A: [
+    { title: 'EDC — Catalog query',
+      body: 'The Eclipse Dataspace Connector (EDC) sends a catalog query to the Catena-X provider endpoint to discover available data assets. The PA6GF30 material data asset is located by its asset IRI.' },
+    { title: 'EDC — Contract negotiation',
+      body: 'EDC initiates a contract negotiation with the Catena-X provider connector. Usage policies are evaluated and a short-lived transfer token is issued.' },
+    { title: 'EDC — SAMM JSON retrieval',
+      body: 'The EDC data plane transfers the SAMM aspect document — a Catena-X-proprietary JSON payload. Field names like <code>stressAtBreak</code> are schema-specific and carry no cross-dataspace semantics.',
+      code: '{\n  "materialInformation": { "materialName": "PA6GF30", "materialIdentifier": "Z1234" },\n  "mechanicalProperty":  { "impactStrength": 74, "youngsModulus": 9800 },\n  "thermophysicalProperty": { "meltingTemperature": 223 }\n}' },
+    { title: 'YARRRML + RDF Converter — mapping to PMDCO',
+      body: 'A YARRRML mapping file defines rules that bind SAMM field paths to PMDCO class IRIs and QUDT unit individuals. RDFConverter executes the mapping and emits PMDCO-conformant Turtle.' },
+    { title: 'Load into Triplestore',
+      body: 'The 80-triple Turtle graph is loaded into the Oxigraph in-browser triplestore as named graph <code>urn:graph:catx</code>.',
+      last: true },
+  ],
+  B: [
+    { title: 'EDC — Catalog query',
+      body: 'EDC queries the Manufacturing-X connector catalog to locate the AAS 3.0 inspection document for steel component 87654321.' },
+    { title: 'EDC — Contract negotiation',
+      body: 'Contract negotiation with the Manufacturing-X provider connector. Usage policies verified; transfer token issued for data plane access.' },
+    { title: 'EDC — AAS 3.0 JSON retrieval',
+      body: 'The EDC data plane returns an IDTA Asset Administration Shell 3.0 inspection document — a submodel tree with <code>idShort</code> references and EN 10204 section codes that have no direct equivalent in the Catena-X schema.',
+      code: '{\n  "assetAdministrationShells": [{ "idShort": "InspectionDocumentsOfSteelProductsAAS" }],\n  "submodels": [{\n    "semanticId": { "keys": [{ "value": "https://admin-shell.io/idta/...InspectionDocumentsOfSteelProducts/1/0" }] },\n    "submodelElements": [ /* EN 10204 sections with tensile / yield / elongation values */ ]\n  }]\n}' },
+    { title: 'YARRRML mapping — AAS submodel to PMDCO',
+      body: 'A YARRRML mapping translates the IDTA AAS submodel tree to PMDCO-conformant Turtle: tensile strength, yield strength, and elongation values are bound to TTO quality class IRIs with QUDT unit annotations.' },
+    { title: 'Load into Triplestore',
+      body: 'The 121-triple PMDCO Turtle graph is loaded into Oxigraph as named graph <code>urn:graph:mfgx</code>.',
+      last: true },
+  ],
+  C: [
+    { title: 'SPARQL INSERT — quality label annotation',
+      body: 'A SPARQL INSERT queries both <code>urn:graph:catx</code> and <code>urn:graph:mfgx</code> for quality individuals typed with PMDCO/TTO classes, then writes human-readable <code>rdfs:label</code> values from the PMDCO/TTO vocabulary into the triplestore.' },
+    { title: 'Labels written to Triplestore',
+      body: '6 quality individuals receive labels — tensile strength, yield strength, elastic modulus, elongation at fracture, melting point, impact strength — stored in named graph <code>urn:graph:pmdco-labels</code>.',
+      last: true },
+  ],
+  D: [
+    { title: 'Company Product Knowledge Graph',
+      body: 'The Tension Pulley graph is institutional knowledge — a hand-authored Turtle file that describes the product structure independently of any individual dataspace.' },
+    { title: 'Part references by IRI',
+      body: 'Each component is identified by its IRI <em>as it appears in its home dataspace document</em>. No data is copied — the CPG holds typed pointers (BFO hasPart) to external entities.',
+      code: 'ex:TensionPulley_001\n    a pmdco:Object ;\n    obo:BFO_0000051\n      <https://catena-x.net/edc/assets/urn:uuid:3f5a8c2d-…> ,\n      <https://mfg-x.2024.2de/dsp/assets/component-87654321> .' },
+    { title: 'Load into Triplestore',
+      body: 'The CPG is loaded into Oxigraph as named graph <code>urn:graph:assembly</code>. The assembly entity now links to both dataspace component IRIs in a single queryable graph.',
+      last: true },
+  ],
+};
+
+function renderStep(modalEl, nodeId, idx) {
+  const steps = MODAL_STEPS[nodeId];
+  if (!steps) return;
+  const step  = steps[idx];
+  const total = steps.length;
+
+  const mount = modalEl.querySelector('.step-mount');
+  if (mount) {
+    mount.innerHTML = `
+      <div class="step-header">
+        <span class="step-counter">Step ${idx + 1} of ${total}</span>
+        <div class="step-timer-bar">
+          <div class="step-timer-fill" style="animation-duration:${step.last ? 0 : STEP_DURATION}ms"></div>
+        </div>
+      </div>
+      <h4 class="step-title">${step.title}</h4>
+      <p class="step-body-text">${step.body}</p>
+      ${step.code ? `<pre class="code-block" style="margin-top:0.5rem;font-size:0.78rem">${escHtml(step.code)}</pre>` : ''}
+    `;
+  }
+
+  const nav = modalEl.querySelector('.step-nav');
+  if (nav) {
+    if (step.last) {
+      nav.innerHTML = `<button type="button" class="step-complete-btn" data-complete="${nodeId}">✓ Mark complete</button>`;
+      nav.querySelector('.step-complete-btn').addEventListener('click', async () => {
+        clearStepTimer();
+        closeModal();
+        await executeNode(nodeId);
+        setNodeState(nodeId, 'done');
+        refreshKGStats();
+      }, { once: true });
+    } else {
+      nav.innerHTML = `
+        <span class="step-skip-hint">auto-advances in ${STEP_DURATION / 1000}s</span>
+        <button type="button" class="step-skip-btn">Skip →</button>
+      `;
+      nav.querySelector('.step-skip-btn').addEventListener('click', () => {
+        advanceStep(modalEl, nodeId, idx);
+      }, { once: true });
+    }
+  }
+}
+
+function advanceStep(modalEl, nodeId, idx) {
+  clearStepTimer();
+  const steps = MODAL_STEPS[nodeId];
+  if (!steps) return;
+  const next = idx + 1;
+  if (next < steps.length) {
+    renderStep(modalEl, nodeId, next);
+    if (!steps[next].last) startStepTimer(modalEl, nodeId, next);
+  }
+}
+
+function startStepTimer(modalEl, nodeId, idx) {
+  clearStepTimer();
+  stepTimer = setTimeout(() => advanceStep(modalEl, nodeId, idx), STEP_DURATION);
+}
+
+function clearStepTimer() {
+  if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 // ── Modal system ──────────────────────────────────────────────────────────────
 function openModal(id) {
   const ov = document.getElementById(id);
   if (!ov) return;
   ov.classList.add('open');
+
+  const nodeId = id.replace('modal-', '');
+  if (MODAL_STEPS[nodeId]) {
+    clearStepTimer();
+    renderStep(ov, nodeId, 0);
+    if (!MODAL_STEPS[nodeId][0].last) startStepTimer(ov, nodeId, 0);
+  }
+
   const f = ov.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])');
   if (f.length) f[0].focus();
 }
 
 function closeModal() {
+  clearStepTimer();
   const ov = document.querySelector('.modal-overlay.open');
   if (!ov) return;
   ov.classList.remove('open');
