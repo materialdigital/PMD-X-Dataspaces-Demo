@@ -83,124 +83,232 @@ N schemas × M targets
   <div class="container">
     <h2>Pipeline Simulator</h2>
     <p style="text-align:center; color:var(--text-muted); margin-bottom:2rem;">
-      Click any step to inspect the data and transformations. Use "▶ Run Workflow" to see the full pipeline animate.
+      Run each node individually — inspect the data it handles, then mark it complete. The knowledge graph inspector updates live.
     </p>
 
-    <!-- Row 1: two source nodes -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:720px; margin:0 auto;">
-      <button type="button" class="step-btn step-catx" data-step="A" aria-label="Step A: Catena-X SAMM JSON source">
-        <span>Catena-X Source</span>
-        <span class="step-sub">SAMM JSON via EDC</span>
-      </button>
-      <button type="button" class="step-btn step-mfgx" data-step="B" aria-label="Step B: Manufacturing-X AAS 3.0 JSON source">
-        <span>Manufacturing-X Source</span>
-        <span class="step-sub">AAS 3.0 Inspection Document</span>
-      </button>
-    </div>
+    <div class="workflow-layout">
 
-    <!-- Arrow row -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; max-width:720px; margin:0 auto;">
-      <div class="pipeline-arrow">↓</div>
-      <div class="pipeline-arrow">↓</div>
-    </div>
+      <!-- ── Left: DAG ── -->
+      <div>
+        <!-- Row 1: Three independent source ingestion nodes -->
+        <div class="dag-row">
+          <div class="wf-node catx" id="node-A">
+            <div class="wf-checkmark">✓</div>
+            <div class="wf-node-header">
+              <div>
+                <div class="wf-node-title">Catena-X Source</div>
+                <div class="wf-node-sub">SAMM JSON via EDC → Fuseki</div>
+              </div>
+              <div class="wf-status-dot"></div>
+            </div>
+            <div class="wf-dep-badge">⚠ independent step</div>
+            <button type="button" class="wf-run-btn" data-node="A" data-modal="modal-A">▶ Run</button>
+          </div>
 
-    <!-- Row 2: transforms -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:720px; margin:0 auto;">
-      <button type="button" class="step-btn step-pmdco" data-step="C" aria-label="Step C: PMDCO transformation">
-        <span>PMDCO Transformation</span>
-        <span class="step-sub">YARRRML + SPARQL INSERT/CONSTRUCT → PMDCO RDF</span>
-      </button>
-      <button type="button" class="step-btn step-pmdco" data-step="C2" aria-label="Step C2: PMDCO transformation Manufacturing-X path" style="display:none"></button>
-    </div>
+          <div class="wf-node mfgx" id="node-B">
+            <div class="wf-checkmark">✓</div>
+            <div class="wf-node-header">
+              <div>
+                <div class="wf-node-title">Manufacturing-X Source</div>
+                <div class="wf-node-sub">AAS 3.0 JSON → Fuseki</div>
+              </div>
+              <div class="wf-status-dot"></div>
+            </div>
+            <button type="button" class="wf-run-btn" data-node="B" data-modal="modal-B">▶ Run</button>
+          </div>
 
-    <!-- Merge arrow -->
-    <div style="max-width:720px; margin:0 auto; display:flex; justify-content:center;">
-      <div class="pipeline-arrow" style="font-size:1rem; color:var(--text-muted);">↓ &nbsp; convergence &nbsp; ↓</div>
-    </div>
+          <div class="wf-node assembly" id="node-D">
+            <div class="wf-checkmark">✓</div>
+            <div class="wf-node-header">
+              <div>
+                <div class="wf-node-title">Assembly Graph</div>
+                <div class="wf-node-sub">tension_pully.ttl → Fuseki</div>
+              </div>
+              <div class="wf-status-dot"></div>
+            </div>
+            <div class="wf-dep-badge">independent — any order</div>
+            <button type="button" class="wf-run-btn" data-node="D" data-modal="modal-D">▶ Run</button>
+          </div>
+        </div>
 
-    <!-- Row 3: Assembly graph -->
-    <div style="display:flex; justify-content:center; max-width:720px; margin:0 auto;">
-      <button type="button" class="step-btn step-assembly" data-step="D" aria-label="Step D: Assembly graph" style="max-width:340px; width:100%;">
-        <span>Assembly Graph</span>
-        <span class="step-sub">Company knowledge — tension_pully.ttl</span>
-      </button>
-    </div>
+        <!-- Connectors: sources → Fuseki -->
+        <div class="dag-connector-row" id="dag-conn-top" aria-hidden="true">
+          <div class="dag-conn-line catx-line"></div>
+          <div class="dag-conn-line mfgx-line"></div>
+          <div class="dag-conn-line asm-line"></div>
+          <div class="dag-conn-merge"></div>
+        </div>
 
-    <div style="max-width:720px; margin:0 auto; display:flex; justify-content:center;">
-      <div class="pipeline-arrow">↓</div>
-    </div>
+        <!-- Fuseki pool (display only — not a runnable node) -->
+        <div class="dag-row">
+          <div class="wf-node fuseki fuseki-pool" id="node-fuseki" style="max-width:280px;">
+            <div class="wf-node-header" style="justify-content:center;">
+              <div>
+                <div class="wf-node-title" style="text-align:center;">◈ Apache Jena Fuseki</div>
+                <div class="wf-node-sub" style="text-align:center;">shared triplestore — accepts all graphs independently</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Row 4: Fuseki -->
-    <div style="display:flex; justify-content:center; max-width:720px; margin:0 auto;">
-      <button type="button" class="step-btn step-fuseki" data-step="E" aria-label="Step E: Apache Jena Fuseki triplestore" style="max-width:340px; width:100%;">
-        <span>Apache Jena Fuseki</span>
-        <span class="step-sub">Unified knowledge graph — 3 named graphs</span>
-      </button>
-    </div>
+        <!-- Connector: Fuseki → PMDCO -->
+        <div class="dag-simple-conn" id="dag-conn-mid" aria-hidden="true">
+          <div class="dag-vert-line"></div>
+        </div>
 
-    <div style="max-width:720px; margin:0 auto; display:flex; justify-content:center;">
-      <div class="pipeline-arrow">↓</div>
-    </div>
+        <!-- PMDCO Transform node -->
+        <div class="dag-row">
+          <div class="wf-node pmdco" id="node-C" style="max-width:300px;">
+            <div class="wf-checkmark">✓</div>
+            <div class="wf-node-header">
+              <div>
+                <div class="wf-node-title">PMDCO Transform</div>
+                <div class="wf-node-sub">SPARQL INSERT runs on Fuseki — augments both graphs</div>
+              </div>
+              <div class="wf-status-dot"></div>
+            </div>
+            <div class="wf-dep-badge">needs A or B first</div>
+            <button type="button" class="wf-run-btn" data-node="C" data-modal="modal-C">▶ Run</button>
+          </div>
+        </div>
 
-    <!-- Row 5: SPARQL query -->
-    <div style="display:flex; justify-content:center; max-width:720px; margin:0 auto;">
-      <button type="button" class="step-btn step-query" data-step="F" aria-label="Step F: Cross-dataspace SPARQL query" style="max-width:340px; width:100%;">
-        <span>Cross-Dataspace SPARQL Query</span>
-        <span class="step-sub">UNION pattern across CatX + MfgX graphs</span>
-      </button>
-    </div>
+        <!-- Connector: PMDCO → Query -->
+        <div class="dag-simple-conn" id="dag-conn-bot" aria-hidden="true">
+          <div class="dag-vert-line"></div>
+        </div>
 
-    <div class="run-btn-wrap">
-      <button type="button" id="run-btn">▶ Run Workflow</button>
-    </div>
+        <!-- Cross-dataspace query node -->
+        <div class="dag-row">
+          <div class="wf-node query" id="node-F" style="max-width:300px;">
+            <div class="wf-checkmark">✓</div>
+            <div class="wf-node-header">
+              <div>
+                <div class="wf-node-title">Cross-Dataspace Query</div>
+                <div class="wf-node-sub">SPARQL UNION — runs anytime, partial results OK</div>
+              </div>
+              <div class="wf-status-dot"></div>
+            </div>
+            <button type="button" class="wf-run-btn" data-node="F" data-modal="modal-F">▶ Run</button>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="workflow-controls">
+          <button type="button" id="reset-btn">↺ Reset all nodes</button>
+        </div>
+      </div>
+
+      <!-- ── Right: KG Inspector ── -->
+      <div class="kg-inspector">
+        <h3>Knowledge Graph State</h3>
+        <p class="kg-inspector-sub">Live entity counts from Fuseki — updates after each step.</p>
+
+        <div class="kg-stats-grid">
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--border)"></span>
+              Total triples
+            </span>
+            <span class="kg-stat-value" id="kg-total">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--catx-blue)"></span>
+              SAMM/CatX entities
+            </span>
+            <span class="kg-stat-value" id="kg-samm">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--mfgx-purple)"></span>
+              AAS/MfgX entities
+            </span>
+            <span class="kg-stat-value" id="kg-aas">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--pmdco-green)"></span>
+              PMDCO individuals
+            </span>
+            <span class="kg-stat-value" id="kg-pmdco">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--text-muted)"></span>
+              Assembly triples
+            </span>
+            <span class="kg-stat-value" id="kg-assembly">—</span>
+          </div>
+        </div>
+
+        <button type="button" class="kg-refresh-btn" id="kg-refresh-btn">↻ Refresh counts</button>
+
+        <hr class="kg-divider">
+
+        <div class="kg-query-section">
+          <h4>Last query result</h4>
+          <p class="kg-latest-result" id="kg-latest">Run a node to see live data.</p>
+        </div>
+
+        <hr class="kg-divider">
+
+        <!-- Mini result preview for node F -->
+        <div id="kg-result-preview" style="display:none;">
+          <h4 style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 0.5rem;">Query preview</h4>
+          <div id="result-badge-inline"></div>
+          <div id="result-spinner-inline" style="font-size:0.75rem; color:var(--text-muted); display:none;">⏳ Querying…</div>
+          <table id="result-table" class="result-table" style="font-size:0.75rem; margin-top:0.5rem;">
+            <thead>
+              <tr>
+                <th>Component</th><th>Property</th><th>Value</th><th>Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-catx"><td>Pulley Wheel</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td></tr>
+              <tr class="row-catx"><td>Pulley Wheel</td><td>impact strength</td><td>74000</td><td>J/m²</td></tr>
+              <tr class="row-catx"><td>Pulley Wheel</td><td>melting point</td><td>223</td><td>DEG_C</td></tr>
+              <tr class="row-catx"><td>Pulley Wheel</td><td>tensile strength</td><td>140</td><td>MegaPA</td></tr>
+              <tr class="row-mfgx"><td>Tensioner Bracket</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td></tr>
+              <tr class="row-mfgx"><td>Tensioner Bracket</td><td>tensile strength</td><td>632</td><td>MegaPA</td></tr>
+              <tr class="row-mfgx"><td>Tensioner Bracket</td><td>yield strength</td><td>276</td><td>MegaPA</td></tr>
+            </tbody>
+          </table>
+          <button type="button" id="rerun-btn" style="margin-top:0.5rem; font-size:0.75rem;">↻ Re-run</button>
+        </div>
+      </div>
+
+    </div><!-- end workflow-layout -->
   </div>
 </section>
 
-<!-- ═══════════════════ RESULT SECTION ═══════════════════ -->
-<section id="result">
+<!-- ═══════════════════ RESULT SECTION (full width, below fold) ═══════════════════ -->
+<section id="result" style="padding:3rem 0;">
   <div class="container">
     <div class="result-header">
-      <h2>Query result: components and material properties from both dataspaces</h2>
+      <h2>Full query result</h2>
       <span id="result-badge"></span>
-      <span id="result-spinner">⏳ Querying Fuseki endpoint…</span>
+      <span id="result-spinner" style="display:none; color:var(--text-muted); font-size:0.9rem;">⏳ Querying Fuseki…</span>
     </div>
-
-    <table id="result-table" class="result-table">
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+      Run the Cross-Dataspace Query node above to populate this table live. The SPARQL UNION works at any time — partial results appear if not all graphs are loaded.
+    </p>
+    <table id="result-table-full" class="result-table">
       <thead>
         <tr>
-          <th>Component</th>
-          <th>Material</th>
-          <th>Property</th>
-          <th>Value</th>
-          <th>Unit</th>
+          <th>Component</th><th>Material</th><th>Property</th><th>Value</th><th>Unit</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="row-catx">
-          <td>Pulley Wheel</td><td>PA6GF30</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td>
-        </tr>
-        <tr class="row-catx">
-          <td>Pulley Wheel</td><td>PA6GF30</td><td>impact strength</td><td>74000</td><td>J/m²</td>
-        </tr>
-        <tr class="row-catx">
-          <td>Pulley Wheel</td><td>PA6GF30</td><td>melting point</td><td>223</td><td>DEG_C</td>
-        </tr>
-        <tr class="row-catx">
-          <td>Pulley Wheel</td><td>PA6GF30</td><td>tensile strength</td><td>140</td><td>MegaPA</td>
-        </tr>
-        <tr class="row-mfgx">
-          <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td>
-        </tr>
-        <tr class="row-mfgx">
-          <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>tensile strength</td><td>632</td><td>MegaPA</td>
-        </tr>
-        <tr class="row-mfgx">
-          <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>yield strength</td><td>276</td><td>MegaPA</td>
-        </tr>
+        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td></tr>
+        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>impact strength</td><td>74000</td><td>J/m²</td></tr>
+        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>melting point</td><td>223</td><td>DEG_C</td></tr>
+        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>tensile strength</td><td>140</td><td>MegaPA</td></tr>
+        <tr class="row-mfgx"><td>Tensioner Bracket</td><td>Steel 316/4401</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td></tr>
+        <tr class="row-mfgx"><td>Tensioner Bracket</td><td>Steel 316/4401</td><td>tensile strength</td><td>632</td><td>MegaPA</td></tr>
+        <tr class="row-mfgx"><td>Tensioner Bracket</td><td>Steel 316/4401</td><td>yield strength</td><td>276</td><td>MegaPA</td></tr>
       </tbody>
     </table>
-
-    <button type="button" id="rerun-btn">↻ Re-run query</button>
+    <button type="button" id="rerun-btn-full">↻ Re-run query</button>
   </div>
 </section>
 
@@ -256,7 +364,7 @@ N schemas × M targets
     </div>
     <div class="modal-footer">
       <a href="detail-catena-x.html">View full pipeline →</a>
-      <button type="button" class="modal-close-btn">Close</button>
+      <button type="button" class="modal-complete-btn" data-complete="A">✓ Mark complete</button>
     </div>
   </div>
 </div>
@@ -296,7 +404,7 @@ InspectionDocumentsOfSteelProducts/1/0"</span>
     </div>
     <div class="modal-footer">
       <a href="detail-mfg-x.html">View full pipeline →</a>
-      <button type="button" class="modal-close-btn">Close</button>
+      <button type="button" class="modal-complete-btn" data-complete="B">✓ Mark complete</button>
     </div>
   </div>
 </div>
@@ -381,7 +489,7 @@ InspectionDocumentsOfSteelProducts/1/0"</span>
     </div>
     <div class="modal-footer">
       <span></span>
-      <button type="button" class="modal-close-btn">Close</button>
+      <button type="button" class="modal-complete-btn" data-complete="C">✓ Mark complete</button>
     </div>
   </div>
 </div>
@@ -427,35 +535,7 @@ ex:TensionPulley_001
     </div>
     <div class="modal-footer">
       <a href="https://dataportal.material-digital.de/dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a/resource/76296e9a-a97d-42e7-91cd-657bfc70c12d/download/tension_pully.ttl" target="_blank" rel="noopener noreferrer">View on data portal ↗</a>
-      <button type="button" class="modal-close-btn">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal E: Apache Jena Fuseki -->
-<div class="modal-overlay modal-fuseki" id="modal-E" role="dialog" aria-modal="true" aria-labelledby="modal-E-title">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="modal-E-title">Unified Knowledge Graph in Fuseki</h3>
-      <button type="button" class="modal-close" aria-label="Close modal">×</button>
-    </div>
-    <div class="modal-body">
-      <p>All three graphs are loaded into named graphs in a shared Fuseki triplestore; from this point the data is jointly queryable via SPARQL regardless of its origin schema.</p>
-      <div class="info-box">Named graphs loaded:
-  &lt;catena-x&gt;        PA6GF30 material (PMDCO)
-  &lt;manufacturing-x&gt; Steel 316/4401 (PMDCO)
-  &lt;assembly&gt;        Tension Pulley assembly
-
-Total: ~500 triples across 3 graphs
-SPARQL endpoint:
-  dataportal.material-digital.de/…/fuseki/$/sparql</div>
-      <div class="section-note">
-        The three graphs are kept separate (named graphs) but are queryable together. The original source schemas are no longer relevant — only the PMDCO alignment matters.
-      </div>
-    </div>
-    <div class="modal-footer">
-      <span></span>
-      <button type="button" class="modal-close-btn">Close</button>
+      <button type="button" class="modal-complete-btn" data-complete="D">✓ Mark complete</button>
     </div>
   </div>
 </div>
@@ -499,11 +579,10 @@ SPARQL endpoint:
   <span class="cm">/* label resolution + FILTER omitted for brevity */</span>
 }
 <span class="kw">ORDER BY</span> ?componentLabel ?property</pre>
-      <a href="#result" class="cta-btn" style="display:inline-block; margin-top:1rem; font-size:0.9rem; padding:0.5rem 1.25rem;">↓ See live results below</a>
     </div>
     <div class="modal-footer">
       <a href="detail-query.html">Explore the full query →</a>
-      <button type="button" class="modal-close-btn">Close</button>
+      <button type="button" class="modal-complete-btn" data-complete="F">▶ Run &amp; show results</button>
     </div>
   </div>
 </div>

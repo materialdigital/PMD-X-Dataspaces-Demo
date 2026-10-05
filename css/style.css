@@ -546,3 +546,389 @@ footer {
   0%   { background: var(--pmd-blue-light); }
   100% { background: transparent; }
 }
+
+/* ══════════════════════════════════════════
+   WORKFLOW DAG
+══════════════════════════════════════════ */
+.workflow-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* ── DAG canvas ── */
+.dag-canvas {
+  position: relative;
+  width: 100%;
+}
+.dag-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* ── Node rows ── */
+.dag-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 0;
+}
+.dag-spacer { height: 56px; }
+
+/* ── Workflow node card ── */
+.wf-node {
+  flex: 1;
+  max-width: 220px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--border);
+  padding: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.wf-node.catx    { border-left-color: var(--catx-blue); }
+.wf-node.mfgx    { border-left-color: var(--mfgx-purple); }
+.wf-node.pmdco   { border-left-color: var(--pmdco-green); }
+.wf-node.assembly{ border-left-color: var(--text-muted); }
+.wf-node.fuseki  { border-left-color: var(--fuseki-amber); }
+.wf-node.query   { border-left-color: var(--query-teal); }
+
+.wf-node.done {
+  border-color: #22c55e;
+  border-left-color: #22c55e;
+  background: #f0fdf4;
+}
+.wf-node.running {
+  box-shadow: 0 0 0 3px var(--pmd-blue);
+}
+
+.wf-node-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.wf-node-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.wf-node-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+.wf-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: background 0.2s;
+}
+.wf-node.done .wf-status-dot { background: #22c55e; }
+.wf-node.running .wf-status-dot {
+  background: var(--pmd-blue);
+  animation: pulse-dot 1s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.wf-checkmark {
+  display: none;
+  position: absolute;
+  top: -8px; right: -8px;
+  background: #22c55e;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px; height: 22px;
+  font-size: 13px;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.wf-node.done .wf-checkmark { display: flex; }
+
+.wf-run-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-primary);
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.wf-run-btn:hover {
+  background: var(--pmd-blue);
+  border-color: var(--pmd-blue);
+  color: #fff;
+}
+.wf-node.done .wf-run-btn {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #15803d;
+}
+.wf-run-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Fuseki pool node (wide, centered) */
+.wf-node.fuseki-pool {
+  max-width: 320px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* ── CSS connectors (replace SVG) ── */
+
+/* Three-line funnel from source row → Fuseki */
+.dag-connector-row {
+  position: relative;
+  height: 56px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+}
+.dag-conn-line {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.dag-conn-line::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--border) 0px, var(--border) 6px,
+    transparent 6px, transparent 10px
+  );
+  transition: background 0.4s;
+}
+/* Active state — green flow */
+.dag-conn-line.line-active::before {
+  background: repeating-linear-gradient(
+    to bottom,
+    #22c55e 0px, #22c55e 6px,
+    transparent 6px, transparent 10px
+  );
+  animation: flow-down 0.6s linear infinite;
+}
+@keyframes flow-down {
+  from { background-position: 0 0; }
+  to   { background-position: 0 10px; }
+}
+
+/* Merge bar at bottom of funnel */
+.dag-conn-merge {
+  position: absolute;
+  bottom: 0;
+  left: 16.67%;
+  right: 16.67%;
+  height: 2px;
+  background: var(--border);
+  transition: background 0.4s;
+}
+
+/* Simple vertical line connector */
+.dag-simple-conn {
+  display: flex;
+  justify-content: center;
+  height: 48px;
+  padding: 0 0.5rem;
+}
+.dag-vert-line {
+  width: 2px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--border) 0px, var(--border) 6px,
+    transparent 6px, transparent 10px
+  );
+  transition: background 0.4s;
+}
+.dag-vert-line.line-active {
+  background: repeating-linear-gradient(
+    to bottom,
+    #22c55e 0px, #22c55e 6px,
+    transparent 6px, transparent 10px
+  );
+  animation: flow-down 0.6s linear infinite;
+}
+
+/* Arrowhead at connector bottom */
+.dag-simple-conn::after,
+.dag-connector-row::after {
+  content: '↓';
+  display: block;
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+/* ── Reset + controls row ── */
+.workflow-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+#reset-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-muted);
+  transition: border-color 0.15s, color 0.15s;
+}
+#reset-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+/* ── KG Inspector ── */
+.kg-inspector {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  position: sticky;
+  top: 80px;
+}
+.kg-inspector h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+.kg-inspector-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.kg-stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.kg-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.kg-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.kg-stat-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.kg-stat-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  min-width: 2.5rem;
+  text-align: right;
+}
+.kg-stat-value.loading { color: var(--text-muted); font-weight: 400; }
+
+.kg-refresh-btn {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.4rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+.kg-refresh-btn:hover { border-color: var(--pmd-blue); color: var(--pmd-blue); }
+
+.kg-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.75rem 0;
+}
+
+.kg-query-section h4 {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.kg-latest-result {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.kg-latest-result.has-data {
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+/* Dependency warning */
+.wf-dep-badge {
+  display: none;
+  font-size: 0.7rem;
+  color: var(--fuseki-amber);
+  background: var(--fuseki-bg);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  margin-top: 0.4rem;
+}
+.wf-node.dep-missing .wf-dep-badge { display: block; }
+
+/* Mark complete button inside modal */
+.modal-complete-btn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.modal-complete-btn:hover { background: #16a34a; }
+

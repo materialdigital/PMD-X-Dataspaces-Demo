@@ -16,9 +16,7 @@ SELECT ?componentLabel
 WHERE {
     ex:TensionPulley_001 obo:BFO_0000051 ?component .
     ?component rdfs:label ?componentLabel .
-
     {
-      # Structure A: separate material entity (Catena-X pipeline)
       ?component obo:BFO_0000051 ?mat .
       ?mat rdfs:label ?materialLabel .
       ?mat obo:RO_0000086 ?quality .
@@ -31,7 +29,6 @@ WHERE {
     }
     UNION
     {
-      # Structure B: qualities directly on component (AAS2KG v2 pipeline)
       ?component obo:RO_0000086 ?quality .
       ?quality a ?qualityType .
       ?quality obo:OBI_0001938 ?qv .
@@ -39,7 +36,6 @@ WHERE {
       OPTIONAL { ?qv obo:IAO_0000039 ?unit }
       BIND(STRAFTER(STR(?unit), "qudt/") AS ?unitLabel)
     }
-
     OPTIONAL { ?quality rdfs:label ?instanceLabel }
     OPTIONAL {
       VALUES (?qualityType ?typeLabel) {
@@ -51,113 +47,119 @@ WHERE {
         (pmd:PMD_0000518  "impact strength")
       }
     }
-    BIND(COALESCE(
-      ?instanceLabel,
-      ?typeLabel,
-      STRAFTER(STR(?quality), "-qual-")
-    ) AS ?property)
-
+    BIND(COALESCE(?instanceLabel, ?typeLabel, STRAFTER(STR(?quality), "-qual-")) AS ?property)
     FILTER(str(?property) != "")
 }
 ORDER BY ?componentLabel ?property`;
 
 const FETCH_TIMEOUT_MS = 10000;
 
-// ── Result binding columns ──────────────────────────────────────────────────
-const EXPECTED_BINDINGS = ['componentLabel', 'material', 'property', 'value', 'unitLabel'];
+// KG inspector COUNT queries
+const KG_QUERIES = {
+  total:    'SELECT (COUNT(*) AS ?c) WHERE { ?s ?p ?o }',
+  samm:     'SELECT (COUNT(DISTINCT ?s) AS ?c) WHERE { ?s a ?t . FILTER(STRSTARTS(STR(?t), "urn:samm:io.catenax")) }',
+  aas:      'SELECT (COUNT(DISTINCT ?s) AS ?c) WHERE { ?s a ?t . FILTER(STRSTARTS(STR(?t), "https://admin-shell.io/")) }',
+  pmdco:    'SELECT (COUNT(DISTINCT ?s) AS ?c) WHERE { ?s a ?t . FILTER(STRSTARTS(STR(?t), "https://w3id.org/pmd/")) }',
+  assembly: 'SELECT (COUNT(*) AS ?c) WHERE { <http://example.org/assembly/TensionPulley_001> ?p ?o }',
+};
 
-// ── State ───────────────────────────────────────────────────────────────────
-let inFlight = false;
-let lastOpenedStep = null;
+// ── Node state ───────────────────────────────────────────────────────────────
+const nodeState = { A: 'pending', B: 'pending', C: 'pending', D: 'pending', F: 'pending' };
+let lastOpenedNode = null;
+let sparqlInFlight = false;
+
+function setNodeState(id, state) {
+  nodeState[id] = state;
+  const el = document.getElementById('node-' + id);
+  if (!el) return;
+  el.classList.remove('done', 'running');
+  if (state === 'done')    el.classList.add('done');
+  if (state === 'running') el.classList.add('running');
+  updateDAGConnectors();
+}
+
+function resetAllNodes() {
+  Object.keys(nodeState).forEach(id => setNodeState(id, 'pending'));
+  // reset result tables
+  const full = document.getElementById('result-table-full');
+  if (full) {
+    const tbody = full.querySelector('tbody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1rem;">Run the Cross-Dataspace Query node to fetch live results.</td></tr>';
+  }
+  const preview = document.getElementById('result-table');
+  if (preview) {
+    const tbody = preview.querySelector('tbody');
+    if (tbody) tbody.innerHTML = '';
+  }
+  document.getElementById('kg-result-preview').style.display = 'none';
+  document.getElementById('kg-latest').textContent = 'Run a node to see live data.';
+  document.getElementById('kg-latest').className = 'kg-latest-result';
+  sparqlInFlight = false;
+}
 
 // ── Modal system ─────────────────────────────────────────────────────────────
-function openModal(stepId) {
-  const overlay = document.getElementById('modal-' + stepId);
+function openModal(modalId) {
+  const overlay = document.getElementById(modalId);
   if (!overlay) return;
   overlay.classList.add('open');
-  overlay.removeAttribute('hidden');
-  const focusable = overlay.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  );
+  const focusable = overlay.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
   if (focusable.length) focusable[0].focus();
-  lastOpenedStep = stepId;
 }
 
 function closeModal() {
   const open = document.querySelector('.modal-overlay.open');
   if (!open) return;
   open.classList.remove('open');
-  // Restore focus to the step button that opened it
-  if (lastOpenedStep) {
-    const btn = document.querySelector('[data-step="' + lastOpenedStep + '"]');
+  if (lastOpenedNode) {
+    const btn = document.querySelector(`[data-node="${lastOpenedNode}"]`);
     if (btn) btn.focus();
-    lastOpenedStep = null;
   }
 }
 
-function openModalForDuration(stepId, ms) {
-  return new Promise(resolve => {
-    openModal(stepId);
-    setTimeout(() => {
-      closeModal();
-      resolve();
-    }, ms);
-  });
-}
-
-// ── Focus trap inside modal ──────────────────────────────────────────────────
+// Escape key + overlay click
 document.addEventListener('keydown', e => {
-  const open = document.querySelector('.modal-overlay.open');
-  if (!open) return;
-  if (e.key === 'Escape') { closeModal(); return; }
-  if (e.key !== 'Tab') return;
-
-  const focusable = Array.from(open.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  ));
-  if (!focusable.length) return;
-  const first = focusable[0];
-  const last  = focusable[focusable.length - 1];
-  if (e.shiftKey) {
-    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-  } else {
-    if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
-  }
+  if (e.key !== 'Escape') return;
+  closeModal();
 });
-
-// Overlay click closes modal
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeModal();
-  });
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) closeModal(); });
 });
-
-// Close buttons
 document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
   btn.addEventListener('click', closeModal);
 });
 
-// ── Step state machine ───────────────────────────────────────────────────────
-function activateStep(stepId) {
-  const btn = document.querySelector('[data-step="' + stepId + '"]');
-  if (!btn) return;
-  btn.classList.remove('step-completed');
-  btn.classList.add('step-active');
-}
+// Focus trap
+document.addEventListener('keydown', e => {
+  const open = document.querySelector('.modal-overlay.open');
+  if (!open || e.key !== 'Tab') return;
+  const focusable = Array.from(open.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])'));
+  if (!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
 
-function completeStep(stepId) {
-  const btn = document.querySelector('[data-step="' + stepId + '"]');
-  if (!btn) return;
-  btn.classList.remove('step-active');
-  btn.classList.add('step-completed');
-}
-
-// Step button click handlers
-document.querySelectorAll('.step-btn').forEach(btn => {
+// ── Run buttons (per-node) ───────────────────────────────────────────────────
+document.querySelectorAll('.wf-run-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const step = btn.dataset.step;
-    activateStep(step);
-    openModal(step);
+    const nodeId  = btn.dataset.node;
+    const modalId = btn.dataset.modal;
+    lastOpenedNode = nodeId;
+    setNodeState(nodeId, 'running');
+    openModal(modalId);
+  });
+});
+
+// ── Mark complete buttons (inside modals) ────────────────────────────────────
+document.querySelectorAll('.modal-complete-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const nodeId = btn.dataset.complete;
+    closeModal();
+    setNodeState(nodeId, 'done');
+    refreshKGStats();
+    if (nodeId === 'F') {
+      triggerSPARQLFetch();
+    }
   });
 });
 
@@ -174,109 +176,130 @@ document.querySelectorAll('.tab-btn').forEach(tabBtn => {
   });
 });
 
-// ── Run Workflow animation ───────────────────────────────────────────────────
-const runBtn = document.getElementById('run-btn');
-if (runBtn) {
-  runBtn.addEventListener('click', async () => {
-    runBtn.disabled = true;
+// ── Reset ────────────────────────────────────────────────────────────────────
+const resetBtn = document.getElementById('reset-btn');
+if (resetBtn) resetBtn.addEventListener('click', resetAllNodes);
 
-    // Steps A + B activate simultaneously; A modal first then B
-    activateStep('A');
-    activateStep('B');
-    await openModalForDuration('A', 2500);
-    completeStep('A');
-    await openModalForDuration('B', 2500);
-    completeStep('B');
-
-    // Steps C → D → E → F in sequence
-    for (const step of ['C', 'D', 'E', 'F']) {
-      activateStep(step);
-      await openModalForDuration(step, 2500);
-      completeStep(step);
-    }
-
-    // Scroll to result section
-    const resultSection = document.getElementById('result');
-    if (resultSection) {
-      resultSection.scrollIntoView({ behavior: 'smooth' });
-      resultSection.classList.add('highlighted');
-      setTimeout(() => resultSection.classList.remove('highlighted'), 1500);
-    }
-
-    runBtn.disabled = false;
+// ── Re-run buttons ───────────────────────────────────────────────────────────
+['rerun-btn', 'rerun-btn-full'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', () => {
+    sparqlInFlight = false;
+    triggerSPARQLFetch();
   });
-}
+});
 
-// ── SPARQL fetch lifecycle ───────────────────────────────────────────────────
-const resultSection  = document.getElementById('result');
-const resultBadge    = document.getElementById('result-badge');
-const resultSpinner  = document.getElementById('result-spinner');
-const staticTable    = document.getElementById('result-table');
-const rerunBtn       = document.getElementById('rerun-btn');
-
-function showSpinner() {
-  if (resultSpinner) resultSpinner.classList.add('visible');
-}
-
-function hideSpinner() {
-  if (resultSpinner) resultSpinner.classList.remove('visible');
-}
-
-function showCachedBadge() {
-  if (resultBadge) {
-    resultBadge.className = 'badge-cached';
-    resultBadge.textContent = 'Cached result';
-  }
-}
-
-function showLiveBadge() {
-  if (resultBadge) {
-    const now = new Date();
-    const hhmm = now.toUTCString().slice(17, 22);
-    resultBadge.className = 'badge-live';
-    resultBadge.textContent = 'Live · ' + hhmm + ' UTC';
-  }
-}
-
-function renderResultTable(bindings) {
-  // Check expected binding names
-  if (bindings.length > 0) {
-    const gotKeys = Object.keys(bindings[0]);
-    const missing = EXPECTED_BINDINGS.filter(k => !gotKeys.includes(k));
-    if (missing.length) {
-      console.error('SPARQL response missing expected bindings:', missing);
-    }
-  }
-
-  // Hide static fallback
-  if (staticTable) staticTable.style.display = 'none';
-
-  const table = document.createElement('table');
-  table.className = 'result-table';
-  table.id = 'result-table-live';
-
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-  ['Component', 'Material', 'Property', 'Value', 'Unit'].forEach(label => {
-    const th = document.createElement('th');
-    th.textContent = label;
-    headerRow.appendChild(th);
+// ── CSS connector state updates ───────────────────────────────────────────────
+function updateDAGConnectors() {
+  // Top funnel: each line lights up when its source node is done
+  const connMap = { A: 'catx-line', B: 'mfgx-line', D: 'asm-line' };
+  Object.entries(connMap).forEach(([nodeId, cls]) => {
+    const line = document.querySelector(`.dag-conn-line.${cls}`);
+    if (!line) return;
+    line.classList.toggle('line-active', nodeState[nodeId] === 'done');
   });
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
 
-  const tbody = document.createElement('tbody');
+  // Merge bar — active when any source is done
+  const merge = document.querySelector('.dag-conn-merge');
+  if (merge) {
+    const anySource = ['A', 'B', 'D'].some(id => nodeState[id] === 'done');
+    merge.style.background = anySource ? '#22c55e' : '';
+  }
+
+  // Mid connector (Fuseki → PMDCO): active when A or B done
+  const mid = document.querySelector('#dag-conn-mid .dag-vert-line');
+  if (mid) mid.classList.toggle('line-active', nodeState.A === 'done' || nodeState.B === 'done');
+
+  // Bot connector (PMDCO → Query): active when C done
+  const bot = document.querySelector('#dag-conn-bot .dag-vert-line');
+  if (bot) bot.classList.toggle('line-active', nodeState.C === 'done');
+}
+
+// ── KG Inspector ─────────────────────────────────────────────────────────────
+async function sparqlCount(query) {
+  const controller = new AbortController();
+  const tid = setTimeout(() => controller.abort(), 8000);
+  try {
+    const resp = await fetch(SPARQL_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/sparql-results+json',
+      },
+      body: 'query=' + encodeURIComponent(query),
+      signal: controller.signal,
+    });
+    clearTimeout(tid);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const val = data?.results?.bindings?.[0]?.c?.value;
+    return val != null ? parseInt(val, 10) : null;
+  } catch {
+    clearTimeout(tid);
+    return null;
+  }
+}
+
+async function refreshKGStats() {
+  const ids = { total: 'kg-total', samm: 'kg-samm', aas: 'kg-aas', pmdco: 'kg-pmdco', assembly: 'kg-assembly' };
+
+  // Set loading state
+  Object.values(ids).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = '…'; el.className = 'kg-stat-value loading'; }
+  });
+
+  const latestEl = document.getElementById('kg-latest');
+
+  // Fire all queries in parallel
+  const results = await Promise.all(
+    Object.entries(KG_QUERIES).map(([key, q]) => sparqlCount(q).then(n => [key, n]))
+  );
+
+  const totalVal = results.find(([k]) => k === 'total')?.[1];
+
+  results.forEach(([key, n]) => {
+    const elId = ids[key];
+    const el = document.getElementById(elId);
+    if (!el) return;
+    if (n === null) {
+      el.textContent = totalVal == null ? '—' : '0';
+      el.className = 'kg-stat-value' + (totalVal == null ? ' loading' : '');
+    } else {
+      el.textContent = n.toLocaleString();
+      el.className = 'kg-stat-value';
+    }
+  });
+
+  if (latestEl && totalVal != null) {
+    latestEl.textContent = `Fuseki live · ${totalVal.toLocaleString()} total triples`;
+    latestEl.className = 'kg-latest-result has-data';
+  }
+  // On failure: leave the "Run a node" placeholder — don't show an error
+}
+
+const kgRefreshBtn = document.getElementById('kg-refresh-btn');
+if (kgRefreshBtn) kgRefreshBtn.addEventListener('click', refreshKGStats);
+
+// ── SPARQL result fetch ───────────────────────────────────────────────────────
+function showResultTable(bindings, tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
   bindings.forEach(binding => {
     const tr = document.createElement('tr');
-    const componentLabel = binding.componentLabel?.value ?? '';
-    if (componentLabel.toLowerCase().includes('pulley') ||
-        componentLabel.toLowerCase().includes('catena') ||
-        componentLabel.toLowerCase().includes('wheel')) {
-      tr.className = 'row-catx';
-    } else {
-      tr.className = 'row-mfgx';
-    }
-    const cols = ['componentLabel', 'material', 'property', 'value', 'unitLabel'];
+    const label = binding.componentLabel?.value ?? '';
+    tr.className = label.toLowerCase().includes('pulley') || label.toLowerCase().includes('wheel')
+      ? 'row-catx' : 'row-mfgx';
+
+    // compact preview: skip material col
+    const cols = tableId === 'result-table'
+      ? ['componentLabel', 'property', 'value', 'unitLabel']
+      : ['componentLabel', 'material', 'property', 'value', 'unitLabel'];
+
     cols.forEach(col => {
       const td = document.createElement('td');
       td.textContent = binding[col]?.value ?? '';
@@ -284,23 +307,24 @@ function renderResultTable(bindings) {
     });
     tbody.appendChild(tr);
   });
-  table.appendChild(tbody);
-
-  const container = resultSection.querySelector('.container');
-  if (container) {
-    const existing = document.getElementById('result-table-live');
-    if (existing) existing.remove();
-    container.insertBefore(table, rerunBtn);
-  }
 }
 
-async function triggerFetch() {
-  if (inFlight) return;
-  inFlight = true;
-  showSpinner();
+async function triggerSPARQLFetch() {
+  if (sparqlInFlight) return;
+  sparqlInFlight = true;
+
+  const preview = document.getElementById('kg-result-preview');
+  const spinnerInline = document.getElementById('result-spinner-inline');
+  const badgeInline = document.getElementById('result-badge-inline');
+  const spinner = document.getElementById('result-spinner');
+  const badge = document.getElementById('result-badge');
+
+  if (preview) preview.style.display = 'block';
+  if (spinnerInline) spinnerInline.style.display = 'block';
+  if (spinner) spinner.style.display = 'inline';
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const tid = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
   try {
     const resp = await fetch(SPARQL_ENDPOINT, {
@@ -312,47 +336,47 @@ async function triggerFetch() {
       body: 'query=' + encodeURIComponent(SPARQL_QUERY),
       signal: controller.signal,
     });
-
-    clearTimeout(timeoutId);
-
+    clearTimeout(tid);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
-
     const data = await resp.json();
     const bindings = data?.results?.bindings;
-    if (!Array.isArray(bindings)) throw new Error('Unexpected SPARQL JSON shape');
+    if (!Array.isArray(bindings)) throw new Error('Bad SPARQL JSON');
 
-    renderResultTable(bindings);
-    showLiveBadge();
+    const now = new Date();
+    const hhmm = now.toUTCString().slice(17, 22);
+    const liveText = `Live · ${hhmm} UTC`;
+
+    if (badgeInline) { badgeInline.className = 'badge-live'; badgeInline.textContent = liveText; }
+    if (badge) { badge.className = 'badge-live'; badge.textContent = liveText; }
+
+    showResultTable(bindings, 'result-table');
+    showResultTable(bindings, 'result-table-full');
+
+    const latestEl = document.getElementById('kg-latest');
+    if (latestEl) {
+      latestEl.textContent = `Query returned ${bindings.length} rows — live from Fuseki.`;
+      latestEl.className = 'kg-latest-result has-data';
+    }
   } catch (err) {
-    clearTimeout(timeoutId);
-    // Show static fallback
-    if (staticTable) staticTable.style.display = '';
-    showCachedBadge();
-    console.info('SPARQL fetch failed, showing cached result:', err.message);
+    clearTimeout(tid);
+    const cachedText = 'Cached result';
+    if (badgeInline) { badgeInline.className = 'badge-cached'; badgeInline.textContent = cachedText; }
+    if (badge) { badge.className = 'badge-cached'; badge.textContent = cachedText; }
+    console.info('SPARQL fetch failed, fallback shown:', err.message);
   } finally {
-    hideSpinner();
-    inFlight = false;
+    if (spinnerInline) spinnerInline.style.display = 'none';
+    if (spinner) spinner.style.display = 'none';
+    sparqlInFlight = false;
   }
 }
 
-// Intersection Observer — fires once when result section is 30% visible
-let observer = null;
+// Intersection Observer on the full result section (auto-trigger if node F done)
+const resultSection = document.getElementById('result');
 if (resultSection) {
-  observer = new IntersectionObserver(entries => {
+  const obs = new IntersectionObserver(entries => {
     if (!entries[0].isIntersecting) return;
-    observer.disconnect();
-    triggerFetch();
+    obs.disconnect();
+    if (nodeState.F === 'done') triggerSPARQLFetch();
   }, { threshold: 0.3 });
-  observer.observe(resultSection);
-}
-
-// Re-run button
-if (rerunBtn) {
-  rerunBtn.addEventListener('click', () => {
-    inFlight = false;
-    const live = document.getElementById('result-table-live');
-    if (live) live.remove();
-    if (staticTable) staticTable.style.display = 'none';
-    triggerFetch();
-  });
+  obs.observe(resultSection);
 }
