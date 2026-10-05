@@ -180,13 +180,13 @@ const MODAL_STEPS = {
       last: true },
   ],
   D: [
-    { title: 'Company Product Knowledge Graph',
-      body: 'The Tension Pulley graph is institutional knowledge — a hand-authored Turtle file that describes the product structure independently of any individual dataspace.' },
-    { title: 'Part references by IRI',
-      body: 'Each component is identified by its IRI <em>as it appears in its home dataspace document</em>. No data is copied — the CPG holds typed pointers (BFO hasPart) to external entities.',
+    { title: 'Company knowledge about a product',
+      body: 'This graph represents what the company knows about one of its own objects — the Tension Pulley. That knowledge exists independently of any dataspace; it simply states that this product consists of two components sourced from different data sources.' },
+    { title: 'Connecting across data sources',
+      body: 'Each component is identified by its IRI in its home dataspace. The graph does not copy any data — it records the part-whole relation and points to where each component\'s data lives.',
       code: 'ex:TensionPulley_001\n    a pmdco:Object ;\n    obo:BFO_0000051\n      <https://catena-x.net/edc/assets/urn:uuid:3f5a8c2d-…> ,\n      <https://mfg-x.2024.2de/dsp/assets/component-87654321> .' },
     { title: 'Load into Triplestore',
-      body: 'The CPG is loaded into Oxigraph as named graph <code>urn:graph:assembly</code>. The assembly entity now links to both dataspace component IRIs in a single queryable graph.',
+      body: 'The graph is loaded into Oxigraph as named graph <code>urn:graph:assembly</code>. Once present, a SPARQL query can traverse from the product through its parts into both dataspace subgraphs.',
       last: true },
   ],
 };
