@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dataportal.material-digital.de; img-src 'self' data:;">
+  <title>Catena-X Pipeline — PMD-X Demo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="container">
+    <a href="index.html">Demo</a>
+    <a href="detail-catena-x.html" aria-current="page">Catena-X pipeline</a>
+    <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-query.html">SPARQL query</a>
+  </div>
+</nav>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Back to demo</a>
+</div>
+
+<div class="detail-content">
+  <div class="container">
+    <h1>Catena-X Pipeline — PA6GF30</h1>
+    <p style="color:var(--text-muted);">How glass-fiber polyamide material data travels from a Catena-X SAMM aspect model to PMDCO-conformant RDF.</p>
+
+    <!-- Section 1: Source -->
+    <div class="detail-section">
+      <h2>1. Source: SAMM Aspect Model</h2>
+      <p>
+        The Catena-X dataspace exposes material data as SAMM (Semantic Aspect Meta Model) aspect models.
+        SAMM is Catena-X's framework for describing data schemas semantically — it specifies property names,
+        units, and data types, but uses Catena-X-specific identifiers that have no direct mapping to
+        cross-domain ontologies like PMDCO or BFO (Basic Formal Ontology) without explicit transformation.
+      </p>
+      <p>
+        The PA6GF30 (glass-fiber reinforced polyamide) data is retrieved via EDC (Eclipse Dataspace Connector)
+        and arrives as a JSON document structured according to the
+        <code>io.catenax.material_data:1.0.0</code> aspect model.
+      </p>
+      <pre class="code-block">{
+  <span class="str">"materialInformation"</span>: {
+    <span class="str">"materialName"</span>: <span class="str">"PA6GF30"</span>,
+    <span class="str">"materialIdentifier"</span>: <span class="str">"Z1234"</span>
+  },
+  <span class="str">"mechanicalProperty"</span>: {
+    <span class="str">"impactStrength"</span>: <span class="num">74</span>,
+    <span class="str">"youngsModulus"</span>: <span class="num">9800</span>,
+    <span class="str">"strainAtBreak"</span>: <span class="num">3</span>,
+    <span class="str">"stressAtBreak"</span>: <span class="num">140</span>,
+    <span class="str">"flexuralStrength"</span>: <span class="num">210</span>,
+    <span class="str">"flexuralModulus"</span>: <span class="num">8600</span>
+  },
+  <span class="str">"thermophysicalProperty"</span>: {
+    <span class="str">"meltingTemperature"</span>: <span class="num">223</span>,
+    <span class="str">"glassTransitionTemperature"</span>: <span class="num">20</span>,
+    <span class="str">"waterAbsorption"</span>: <span class="num">6.5</span>,
+    <span class="str">"linearThermalExpansionCoefficient"</span>: {
+      <span class="str">"linearThermalExpansionCoefficientParallel"</span>: <span class="num">0.0025</span>,
+      <span class="str">"linearThermalExpansionCoefficientTransverse"</span>: <span class="num">0.0115</span>
+    }
+  },
+  <span class="str">"physicalProperty"</span>: { <span class="str">"density"</span>: <span class="num">1530</span> }
+}</pre>
+      <a href="https://dataportal.material-digital.de/dataset/f2bca6a2-04df-47cb-9439-589e46ba60e2/resource/5f7d5a69-f8f5-49d1-9780-c3ecdc0e11ec/download/material_data_test_pa6gf30.json" class="source-link" target="_blank" rel="noopener noreferrer">View source file on data portal ↗</a>
+    </div>
+
+    <!-- Section 2: JSON → RDF -->
+    <div class="detail-section">
+      <h2>2. Step 1: JSON → RDF (YARRRML + RDFConverter)</h2>
+      <p>
+        The SAMM JSON is first converted to RDF using YARRRML (Yet Another RDF Mapping Language) rules
+        processed by RDFConverter. YARRRML provides a human-friendly YAML syntax for R2RML-style mappings
+        that transform JSON into RDF triples. The resulting intermediate RDF preserves the SAMM structure
+        (property names, group hierarchy, units) but is now represented as linked data.
+      </p>
+      <p>
+        At this stage the RDF is "SAMM/RDF" — structurally equivalent to the JSON, but expressed as triples.
+        PMDCO alignment has not yet occurred. The SAMM unit vocabulary
+        (<code>urn:samm:org.eclipse.esmf.samm:unit:2.2.0#megapascal</code>) is not the same as QUDT
+        (<code>https://qudt.org/vocab/unit/MegaPA</code>), and property IRIs are SAMM-specific.
+      </p>
+      <p>
+        YARRRML mappings for this pipeline are maintained at:
+        <a href="https://futurecarproduction.materialsdata.space/group/mappings" target="_blank" rel="noopener noreferrer">futurecarproduction.materialsdata.space/group/mappings ↗</a>
+      </p>
+    </div>
+
+    <!-- Section 3: SAMM/RDF → PMDCO -->
+    <div class="detail-section">
+      <h2>3. Step 2: SAMM/RDF → PMDCO (SPARQL INSERT)</h2>
+      <p>
+        The core transformation is a SPARQL INSERT that reads from the SAMM/RDF graph and writes
+        PMDCO-conformant triples into a new named graph. Each SAMM property is mapped to a PMDCO
+        quality class, SAMM units are converted to QUDT units (with SI conversion factors where needed),
+        and a standard PMDCO quality individual + OBI datum + QUDT QuantityValue chain is minted.
+      </p>
+      <pre class="code-block"><span class="kw">PREFIX</span> samm:   &lt;urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#&gt;
+<span class="kw">PREFIX</span> mat:    &lt;urn:samm:io.catenax.material_data:1.0.0#&gt;
+<span class="kw">PREFIX</span> qudt:   &lt;https://qudt.org/schema/qudt/&gt;
+<span class="kw">PREFIX</span> unit:   &lt;https://qudt.org/vocab/unit/&gt;
+<span class="kw">PREFIX</span> obo:    &lt;http://purl.obolibrary.org/obo/&gt;
+<span class="kw">PREFIX</span> pmd:    &lt;https://w3id.org/pmd/co/&gt;
+
+<span class="kw">INSERT</span> { <span class="kw">GRAPH</span> &lt;pmdco&gt; {
+  <span class="cm"># Material entity (BFO:material entity)</span>
+  ?material <span class="kw">a</span> obo:BFO_0000040 ;
+            rdfs:label ?matLabel .
+
+  <span class="cm"># Quality individual — typed with PMDco quality class</span>
+  ?quality <span class="kw">a</span>              ?qualityClass ;
+           obo:RO_0000052 ?material ;       <span class="cm"># characteristic of</span>
+           obo:IAO_0000417 ?datum .         <span class="cm"># is quality measured as</span>
+  ?material obo:RO_0000086 ?quality .       <span class="cm"># has quality</span>
+
+  <span class="cm"># Measurement datum — scalar value specification (OBI)</span>
+  ?datum <span class="kw">a</span>               obo:OBI_0001931 ;
+         obo:OBI_0001938  ?qv .             <span class="cm"># has value specification</span>
+
+  <span class="cm"># QuantityValue (QUDT)</span>
+  ?qv <span class="kw">a</span>                  qudt:QuantityValue ;
+      qudt:unit          ?qdtUnit ;
+      qudt:numericValue  ?convertedValue .
+} }
+<span class="kw">WHERE</span> {
+  <span class="kw">GRAPH</span> ?dataGraph {
+    ?dataEntity ?prop ?value .
+    <span class="kw">FILTER</span>(isLiteral(?value))
+    ?materialData <span class="kw">a</span> mat:MaterialData ;
+                 ?groupProp ?dataEntity .
+  }
+  <span class="kw">GRAPH</span> ?schemaGraph {
+    ?prop <span class="kw">a</span> samm:Property ;
+          samm:characteristic ?char .
+    ?char samm-c:unit ?sammUnit ;
+          samm:dataType ?dtype .
+    <span class="kw">OPTIONAL</span> { ?prop samm:preferredName ?propLabel .
+               <span class="kw">FILTER</span>(LANG(?propLabel) = <span class="str">"en"</span>) }
+  }
+  <span class="kw">FILTER</span>(?dtype <span class="kw">IN</span> (xsd:float, xsd:double, xsd:decimal,
+                     xsd:integer, xsd:int, xsd:long))
+
+  <span class="cm"># SAMM unit → QUDT unit + SI conversion factor</span>
+  <span class="kw">VALUES</span> (?sammUnit ?qdtUnit ?factor) {
+    ( sunit:megapascal              unit:MegaPA            <span class="num">1</span>    )
+    ( sunit:percent                 unit:PERCENT           <span class="num">1</span>    )
+    ( sunit:degreeCelsius           unit:DEG_C             <span class="num">1</span>    )
+    ( sunit:kilogramPerCubicMetre   unit:KiloGM-PER-M3     <span class="num">1</span>    )
+    ( mat:kiloJoulePerSquareMeter   unit:J-PER-M2          <span class="num">1000</span> ) <span class="cm"># kJ/m² → J/m²</span>
+  }
+  <span class="cm"># SAMM property → PMDco quality class</span>
+  <span class="kw">VALUES</span> (?prop ?qualityClass) {
+    ( mat:stressAtBreak    pmd:PMD_0000952 ) <span class="cm"># strength</span>
+    ( mat:youngsModulus    pmd:PMD_0000618 ) <span class="cm"># elastic modulus</span>
+    ( mat:impactStrength   pmd:PMD_0000518 ) <span class="cm"># impact</span>
+    ( mat:meltingTemperature pmd:PMD_0000851 ) <span class="cm"># melting point</span>
+  }
+  <span class="kw">BIND</span>(xsd:decimal(?value) * ?factor <span class="kw">AS</span> ?convertedValue)
+  <span class="kw">BIND</span>(IRI(CONCAT(STR(?materialData), <span class="str">"-material"</span>)) <span class="kw">AS</span> ?material)
+  <span class="kw">BIND</span>(IRI(CONCAT(STR(?dataEntity), <span class="str">"-qual-"</span>,  STRAFTER(STR(?prop), <span class="str">"#"</span>))) <span class="kw">AS</span> ?quality)
+  <span class="kw">BIND</span>(IRI(CONCAT(STR(?dataEntity), <span class="str">"-datum-"</span>, STRAFTER(STR(?prop), <span class="str">"#"</span>))) <span class="kw">AS</span> ?datum)
+  <span class="kw">BIND</span>(IRI(CONCAT(STR(?dataEntity), <span class="str">"-qv-"</span>,    STRAFTER(STR(?prop), <span class="str">"#"</span>))) <span class="kw">AS</span> ?qv)
+}</pre>
+      <a href="https://dataportal.material-digital.de/dataset/f2bca6a2-04df-47cb-9439-589e46ba60e2/resource/30780c7d-e08b-4607-b83a-c2dd20e44e89/download/pmdco-mapping-insert.sparql" class="source-link" target="_blank" rel="noopener noreferrer">View full SPARQL on data portal ↗</a>
+    </div>
+
+    <!-- Section 4: Output -->
+    <div class="detail-section">
+      <h2>4. Output — PMDCO-Conformant RDF</h2>
+      <p>
+        The INSERT produces PMDCO quality individuals with QUDT-typed quantity values.
+        Each property from the SAMM JSON is now represented as a quality individual typed with
+        the appropriate PMDCO or TTO (Thermodynamics and Transport Ontology) class,
+        linked to an OBI scalar value specification holding the numeric value and QUDT unit.
+      </p>
+      <pre class="code-block"><span class="kw">@prefix</span> pmd:  &lt;https://w3id.org/pmd/co/&gt; .
+<span class="kw">@prefix</span> obo:  &lt;http://purl.obolibrary.org/obo/&gt; .
+<span class="kw">@prefix</span> qudt: &lt;https://qudt.org/schema/qudt/&gt; .
+<span class="kw">@prefix</span> unit: &lt;https://qudt.org/vocab/unit/&gt; .
+
+<span class="cm"># Material entity</span>
+&lt;…#MaterialData_Z1234-material&gt;
+    <span class="kw">a</span> obo:BFO_0000040 ;
+    rdfs:label <span class="str">"PA6GF30 (Z1234)"</span> .
+
+<span class="cm"># Tensile strength quality</span>
+&lt;…-qual-stressAtBreak&gt;
+    <span class="kw">a</span> pmd:PMD_0000952 ;           <span class="cm"># strength</span>
+    obo:RO_0000052 &lt;…-material&gt; ;
+    obo:IAO_0000417 &lt;…-datum-stressAtBreak&gt; .
+
+<span class="cm"># Datum + quantity value</span>
+&lt;…-datum-stressAtBreak&gt;
+    <span class="kw">a</span> obo:OBI_0001931 ;
+    obo:OBI_0001938 &lt;…-qv-stressAtBreak&gt; .
+
+&lt;…-qv-stressAtBreak&gt;
+    <span class="kw">a</span> qudt:QuantityValue ;
+    qudt:unit unit:MegaPA ;
+    qudt:numericValue <span class="num">140</span> .
+
+<span class="cm"># Impact strength (with kJ/m² → J/m² unit conversion)</span>
+&lt;…-qv-impactStrength&gt;
+    qudt:unit unit:J-PER-M2 ;
+    qudt:numericValue <span class="num">74000</span> .</pre>
+      <a href="https://dataportal.material-digital.de/dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a/resource/00367f16-e55d-4d1d-ad2e-3b8e1518e2d8/download/material_data_pa6gf30_pmdco.ttl" class="source-link" target="_blank" rel="noopener noreferrer">View output TTL on data portal ↗</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://dataportal.material-digital.de/dataset/pmd-x-cross-dataspace-demo" target="_blank" rel="noopener noreferrer">Source dataset</a>
+      <a href="https://dataportal.material-digital.de/dataset/cross-project-use-case" target="_blank" rel="noopener noreferrer">Catena-X use case dataset</a>
+      <a href="https://www.material-digital.de" target="_blank" rel="noopener noreferrer">Platform MaterialDigital</a>
+    </div>
+    <div class="footer-built">
+      Built with: PMDCO · Apache Jena Fuseki · RDFConverter · YARRRML · AAS2KG
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

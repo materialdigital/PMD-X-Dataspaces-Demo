@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dataportal.material-digital.de; img-src 'self' data:;">
+  <title>PMD-X Cross-Dataspace Demo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="container">
+    <a href="index.html" aria-current="page">Demo</a>
+    <a href="detail-catena-x.html">Catena-X pipeline</a>
+    <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-query.html">SPARQL query</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero">
+  <div class="container">
+    <h1>One Assembly. Two Dataspaces. One Query.</h1>
+    <p style="font-size:1.15rem; color:#374151; max-width:640px; margin: 0 auto;">
+      How PMDCO (PMD Core Ontology) bridges incompatible industrial schemas across Catena-X and Manufacturing-X.
+    </p>
+    <div class="badges">
+      <span class="badge-catx">Catena-X</span>
+      <span class="badge-mfgx">Manufacturing-X</span>
+    </div>
+    <img src="assets/tension-pulley.svg" alt="Tension Pulley Assembly schematic — Pulley Wheel from Catena-X and Tensioner Bracket from Manufacturing-X">
+    <a href="#pipeline" class="cta-btn">See the demo ↓</a>
+  </div>
+</section>
+
+<!-- ═══════════════════ PROBLEM STATEMENT ═══════════════════ -->
+<section id="problem">
+  <div class="container">
+    <h2>The integration problem</h2>
+    <p>
+      Catena-X and Manufacturing-X each expose material data through their own schemas — SAMM
+      (Semantic Aspect Meta Model) aspect models for polymer properties, AAS (Asset Administration Shell)
+      3.0 inspection documents for steel certifications. A conventional integration requires a
+      bespoke adapter for every pair of schemas.
+    </p>
+    <p>
+      The PMD approach is different: each dataspace's data is converted once into
+      PMDCO (PMD Core Ontology)-conformant RDF, loaded into a shared triplestore, and from that point
+      forward is queryable together using SPARQL — regardless of the original format.
+    </p>
+    <p>
+      The Tension Pulley Assembly demonstrates this: one physical part, two components sourced from
+      incompatible dataspaces, unified by a single cross-dataspace SPARQL UNION query.
+    </p>
+
+    <div class="comparison-grid">
+      <div>
+        <div class="comparison-label">Without PMDCO</div>
+        <pre>CatX ──adapter──► MfgX
+CatX ──adapter──► Lab
+CatX ──adapter──► …
+MfgX ──adapter──► ERP
+…
+N schemas × M targets
+= N×M adapters</pre>
+      </div>
+      <div>
+        <div class="comparison-label">With PMDCO</div>
+        <pre>CatX ──► PMDCO ◄── MfgX
+         ▲            ▲
+        Lab           ERP
+    one shared layer
+    N queries possible
+    0 additional adapters</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PIPELINE SIMULATOR ═══════════════════ -->
+<section id="pipeline">
+  <div class="container">
+    <h2>Pipeline Simulator</h2>
+    <p style="text-align:center; color:var(--text-muted); margin-bottom:2rem;">
+      Click any step to inspect the data and transformations. Use "▶ Run Workflow" to see the full pipeline animate.
+    </p>
+
+    <!-- Row 1: two source nodes -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:720px; margin:0 auto;">
+      <button type="button" class="step-btn step-catx" data-step="A" aria-label="Step A: Catena-X SAMM JSON source">
+        <span>Catena-X Source</span>
+        <span class="step-sub">SAMM JSON via EDC</span>
+      </button>
+      <button type="button" class="step-btn step-mfgx" data-step="B" aria-label="Step B: Manufacturing-X AAS 3.0 JSON source">
+        <span>Manufacturing-X Source</span>
+        <span class="step-sub">AAS 3.0 Inspection Document</span>
+      </button>
+    </div>
+
+    <!-- Arrow row -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; max-width:720px; margin:0 auto;">
+      <div class="pipeline-arrow">↓</div>
+      <div class="pipeline-arrow">↓</div>
+    </div>
+
+    <!-- Row 2: transforms -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:720px; margin:0 auto;">
+      <button type="button" class="step-btn step-pmdco" data-step="C" aria-label="Step C: PMDCO transformation">
+        <span>PMDCO Transformation</span>
+        <span class="step-sub">YARRRML + SPARQL INSERT/CONSTRUCT → PMDCO RDF</span>
+      </button>
+      <button type="button" class="step-btn step-pmdco" data-step="C2" aria-label="Step C2: PMDCO transformation Manufacturing-X path" style="display:none"></button>
+    </div>
+
+    <!-- Merge arrow -->
+    <div style="max-width:720px; margin:0 auto; display:flex; justify-content:center;">
+      <div class="pipeline-arrow" style="font-size:1rem; color:var(--text-muted);">↓ &nbsp; convergence &nbsp; ↓</div>
+    </div>
+
+    <!-- Row 3: Assembly graph -->
+    <div style="display:flex; justify-content:center; max-width:720px; margin:0 auto;">
+      <button type="button" class="step-btn step-assembly" data-step="D" aria-label="Step D: Assembly graph" style="max-width:340px; width:100%;">
+        <span>Assembly Graph</span>
+        <span class="step-sub">Company knowledge — tension_pully.ttl</span>
+      </button>
+    </div>
+
+    <div style="max-width:720px; margin:0 auto; display:flex; justify-content:center;">
+      <div class="pipeline-arrow">↓</div>
+    </div>
+
+    <!-- Row 4: Fuseki -->
+    <div style="display:flex; justify-content:center; max-width:720px; margin:0 auto;">
+      <button type="button" class="step-btn step-fuseki" data-step="E" aria-label="Step E: Apache Jena Fuseki triplestore" style="max-width:340px; width:100%;">
+        <span>Apache Jena Fuseki</span>
+        <span class="step-sub">Unified knowledge graph — 3 named graphs</span>
+      </button>
+    </div>
+
+    <div style="max-width:720px; margin:0 auto; display:flex; justify-content:center;">
+      <div class="pipeline-arrow">↓</div>
+    </div>
+
+    <!-- Row 5: SPARQL query -->
+    <div style="display:flex; justify-content:center; max-width:720px; margin:0 auto;">
+      <button type="button" class="step-btn step-query" data-step="F" aria-label="Step F: Cross-dataspace SPARQL query" style="max-width:340px; width:100%;">
+        <span>Cross-Dataspace SPARQL Query</span>
+        <span class="step-sub">UNION pattern across CatX + MfgX graphs</span>
+      </button>
+    </div>
+
+    <div class="run-btn-wrap">
+      <button type="button" id="run-btn">▶ Run Workflow</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ RESULT SECTION ═══════════════════ -->
+<section id="result">
+  <div class="container">
+    <div class="result-header">
+      <h2>Query result: components and material properties from both dataspaces</h2>
+      <span id="result-badge"></span>
+      <span id="result-spinner">⏳ Querying Fuseki endpoint…</span>
+    </div>
+
+    <table id="result-table" class="result-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Material</th>
+          <th>Property</th>
+          <th>Value</th>
+          <th>Unit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-catx">
+          <td>Pulley Wheel</td><td>PA6GF30</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td>
+        </tr>
+        <tr class="row-catx">
+          <td>Pulley Wheel</td><td>PA6GF30</td><td>impact strength</td><td>74000</td><td>J/m²</td>
+        </tr>
+        <tr class="row-catx">
+          <td>Pulley Wheel</td><td>PA6GF30</td><td>melting point</td><td>223</td><td>DEG_C</td>
+        </tr>
+        <tr class="row-catx">
+          <td>Pulley Wheel</td><td>PA6GF30</td><td>tensile strength</td><td>140</td><td>MegaPA</td>
+        </tr>
+        <tr class="row-mfgx">
+          <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td>
+        </tr>
+        <tr class="row-mfgx">
+          <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>tensile strength</td><td>632</td><td>MegaPA</td>
+        </tr>
+        <tr class="row-mfgx">
+          <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>yield strength</td><td>276</td><td>MegaPA</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" id="rerun-btn">↻ Re-run query</button>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://dataportal.material-digital.de/dataset/pmd-x-cross-dataspace-demo" target="_blank" rel="noopener noreferrer">Source dataset</a>
+      <a href="https://www.material-digital.de" target="_blank" rel="noopener noreferrer">Platform MaterialDigital</a>
+      <a href="https://w3id.org/pmd/co" target="_blank" rel="noopener noreferrer">PMDCO ontology</a>
+    </div>
+    <div class="footer-built">
+      Built with: PMDCO · Apache Jena Fuseki · RDFConverter · YARRRML · AAS2KG
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- Modal A: Catena-X Source -->
+<div class="modal-overlay modal-catx" id="modal-A" role="dialog" aria-modal="true" aria-labelledby="modal-A-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-A-title">Catena-X — PA6GF30 Material Data</h3>
+      <button type="button" class="modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <p>The source is a SAMM (Semantic Aspect Meta Model) aspect model for glass-fiber polyamide (PA6GF30) retrieved via Eclipse Dataspace Connector (EDC); the schema is Catena-X proprietary and not interoperable with Manufacturing-X out of the box.</p>
+      <pre class="code-block">{
+  <span class="str">"materialInformation"</span>: {
+    <span class="str">"materialName"</span>: <span class="str">"PA6GF30"</span>,
+    <span class="str">"materialIdentifier"</span>: <span class="str">"Z1234"</span>
+  },
+  <span class="str">"mechanicalProperty"</span>: {
+    <span class="str">"impactStrength"</span>: <span class="num">74</span>,
+    <span class="str">"youngsModulus"</span>: <span class="num">9800</span>,
+    <span class="str">"strainAtBreak"</span>: <span class="num">3</span>,
+    <span class="str">"stressAtBreak"</span>: <span class="num">140</span>,
+    <span class="str">"flexuralStrength"</span>: <span class="num">210</span>,
+    <span class="str">"flexuralModulus"</span>: <span class="num">8600</span>
+  },
+  <span class="str">"thermophysicalProperty"</span>: {
+    <span class="str">"meltingTemperature"</span>: <span class="num">223</span>,
+    <span class="str">"waterAbsorption"</span>: <span class="num">6.5</span>
+  },
+  <span class="str">"physicalProperty"</span>: {
+    <span class="str">"density"</span>: <span class="num">1530</span>
+  }
+}</pre>
+      <div class="section-note">
+        Schema challenge: field names like <code>stressAtBreak</code> are Catena-X SAMM-specific. No shared unit annotation. No ontology link.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="detail-catena-x.html">View full pipeline →</a>
+      <button type="button" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal B: Manufacturing-X Source -->
+<div class="modal-overlay modal-mfgx" id="modal-B" role="dialog" aria-modal="true" aria-labelledby="modal-B-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-B-title">Manufacturing-X — Steel 316/4401 Inspection Document</h3>
+      <button type="button" class="modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <p>The source is an AAS (Asset Administration Shell) 3.0 inspection certificate for cold-rolled stainless steel following EN 10204; the structure is fundamentally different from the Catena-X SAMM schema — a different ontology, different property naming, different unit representation.</p>
+      <pre class="code-block">{
+  <span class="str">"assetAdministrationShells"</span>: [{
+    <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProductsAAS"</span>,
+    <span class="str">"id"</span>: <span class="str">"https://pmdx.materials-data.space/.../AAS"</span>,
+    <span class="str">"assetInformation"</span>: { <span class="str">"assetKind"</span>: <span class="str">"Instance"</span> }
+  }],
+  <span class="str">"submodels"</span>: [{
+    <span class="str">"semanticId"</span>: {
+      <span class="str">"keys"</span>: [{
+        <span class="str">"value"</span>: <span class="str">"https://admin-shell.io/idta/SubmodelTemplate/
+InspectionDocumentsOfSteelProducts/1/0"</span>
+      }]
+    },
+    <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProducts"</span>,
+    <span class="str">"submodelElements"</span>: [
+      <span class="cm">/* EN 10204 section codes, idShort references, */</span>
+      <span class="cm">/* tensile/yield/elongation via semantic IRIs  */</span>
+    ]
+  }]
+}</pre>
+      <div class="section-note">
+        Schema challenge: AAS submodel tree structure, <code>idShort</code> references, EN 10204 section codes — none of which align with the Catena-X SAMM keys.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="detail-mfg-x.html">View full pipeline →</a>
+      <button type="button" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal C: PMDCO Transformation -->
+<div class="modal-overlay modal-pmdco" id="modal-C" role="dialog" aria-modal="true" aria-labelledby="modal-C-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-C-title">Mapping to PMDCO — Common Semantic Ground</h3>
+      <button type="button" class="modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <p>Each dataspace's data is converted independently to PMDCO-conformant RDF: for Catena-X this uses YARRRML + RDFConverter + a SPARQL INSERT; for Manufacturing-X the AAS2KG tool produces RDF, then a SPARQL CONSTRUCT maps to PMDCO qualities and QUDT units.</p>
+
+      <div class="tab-bar">
+        <button type="button" class="tab-btn active" data-tab="catx-tab">Catena-X path</button>
+        <button type="button" class="tab-btn" data-tab="mfgx-tab">Manufacturing-X path</button>
+      </div>
+
+      <div id="catx-tab" class="tab-panel active">
+        <pre class="code-block"><span class="cm"># pmdco-mapping-insert.sparql (key clauses)</span>
+<span class="kw">PREFIX</span> mat:   &lt;urn:samm:io.catenax.material_data:1.0.0#&gt;
+<span class="kw">PREFIX</span> qudt:  &lt;https://qudt.org/schema/qudt/&gt;
+<span class="kw">PREFIX</span> unit:  &lt;https://qudt.org/vocab/unit/&gt;
+<span class="kw">PREFIX</span> obo:   &lt;http://purl.obolibrary.org/obo/&gt;
+<span class="kw">PREFIX</span> pmd:   &lt;https://w3id.org/pmd/co/&gt;
+
+<span class="kw">INSERT</span> { <span class="kw">GRAPH</span> &lt;pmdco&gt; {
+  ?quality <span class="kw">a</span>              ?qualityClass ;
+           obo:IAO_0000417 ?datum .
+  ?datum   obo:OBI_0001938  ?qv .
+  ?qv      qudt:unit          ?qdtUnit ;
+           qudt:numericValue  ?convertedValue .
+} }
+<span class="kw">WHERE</span> {
+  <span class="cm">/* SAMM unit → QUDT unit + SI factor */</span>
+  <span class="kw">VALUES</span> (?sammUnit ?qdtUnit ?factor) {
+    ( sunit:megapascal   unit:MegaPA   <span class="num">1</span> )
+    ( mat:kiloJoulePerSquareMeter   unit:J-PER-M2  <span class="num">1000</span> )
+  }
+  <span class="cm">/* SAMM property → PMDco quality class */</span>
+  <span class="kw">VALUES</span> (?prop ?qualityClass) {
+    ( mat:stressAtBreak   pmd:PMD_0000952 )
+    ( mat:youngsModulus   pmd:PMD_0000618 )
+    ( mat:impactStrength  pmd:PMD_0000518 )
+    ( mat:meltingTemperature pmd:PMD_0000851 )
+  }
+}</pre>
+      </div>
+
+      <div id="mfgx-tab" class="tab-panel">
+        <pre class="code-block"><span class="cm"># InspectionDocument_AAS2KG_mapping.sparql (key clauses)</span>
+<span class="kw">PREFIX</span> aas:  &lt;https://admin-shell.io/aas/3/0/&gt;
+<span class="kw">PREFIX</span> tto:  &lt;https://w3id.org/pmd/tto/&gt;
+<span class="kw">PREFIX</span> pmd:  &lt;https://w3id.org/pmd/co/&gt;
+<span class="kw">PREFIX</span> obo:  &lt;http://purl.obolibrary.org/obo/&gt;
+<span class="kw">PREFIX</span> qudt: &lt;http://qudt.org/schema/qudt/&gt;
+
+<span class="kw">CONSTRUCT</span> {
+  <span class="cm"># Quality typed with TTO class, linked to component</span>
+  ex:PLACEHOLDER_tensile_strength <span class="kw">a</span> tto:TTO_0000053 ;
+    obo:RO_0000052 ex:PLACEHOLDER_material ;
+    obo:IAO_0000417 ex:PLACEHOLDER_tensile_strength_svs .
+
+  ex:PLACEHOLDER_tensile_strength_svs <span class="kw">a</span> obo:OBI_0001931 ;
+    obo:OBI_0001938 ex:PLACEHOLDER_tensile_strength_value .
+
+  ex:PLACEHOLDER_tensile_strength_value <span class="kw">a</span> qudt:QuantityValue ;
+    qudt:unit qudt:MegaPA ;
+    qudt:numericValue ?tensileStrengthValueFinal .
+}
+<span class="kw">WHERE</span> {
+  <span class="cm">/* AAS semanticId → TTO quality class mapping */</span>
+  ?tensileStrengthKey ns2:value
+    <span class="str">"https://admin-shell.io/idta/...TensileStrengthMean/1/0"</span> .
+}</pre>
+      </div>
+
+      <div class="section-note">
+        Both paths output PMDCO quality individuals with QUDT-typed values. The schemas disappear; the shared ontology remains.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span></span>
+      <button type="button" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal D: Assembly Graph -->
+<div class="modal-overlay modal-assembly" id="modal-D" role="dialog" aria-modal="true" aria-labelledby="modal-D-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-D-title">Assembly Graph — Institutional Knowledge</h3>
+      <button type="button" class="modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <p>The assembly graph (<code>tension_pully.ttl</code>) is company/institutional knowledge — it describes how the tension pulley is composed of its two parts, linking to assets in each dataspace via BFO (Basic Formal Ontology) part-whole relations.</p>
+      <pre class="code-block"><span class="kw">@prefix</span> pmdco: &lt;https://w3id.org/pmd/co/&gt; .
+<span class="kw">@prefix</span> obo:   &lt;http://purl.obolibrary.org/obo/&gt; .
+<span class="kw">@prefix</span> ex:    &lt;http://example.org/assembly/&gt; .
+
+<span class="cm"># === Tension Pulley Assembly ===</span>
+ex:TensionPulley_001
+    <span class="kw">a</span> pmdco:Object ;
+    rdfs:label <span class="str">"Tension Pulley Assembly"</span>@en ;
+    obo:BFO_0000051
+      &lt;https://catena-x.net/edc/assets/urn:uuid:3f5a8c2d-…&gt; ,
+      &lt;https://mfg-x.2024.2de/dsp/assets/component-87654321&gt; .
+
+<span class="cm"># === Part 1: Pulley Wheel (Catena-X Asset) ===</span>
+&lt;https://catena-x.net/edc/assets/urn:uuid:3f5a8c2d-…&gt;
+    <span class="kw">a</span> pmdco:Object ;
+    rdfs:label <span class="str">"Pulley Wheel"</span>@en ;
+    obo:BFO_0000050 ex:TensionPulley_001 ;
+    obo:BFO_0000051 &lt;…/material_data_test_pa6gf30-joined.ttl
+                     #MaterialData_Z1234-material&gt; .
+
+<span class="cm"># === Part 2: Tensioner Bracket (Manufacturing-X Asset) ===</span>
+&lt;https://mfg-x.2024.2de/dsp/assets/component-87654321&gt;
+    <span class="kw">a</span> pmdco:Object ;
+    rdfs:label <span class="str">"Tensioner Bracket"</span>@en ;
+    obo:BFO_0000050 ex:TensionPulley_001 ;
+    obo:BFO_0000051 &lt;http://www.example.org/#316-4401_material&gt; .</pre>
+      <div class="section-note">
+        This is the semantic glue at the institutional level. The graph knows what the assembly is made of — without caring which dataspace each part came from.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="https://dataportal.material-digital.de/dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a/resource/76296e9a-a97d-42e7-91cd-657bfc70c12d/download/tension_pully.ttl" target="_blank" rel="noopener noreferrer">View on data portal ↗</a>
+      <button type="button" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal E: Apache Jena Fuseki -->
+<div class="modal-overlay modal-fuseki" id="modal-E" role="dialog" aria-modal="true" aria-labelledby="modal-E-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-E-title">Unified Knowledge Graph in Fuseki</h3>
+      <button type="button" class="modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <p>All three graphs are loaded into named graphs in a shared Fuseki triplestore; from this point the data is jointly queryable via SPARQL regardless of its origin schema.</p>
+      <div class="info-box">Named graphs loaded:
+  &lt;catena-x&gt;        PA6GF30 material (PMDCO)
+  &lt;manufacturing-x&gt; Steel 316/4401 (PMDCO)
+  &lt;assembly&gt;        Tension Pulley assembly
+
+Total: ~500 triples across 3 graphs
+SPARQL endpoint:
+  dataportal.material-digital.de/…/fuseki/$/sparql</div>
+      <div class="section-note">
+        The three graphs are kept separate (named graphs) but are queryable together. The original source schemas are no longer relevant — only the PMDCO alignment matters.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span></span>
+      <button type="button" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal F: Cross-Dataspace SPARQL Query -->
+<div class="modal-overlay modal-query" id="modal-F" role="dialog" aria-modal="true" aria-labelledby="modal-F-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-F-title">Cross-Dataspace Query — SPARQL UNION</h3>
+      <button type="button" class="modal-close" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <p>A single SPARQL SELECT with UNION handles the two different PMDCO graph patterns — one for Catena-X (material node → quality → datum → quantityValue) and one for Manufacturing-X (quality directly on component); this is the query that could not exist without a shared ontology.</p>
+      <pre class="code-block"><span class="kw">SELECT</span> ?componentLabel
+       (<span class="kw">COALESCE</span>(?materialLabel, ?componentLabel) <span class="kw">AS</span> ?material)
+       ?property ?value ?unitLabel
+<span class="kw">WHERE</span> {
+  ex:TensionPulley_001 obo:BFO_0000051 ?component .
+  ?component rdfs:label ?componentLabel .
+
+  {
+    <span class="cm"># Structure A: separate material entity (Catena-X)</span>
+    ?component obo:BFO_0000051 ?mat .
+    ?mat rdfs:label ?materialLabel .
+    ?mat obo:RO_0000086 ?quality .
+    ?quality obo:IAO_0000417 ?datum .
+    ?datum obo:OBI_0001938 ?qv .
+    ?qv qudt:numericValue ?value .
+    <span class="kw">OPTIONAL</span> { ?qv qudt:unit ?unit }
+    <span class="kw">BIND</span>(<span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?unit), <span class="str">"unit/"</span>) <span class="kw">AS</span> ?unitLabel)
+  }
+  <span class="kw">UNION</span>
+  {
+    <span class="cm"># Structure B: qualities directly on component (MfgX/AAS2KG)</span>
+    ?component obo:RO_0000086 ?quality .
+    ?quality obo:OBI_0001938 ?qv .
+    ?qv pmd:PMD_0000006 ?value .
+    <span class="kw">OPTIONAL</span> { ?qv obo:IAO_0000039 ?unit }
+    <span class="kw">BIND</span>(<span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?unit), <span class="str">"qudt/"</span>) <span class="kw">AS</span> ?unitLabel)
+  }
+  <span class="cm">/* label resolution + FILTER omitted for brevity */</span>
+}
+<span class="kw">ORDER BY</span> ?componentLabel ?property</pre>
+      <a href="#result" class="cta-btn" style="display:inline-block; margin-top:1rem; font-size:0.9rem; padding:0.5rem 1.25rem;">↓ See live results below</a>
+    </div>
+    <div class="modal-footer">
+      <a href="detail-query.html">Explore the full query →</a>
+      <button type="button" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script defer src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 790" font-family="Arial, sans-serif" font-size="13">
+
+  <!-- Background -->
+  <rect width="900" height="790" fill="#f8f9fa" rx="8"/>
+
+  <!-- Title -->
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">Cross-Dataspace Demonstration Pipeline</text>
+
+  <!-- Arrowhead markers -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2e7d32"/>
+    </marker>
+  </defs>
+
+  <!-- ═══════════════ PIPELINE 1 (left) ═══════════════ -->
+  <text x="220" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565c0">Catena-X Pipeline</text>
+
+  <!-- Box: Catena-X Dataspace source -->
+  <rect x="80" y="66" width="280" height="54" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="220" y="84" text-anchor="middle" font-weight="bold" fill="#1565c0" font-size="12">Catena-X Dataspace</text>
+  <text x="220" y="100" text-anchor="middle" fill="#1565c0" font-size="10">Partner: Example Corp</text>
+  <text x="220" y="113" text-anchor="middle" fill="#1565c0" font-size="10">Asset: urn:uuid:3f5a8c2d-1234-4b6e-9abc-…</text>
+
+  <!-- Arrow + label -->
+  <line x1="220" y1="120" x2="220" y2="146" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="268" y="137" font-size="10" fill="#555">EDC retrieval</text>
+
+  <!-- Box: PA6GF30 JSON -->
+  <rect x="80" y="146" width="280" height="54" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="220" y="166" text-anchor="middle" font-weight="bold" fill="#1565c0" font-size="12">material_data_test_pa6gf30.json</text>
+  <text x="220" y="182" text-anchor="middle" fill="#1565c0" font-size="11">SAMM AspectModel — PA6GF30 (Z1234)</text>
+
+  <!-- Arrow -->
+  <line x1="220" y1="200" x2="220" y2="226" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Box: RDFConverter -->
+  <rect x="80" y="226" width="280" height="54" rx="6" fill="#fff9c4" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="220" y="246" text-anchor="middle" font-weight="bold" fill="#f57f17">RDFConverter API</text>
+  <text x="220" y="264" text-anchor="middle" fill="#f57f17" font-size="11">catenax-material-map.yaml (YARRRML)</text>
+
+  <!-- Arrow -->
+  <line x1="220" y1="280" x2="220" y2="306" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Box: SAMM RDF -->
+  <rect x="80" y="306" width="280" height="54" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="220" y="326" text-anchor="middle" font-weight="bold" fill="#1565c0" font-size="11">material_data_test_pa6gf30-joined.ttl</text>
+  <text x="220" y="344" text-anchor="middle" fill="#1565c0" font-size="11">SAMM/RDF — intermediate graph</text>
+
+  <!-- Arrow + label -->
+  <line x1="220" y1="360" x2="220" y2="386" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="268" y="377" font-size="10" fill="#555">SPARQL INSERT</text>
+
+  <!-- Box: SPARQL mapping -->
+  <rect x="80" y="386" width="280" height="54" rx="6" fill="#fff9c4" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="220" y="406" text-anchor="middle" font-weight="bold" fill="#f57f17">pmdco-mapping-insert.sparql</text>
+  <text x="220" y="424" text-anchor="middle" fill="#f57f17" font-size="11">Maps 13 properties, 7 units → QUDT/PMDCo</text>
+
+  <!-- Arrow -->
+  <line x1="220" y1="440" x2="220" y2="466" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Box: PMDCo result 1 -->
+  <rect x="80" y="466" width="280" height="54" rx="6" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="220" y="486" text-anchor="middle" font-weight="bold" fill="#2e7d32" font-size="12">material_data_pa6gf30_pmdco.ttl</text>
+  <text x="220" y="504" text-anchor="middle" fill="#2e7d32" font-size="11">PMDCo KG — PA6GF30 material properties</text>
+
+
+  <!-- ═══════════════ PIPELINE 2 (right) ═══════════════ -->
+  <text x="680" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="#6a1b9a">Manufacturing-X Pipeline</text>
+
+  <!-- Box: Manufacturing-X Dataspace source -->
+  <rect x="540" y="66" width="280" height="54" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="680" y="84" text-anchor="middle" font-weight="bold" fill="#6a1b9a" font-size="12">Manufacturing-X Dataspace</text>
+  <text x="680" y="100" text-anchor="middle" fill="#6a1b9a" font-size="10">Partner: Fraunhofer IWM</text>
+  <text x="680" y="113" text-anchor="middle" fill="#6a1b9a" font-size="10">Asset: component-87654321</text>
+
+  <!-- Arrow + label -->
+  <line x1="680" y1="120" x2="680" y2="146" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="728" y="137" font-size="10" fill="#555">AAS download</text>
+
+  <!-- Box: AAS JSON -->
+  <rect x="540" y="146" width="280" height="54" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5"/>
+  <text x="680" y="164" text-anchor="middle" font-weight="bold" fill="#6a1b9a" font-size="11">InspectionDocument_316_4401_alloy.json</text>
+  <text x="680" y="182" text-anchor="middle" fill="#6a1b9a" font-size="11">AAS 3.0 — Steel 316/4401 inspection doc</text>
+
+  <!-- Arrow + label -->
+  <line x1="680" y1="200" x2="680" y2="226" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="728" y="217" font-size="10" fill="#555">py-aas-rdf</text>
+
+  <!-- Box: AAS RDF tool -->
+  <rect x="540" y="226" width="280" height="54" rx="6" fill="#fff9c4" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="680" y="246" text-anchor="middle" font-weight="bold" fill="#f57f17">py-aas-rdf + rdflib</text>
+  <text x="680" y="264" text-anchor="middle" fill="#f57f17" font-size="11">Submodel.to_rdf() → AAS/RDF (Turtle)</text>
+
+  <!-- Arrow -->
+  <line x1="680" y1="280" x2="680" y2="306" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Box: AAS/RDF intermediate -->
+  <rect x="540" y="306" width="280" height="54" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5"/>
+  <text x="680" y="326" text-anchor="middle" font-weight="bold" fill="#6a1b9a">AAS/RDF intermediate graph</text>
+  <text x="680" y="344" text-anchor="middle" fill="#6a1b9a" font-size="11">Loaded into pyoxigraph Store</text>
+
+  <!-- Arrow + label -->
+  <line x1="680" y1="360" x2="680" y2="386" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="728" y="377" font-size="10" fill="#555">SPARQL CONSTRUCT</text>
+
+  <!-- Box: SPARQL mapping -->
+  <rect x="540" y="386" width="280" height="54" rx="6" fill="#fff9c4" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="680" y="404" text-anchor="middle" font-weight="bold" fill="#f57f17" font-size="11">InspectionDocument_AAS2KG_mapping.sparql</text>
+  <text x="680" y="422" text-anchor="middle" fill="#f57f17" font-size="11">Mech. props + chem. composition → PMDCo</text>
+
+  <!-- Arrow -->
+  <line x1="680" y1="440" x2="680" y2="466" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Box: PMDCo result 2 -->
+  <rect x="540" y="466" width="280" height="54" rx="6" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="680" y="486" text-anchor="middle" font-weight="bold" fill="#2e7d32" font-size="11">InspectionDocument_316_4401_alloy_PMDCore.ttl</text>
+  <text x="680" y="504" text-anchor="middle" fill="#2e7d32" font-size="11">PMDCo KG — Steel 316/4401 properties</text>
+
+
+  <!-- ═══════════════ CONVERGENCE ═══════════════ -->
+
+  <!-- Lines from both PMDCo results down to merge point -->
+  <line x1="220" y1="520" x2="220" y2="566" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="680" y1="520" x2="680" y2="566" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="220" y1="566" x2="680" y2="566" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="450" y1="566" x2="450" y2="590" stroke="#2e7d32" stroke-width="2" marker-end="url(#arr-green)"/>
+
+  <!-- label on convergence line -->
+  <text x="450" y="558" text-anchor="middle" font-size="11" fill="#2e7d32">+ tension_pully.ttl (assembly graph)</text>
+
+  <!-- Box: Fuseki triplestore -->
+  <rect x="300" y="590" width="300" height="54" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="450" y="612" text-anchor="middle" font-weight="bold" fill="#2e7d32">Apache Jena Fuseki Triplestore</text>
+  <text x="450" y="630" text-anchor="middle" fill="#2e7d32" font-size="11">pmd-x-cross-dataspace-demo dataset</text>
+
+  <!-- Arrow down to query -->
+  <line x1="450" y1="644" x2="450" y2="670" stroke="#555" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="510" y="661" font-size="10" fill="#555">cross_dataspace_query.sparql</text>
+
+  <!-- Box: Joint SPARQL result -->
+  <rect x="290" y="670" width="320" height="54" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="450" y="692" text-anchor="middle" font-weight="bold" fill="#e65100">Joint SPARQL Query Result</text>
+  <text x="450" y="710" text-anchor="middle" fill="#e65100" font-size="11">Components + material properties from both dataspaces</text>
+
+  <!-- Legend -->
+  <rect x="30" y="742" width="14" height="14" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="50" y="754" font-size="11" fill="#333">Dataspace source</text>
+  <rect x="170" y="742" width="14" height="14" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="190" y="754" font-size="11" fill="#333">Input / intermediate data</text>
+  <rect x="360" y="742" width="14" height="14" fill="#fff9c4" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="380" y="754" font-size="11" fill="#333">Processing tool</text>
+  <rect x="490" y="742" width="14" height="14" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="510" y="754" font-size="11" fill="#333">PMDCo output graph</text>
+  <rect x="650" y="742" width="14" height="14" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="670" y="754" font-size="11" fill="#333">Query result</text>
+
+</svg>

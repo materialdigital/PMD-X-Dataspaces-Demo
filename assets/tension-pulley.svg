@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" font-family="system-ui, Arial, sans-serif">
+  <!-- Pulley Wheel (CatX) -->
+  <rect x="20" y="30" width="180" height="90" rx="8" fill="#1E40AF"/>
+  <text x="110" y="68" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Pulley Wheel</text>
+  <text x="110" y="88" text-anchor="middle" font-size="12" fill="#bfdbfe">PA6GF30</text>
+  <text x="110" y="106" text-anchor="middle" font-size="10" fill="#93c5fd">Catena-X · SAMM JSON</text>
+
+  <!-- Tensioner Bracket (MfgX) -->
+  <rect x="440" y="30" width="180" height="90" rx="8" fill="#6D28D9"/>
+  <text x="530" y="68" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Tensioner Bracket</text>
+  <text x="530" y="88" text-anchor="middle" font-size="12" fill="#ddd6fe">Steel 316/4401</text>
+  <text x="530" y="106" text-anchor="middle" font-size="10" fill="#c4b5fd">Manufacturing-X · AAS 3.0</text>
+
+  <!-- Lines to assembly node -->
+  <line x1="200" y1="75" x2="270" y2="130" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="440" y1="75" x2="370" y2="130" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,3"/>
+
+  <!-- Central assembly node -->
+  <rect x="220" y="125" width="200" height="60" rx="8" fill="#0F172A" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="320" y="151" text-anchor="middle" font-size="13" font-weight="bold" fill="#E2E8F0">Tension Pulley Assembly</text>
+  <text x="320" y="171" text-anchor="middle" font-size="11" fill="#64748B">ex:TensionPulley_001</text>
+</svg>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dataportal.material-digital.de; img-src 'self' data:;">
+  <title>Cross-Dataspace SPARQL Query — PMD-X Demo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="container">
+    <a href="index.html">Demo</a>
+    <a href="detail-catena-x.html">Catena-X pipeline</a>
+    <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-query.html" aria-current="page">SPARQL query</a>
+  </div>
+</nav>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Back to demo</a>
+</div>
+
+<div class="detail-content">
+  <div class="container">
+    <h1>Cross-Dataspace SPARQL Query</h1>
+    <p style="color:var(--text-muted);">
+      How a single SPARQL SELECT with UNION bridges two structurally different PMDCO graph patterns.
+    </p>
+
+    <!-- Section 1: Why UNION -->
+    <div class="detail-section">
+      <h2>1. Why a UNION is needed</h2>
+      <p>
+        Both pipelines produce PMDCO-conformant RDF, but they land on different graph patterns because
+        the source schemas encode the material-component relationship differently.
+      </p>
+
+      <h3>Catena-X graph pattern (Structure A)</h3>
+      <p>
+        The Catena-X SPARQL INSERT creates an intermediate <em>material entity</em> node between the
+        component and its qualities. The component points to the material via BFO part-whole relations;
+        the material then carries the qualities. Numeric values are typed as QUDT QuantityValues with
+        <code>qudt:numericValue</code> (an <code>xsd:decimal</code> literal).
+      </p>
+      <pre class="code-block"><span class="cm"># Component → material → quality → datum → QuantityValue</span>
+?component  obo:BFO_0000051  ?mat .
+?mat        obo:RO_0000086   ?quality .
+?quality    obo:IAO_0000417  ?datum .
+?datum      obo:OBI_0001938  ?qv .
+?qv         qudt:numericValue  ?value .    <span class="cm"># xsd:decimal</span>
+?qv         qudt:unit          ?unit .     <span class="cm"># QUDT unit IRI</span></pre>
+
+      <h3>Manufacturing-X graph pattern (Structure B)</h3>
+      <p>
+        The AAS2KG CONSTRUCT links qualities <em>directly</em> to the component — no separate material
+        node. Numeric values are string literals accessed via <code>pmd:PMD_0000006</code>, and units
+        use <code>obo:IAO_0000039</code>. These are different properties and different value types
+        from Structure A, making a UNION mandatory.
+      </p>
+      <pre class="code-block"><span class="cm"># Component → quality → value specification</span>
+?component  obo:RO_0000086   ?quality .
+?quality    obo:OBI_0001938  ?qv .
+?qv         pmd:PMD_0000006  ?value .    <span class="cm"># string literal</span>
+?qv         obo:IAO_0000039  ?unit .     <span class="cm"># QUDT unit IRI (different predicate)</span></pre>
+
+      <div class="section-note">
+        Without PMDCO as the shared ontology, the two components could not even be in the same query.
+        With PMDCO, both quality individuals use the same TTO/PMDCO type IRIs —
+        <code>tto:TTO_0000053</code> for tensile strength, <code>tto:TTO_0000009</code> for yield strength —
+        making a UNION across the two graph patterns possible.
+      </div>
+    </div>
+
+    <!-- Section 2: Full query -->
+    <div class="detail-section">
+      <h2>2. The full query</h2>
+      <pre class="code-block"><span class="kw">PREFIX</span> rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+<span class="kw">PREFIX</span> rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+<span class="kw">PREFIX</span> obo:   &lt;http://purl.obolibrary.org/obo/&gt;
+<span class="kw">PREFIX</span> pmd:   &lt;https://w3id.org/pmd/co/&gt;
+<span class="kw">PREFIX</span> tto:   &lt;https://w3id.org/pmd/tto/&gt;
+<span class="kw">PREFIX</span> qudt:  &lt;https://qudt.org/schema/qudt/&gt;
+<span class="kw">PREFIX</span> ex:    &lt;http://example.org/assembly/&gt;
+
+<span class="cm"># Starting point: the assembly graph links the two components</span>
+<span class="kw">SELECT</span> ?componentLabel
+       (<span class="kw">COALESCE</span>(?materialLabel, ?componentLabel) <span class="kw">AS</span> ?material)
+       ?property ?value ?unitLabel
+<span class="kw">WHERE</span> {
+  ex:TensionPulley_001 obo:BFO_0000051 ?component .
+  ?component rdfs:label ?componentLabel .
+
+  {
+    <span class="cm"># Structure A: Catena-X — separate material entity</span>
+    ?component obo:BFO_0000051 ?mat .
+    ?mat rdfs:label ?materialLabel .
+    ?mat obo:RO_0000086 ?quality .
+    ?quality <span class="kw">a</span> ?qualityType .
+    ?quality obo:IAO_0000417 ?datum .
+    ?datum obo:OBI_0001938 ?qv .
+    ?qv qudt:numericValue ?value .            <span class="cm"># decimal literal</span>
+    <span class="kw">OPTIONAL</span> { ?qv qudt:unit ?unit }
+    <span class="kw">BIND</span>(<span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?unit), <span class="str">"unit/"</span>) <span class="kw">AS</span> ?unitLabel)
+  }
+  <span class="kw">UNION</span>
+  {
+    <span class="cm"># Structure B: Manufacturing-X — qualities directly on component</span>
+    ?component obo:RO_0000086 ?quality .
+    ?quality <span class="kw">a</span> ?qualityType .
+    ?quality obo:OBI_0001938 ?qv .
+    ?qv pmd:PMD_0000006 ?value .              <span class="cm"># string literal</span>
+    <span class="kw">OPTIONAL</span> { ?qv obo:IAO_0000039 ?unit }
+    <span class="kw">BIND</span>(<span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?unit), <span class="str">"qudt/"</span>) <span class="kw">AS</span> ?unitLabel)
+  }
+
+  <span class="cm"># Label resolution: instance label > type label > IRI fragment</span>
+  <span class="kw">OPTIONAL</span> { ?quality rdfs:label ?instanceLabel }
+  <span class="kw">OPTIONAL</span> {
+    <span class="kw">VALUES</span> (?qualityType ?typeLabel) {
+      (tto:TTO_0000009  <span class="str">"yield strength"</span>)
+      (tto:TTO_0000033  <span class="str">"elongation at fracture"</span>)
+      (tto:TTO_0000053  <span class="str">"tensile strength"</span>)
+      (pmd:PMD_0000618  <span class="str">"elastic modulus"</span>)
+      (pmd:PMD_0000851  <span class="str">"melting point"</span>)
+      (pmd:PMD_0000518  <span class="str">"impact strength"</span>)
+    }
+  }
+  <span class="kw">BIND</span>(<span class="kw">COALESCE</span>(
+    ?instanceLabel,
+    ?typeLabel,
+    <span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?quality), <span class="str">"-qual-"</span>)
+  ) <span class="kw">AS</span> ?property)
+
+  <span class="cm"># Drop rows where label resolution produced nothing</span>
+  <span class="kw">FILTER</span>(str(?property) != <span class="str">""</span>)
+}
+<span class="kw">ORDER BY</span> ?componentLabel ?property</pre>
+      <a href="https://dataportal.material-digital.de/dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a/resource/6f9909fd-10a5-47b0-9098-097a756b8b11/download/cross_dataspace_query.sparql" class="source-link" target="_blank" rel="noopener noreferrer">View source SPARQL on data portal ↗</a>
+    </div>
+
+    <!-- Section 3: The result -->
+    <div class="detail-section">
+      <h2>3. The result</h2>
+      <p>
+        Seven rows covering both components: four polymer properties from Catena-X (elastic modulus,
+        impact strength, melting point, tensile strength) and three steel properties from Manufacturing-X
+        (elongation at fracture, tensile strength, yield strength). The column names correspond
+        directly to the SPARQL SELECT bindings.
+      </p>
+
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>?componentLabel</th>
+            <th>?material</th>
+            <th>?property</th>
+            <th>?value</th>
+            <th>?unitLabel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-catx">
+            <td>Pulley Wheel</td><td>PA6GF30</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td>
+          </tr>
+          <tr class="row-catx">
+            <td>Pulley Wheel</td><td>PA6GF30</td><td>impact strength</td><td>74000</td><td>J/m²</td>
+          </tr>
+          <tr class="row-catx">
+            <td>Pulley Wheel</td><td>PA6GF30</td><td>melting point</td><td>223</td><td>DEG_C</td>
+          </tr>
+          <tr class="row-catx">
+            <td>Pulley Wheel</td><td>PA6GF30</td><td>tensile strength</td><td>140</td><td>MegaPA</td>
+          </tr>
+          <tr class="row-mfgx">
+            <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td>
+          </tr>
+          <tr class="row-mfgx">
+            <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>tensile strength</td><td>632</td><td>MegaPA</td>
+          </tr>
+          <tr class="row-mfgx">
+            <td>Tensioner Bracket</td><td>Steel 316/4401</td><td>yield strength</td><td>276</td><td>MegaPA</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:1rem; font-size:0.875rem; color:var(--text-muted);">
+        Blue rows: Catena-X / PA6GF30 (Structure A).
+        Purple rows: Manufacturing-X / Steel 316/4401 (Structure B).
+        Both materialised from the same PMDCO ontology — different graph topologies, one query.
+      </p>
+    </div>
+
+    <!-- Section 4: Live endpoint -->
+    <div class="detail-section">
+      <h2>4. Live SPARQL endpoint</h2>
+      <p>
+        The cross-dataspace demo dataset is served by Apache Jena Fuseki on the PMD data portal.
+        The endpoint accepts HTTP POST with <code>Content-Type: application/x-www-form-urlencoded</code>
+        and <code>Accept: application/sparql-results+json</code>.
+      </p>
+      <div class="info-box">Endpoint:
+  https://dataportal.material-digital.de/
+  dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a/
+  fuseki/$/sparql
+
+Method:  POST
+Body:    query=&lt;URL-encoded SPARQL&gt;
+Accept:  application/sparql-results+json
+CORS:    Access-Control-Allow-Origin reflects request Origin</div>
+      <a href="https://dataportal.material-digital.de/dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a" class="source-link" target="_blank" rel="noopener noreferrer">View dataset on data portal ↗</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://dataportal.material-digital.de/dataset/pmd-x-cross-dataspace-demo" target="_blank" rel="noopener noreferrer">Source dataset</a>
+      <a href="https://www.material-digital.de" target="_blank" rel="noopener noreferrer">Platform MaterialDigital</a>
+      <a href="https://w3id.org/pmd/co" target="_blank" rel="noopener noreferrer">PMDCO ontology</a>
+    </div>
+    <div class="footer-built">
+      Built with: PMDCO · Apache Jena Fuseki · RDFConverter · YARRRML · AAS2KG
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

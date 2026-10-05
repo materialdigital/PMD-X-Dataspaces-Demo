@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dataportal.material-digital.de; img-src 'self' data:;">
+  <title>Manufacturing-X Pipeline — PMD-X Demo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="container">
+    <a href="index.html">Demo</a>
+    <a href="detail-catena-x.html">Catena-X pipeline</a>
+    <a href="detail-mfg-x.html" aria-current="page">Manufacturing-X pipeline</a>
+    <a href="detail-query.html">SPARQL query</a>
+  </div>
+</nav>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Back to demo</a>
+</div>
+
+<div class="detail-content">
+  <div class="container">
+    <h1>Manufacturing-X Pipeline — Steel 316/4401</h1>
+    <p style="color:var(--text-muted);">How stainless steel inspection data travels from an AAS 3.0 document to PMDCO-conformant RDF.</p>
+
+    <!-- Section 1: Source -->
+    <div class="detail-section">
+      <h2>1. Source: AAS 3.0 Inspection Document</h2>
+      <p>
+        The Manufacturing-X dataspace exposes steel inspection data as AAS (Asset Administration Shell) 3.0
+        documents following the EN 10204 standard for metallic materials test reports.
+        AAS 3.0 uses a hierarchical submodel tree with <code>idShort</code> identifiers and semantic IDs
+        referencing IDTA (Industrial Digital Twin Association) submodel templates.
+      </p>
+      <p>
+        Unlike the Catena-X SAMM JSON, AAS encodes property semantics via external semantic IDs
+        (e.g., <code>https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/TensileStrengthMean/1/0</code>)
+        rather than field names. The structure is fundamentally incompatible with SAMM without
+        a dedicated transformation.
+      </p>
+      <pre class="code-block">{
+  <span class="str">"assetAdministrationShells"</span>: [{
+    <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProductsAAS"</span>,
+    <span class="str">"id"</span>: <span class="str">"https://pmdx.materials-data.space/.../AAS"</span>
+  }],
+  <span class="str">"submodels"</span>: [{
+    <span class="str">"semanticId"</span>: { <span class="str">"keys"</span>: [{
+      <span class="str">"value"</span>: <span class="str">"https://admin-shell.io/idta/SubmodelTemplate/
+        InspectionDocumentsOfSteelProducts/1/0"</span>
+    }]},
+    <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProducts"</span>,
+    <span class="str">"submodelElements"</span>: [{
+      <span class="str">"idShort"</span>: <span class="str">"TensileStrengthMean"</span>,
+      <span class="str">"semanticId"</span>: { <span class="str">"keys"</span>: [{
+        <span class="str">"value"</span>: <span class="str">"https://admin-shell.io/idta/...TensileStrengthMean/1/0"</span>
+      }]},
+      <span class="str">"value"</span>: <span class="str">"632"</span>,
+      <span class="str">"displayName"</span>: [{ <span class="str">"language"</span>: <span class="str">"en"</span>, <span class="str">"text"</span>: <span class="str">"Tensile Strength Mean"</span> }],
+      <span class="str">"modelType"</span>: <span class="str">"Property"</span>
+    }]
+  }]
+}</pre>
+      <div class="section-note">
+        EN 10204 section codes, <code>idShort</code> references, and IDTA semantic IRIs — none of which align with the Catena-X SAMM keys or standard QUDT units.
+      </div>
+      <a href="https://dataportal.material-digital.de/dataset/a725c4a1-a463-47f8-bad3-fe84b73ef0d3/resource/25076900-3a83-4580-a354-47055958a22c/download/inspectiondocument_316_4401_alloy.json" class="source-link" target="_blank" rel="noopener noreferrer">View source file on data portal ↗</a>
+    </div>
+
+    <!-- Section 2: AAS → RDF -->
+    <div class="detail-section">
+      <h2>2. Step 1: AAS → RDF (py-aas-rdf + AAS2KG)</h2>
+      <p>
+        The AAS 3.0 JSON is first converted to RDF using <strong>py-aas-rdf</strong>, which produces
+        AAS-conformant RDF triples stored in a pyoxigraph in-memory store. The resulting RDF faithfully
+        represents the AAS structure (submodel elements, semantic IDs, display names) as linked data.
+      </p>
+      <p>
+        At this stage the RDF is "AAS/RDF" — the hierarchical AAS structure is preserved but not yet
+        aligned with PMDCO. A subsequent SPARQL CONSTRUCT query (the AAS2KG mapping) performs the
+        PMDCO alignment in the next step.
+      </p>
+      <p>
+        The AAS2KG tool chain is developed by MI-Fraunhofer IWM. The steel inspection document pipeline
+        is documented at:
+        <a href="https://dataportal.material-digital.de/dataset/steel-inspection-document-mapro" target="_blank" rel="noopener noreferrer">dataportal.material-digital.de/dataset/steel-inspection-document-mapro ↗</a>
+      </p>
+    </div>
+
+    <!-- Section 3: AAS/RDF → PMDCO -->
+    <div class="detail-section">
+      <h2>3. Step 2: AAS/RDF → PMDCO (SPARQL CONSTRUCT)</h2>
+      <p>
+        The AAS2KG mapping is a SPARQL CONSTRUCT query that reads AAS/RDF triples and builds
+        PMDCO-conformant output. Each IDTA semantic ID is resolved to a TTO (Taxonomy Thermodynamic Ontology)
+        or PMDCO quality class, and numeric values are linked via OBI datum + QUDT QuantityValue patterns.
+      </p>
+      <pre class="code-block"><span class="kw">PREFIX</span> aas:  &lt;https://admin-shell.io/aas/3/0/&gt;
+<span class="kw">PREFIX</span> tto:  &lt;https://w3id.org/pmd/tto/&gt;
+<span class="kw">PREFIX</span> pmd:  &lt;https://w3id.org/pmd/co/&gt;
+<span class="kw">PREFIX</span> obo:  &lt;http://purl.obolibrary.org/obo/&gt;
+<span class="kw">PREFIX</span> qudt: &lt;http://qudt.org/schema/qudt/&gt;
+
+<span class="kw">CONSTRUCT</span> {
+  <span class="cm"># Component is a PMDCO Object</span>
+  ex:PLACEHOLDER_material <span class="kw">a</span> pmd:PMD_0000000, obo:BFO_0000040 ;
+    rdfs:label ?materialNameValueFinal .
+
+  <span class="cm"># Tensile strength: TTO class + OBI datum chain</span>
+  ex:PLACEHOLDER_tensile_strength <span class="kw">a</span> tto:TTO_0000053 ;
+    obo:RO_0000052 ex:PLACEHOLDER_material ;
+    obo:IAO_0000417 ex:PLACEHOLDER_tensile_strength_svs .
+
+  ex:PLACEHOLDER_tensile_strength_svs <span class="kw">a</span> obo:OBI_0001931 ;
+    obo:OBI_0001938 ex:PLACEHOLDER_tensile_strength_value .
+
+  ex:PLACEHOLDER_tensile_strength_value <span class="kw">a</span> qudt:QuantityValue ;
+    qudt:unit qudt:MegaPA ;
+    qudt:numericValue ?tensileStrengthValueFinal .
+
+  <span class="cm"># Yield strength: TTO_0000009</span>
+  ex:PLACEHOLDER_yield_strength <span class="kw">a</span> tto:TTO_0000009 ; <span class="cm"># yield strength</span>
+    obo:OBI_0001938 ex:PLACEHOLDER_yield_strength_value .
+  ex:PLACEHOLDER_yield_strength_value qudt:numericValue ?yieldStrengthValueFinal ;
+    qudt:unit qudt:MegaPA .
+
+  <span class="cm"># Elongation at fracture: TTO_0000033</span>
+  ex:PLACEHOLDER_elongation <span class="kw">a</span> tto:TTO_0000033 ;
+    obo:OBI_0001938 ex:PLACEHOLDER_elongation_value .
+  ex:PLACEHOLDER_elongation_value qudt:numericValue ?elongationAfterFractureValueFinal ;
+    qudt:unit qudt:PERCENT .
+}
+<span class="kw">WHERE</span> {
+  <span class="cm"># Resolve AAS semanticId → property value</span>
+  <span class="kw">OPTIONAL</span> {
+    ?tensileStrengthProp <span class="kw">a</span> aas:Property ;
+        ns1:value ?tensileStrengthValue ;
+        ns5:semanticId ?tensileStrengthSS .
+    ?tensileStrengthSS ns3:keys ?tensileStrengthKey .
+    ?tensileStrengthKey ns2:value
+      <span class="str">"https://admin-shell.io/idta/…/TensileStrengthMean/1/0"</span> .
+  }
+  <span class="kw">BIND</span>(<span class="kw">COALESCE</span>(?tensileStrengthValue, <span class="str">"N/A"</span>) <span class="kw">AS</span> ?tensileStrengthValueFinal)
+  <span class="cm">/* … analogous blocks for yield strength and elongation … */</span>
+}</pre>
+      <a href="https://dataportal.material-digital.de/dataset/a725c4a1-a463-47f8-bad3-fe84b73ef0d3/resource/93e50b44-f325-417b-80dd-83fc2664ce6b/download/inspectiondocument_aas2kg_mapping.sparql" class="source-link" target="_blank" rel="noopener noreferrer">View full SPARQL on data portal ↗</a>
+    </div>
+
+    <!-- Section 4: Output -->
+    <div class="detail-section">
+      <h2>4. Output — Steel Properties as PMDCO Qualities</h2>
+      <p>
+        The CONSTRUCT produces a compact graph where qualities are linked directly to the component
+        (no intermediate material node, unlike the Catena-X pipeline). Values use <code>pmd:PMD_0000006</code>
+        for the numeric value and <code>obo:IAO_0000039</code> for the unit — a different pattern from
+        the CatX QUDT binding, which is why the cross-dataspace SPARQL query needs a UNION.
+      </p>
+      <pre class="code-block"><span class="kw">@prefix</span> obo:  &lt;http://purl.obolibrary.org/obo/&gt; .
+<span class="kw">@prefix</span> pmd:  &lt;https://w3id.org/pmd/co/&gt; .
+<span class="kw">@prefix</span> qudt: &lt;http://qudt.org/schema/qudt/&gt; .
+<span class="kw">@prefix</span> tto:  &lt;https://w3id.org/pmd/tto/&gt; .
+
+<span class="cm"># Component directly has qualities (no separate material node)</span>
+&lt;https://mfg-x.2024.2de/dsp/assets/component-87654321&gt;
+    <span class="kw">a</span> obo:BFO_0000030, pmd:PMD_0020096 ;
+    obo:RO_0000086
+      &lt;…/tensile_strength_quality&gt;,
+      &lt;…/yield_strength_quality&gt;,
+      &lt;…/elon_af_quality&gt; .
+
+<span class="cm"># Tensile strength</span>
+&lt;…/tensile_strength_quality&gt; <span class="kw">a</span> pmd:PMD_0000848, tto:TTO_0000053 ;
+    obo:OBI_0001938 &lt;…/tensile_strength_value&gt; .
+
+&lt;…/tensile_strength_value&gt; <span class="kw">a</span> obo:OBI_0001931 ;
+    obo:IAO_0000039 qudt:MegaPA ;
+    pmd:PMD_0000006 <span class="str">"632"</span> .          <span class="cm"># numeric value as string literal</span>
+
+<span class="cm"># Yield strength</span>
+&lt;…/yield_strength_value&gt;
+    obo:IAO_0000039 qudt:MegaPA ;
+    pmd:PMD_0000006 <span class="str">"276"</span> .
+
+<span class="cm"># Elongation at fracture</span>
+&lt;…/elon_af_value&gt;
+    obo:IAO_0000039 qudt:PERCENT ;
+    pmd:PMD_0000006 <span class="str">"60"</span> .</pre>
+      <a href="https://dataportal.material-digital.de/dataset/a725c4a1-a463-47f8-bad3-fe84b73ef0d3/resource/929c0b99-ebfb-4aaf-99c5-ae29285ace71/download/inspectiondocument_316_4401_alloy_pmdcore.ttl" class="source-link" target="_blank" rel="noopener noreferrer">View output TTL on data portal ↗</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://dataportal.material-digital.de/dataset/pmd-x-cross-dataspace-demo" target="_blank" rel="noopener noreferrer">Source dataset</a>
+      <a href="https://dataportal.material-digital.de/dataset/steel-inspection-document-mapro" target="_blank" rel="noopener noreferrer">Steel inspection document dataset</a>
+      <a href="https://www.material-digital.de" target="_blank" rel="noopener noreferrer">Platform MaterialDigital</a>
+    </div>
+    <div class="footer-built">
+      Built with: PMDCO · Apache Jena Fuseki · RDFConverter · YARRRML · AAS2KG
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
