@@ -239,11 +239,13 @@ function updateDAGConnectors() {
     line.classList.toggle('line-active', nodeState[nid] === 'done');
   });
 
-  const merge = document.querySelector('.dag-conn-merge');
-  if (merge) {
-    const anySource = ['A','B','D'].some(id => nodeState[id] === 'done');
-    merge.classList.toggle('line-active', anySource);
-  }
+  const mergeL = document.querySelector('#dag-merge-l');
+  if (mergeL) mergeL.classList.toggle('line-active', nodeState.A === 'done');
+  const mergeR = document.querySelector('#dag-merge-r');
+  if (mergeR) mergeR.classList.toggle('line-active', nodeState.D === 'done');
+  const anySource = ['A','B','D'].some(id => nodeState[id] === 'done');
+  const stem = document.querySelector('#dag-conn-stem');
+  if (stem) stem.classList.toggle('line-active', anySource);
 
   const mid = document.querySelector('#dag-conn-mid .dag-vert-line');
   if (mid) mid.classList.toggle('line-active', nodeState.A === 'done' || nodeState.B === 'done');

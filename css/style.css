@@ -577,6 +577,10 @@ footer {
   justify-content: center;
   margin-bottom: 0;
 }
+/* extra top margin only on the Fuseki row so the funnel stem has space */
+#dag-conn-top + .dag-row {
+  margin-top: 28px;
+}
 .dag-spacer { height: 56px; }
 
 /* ── Workflow node card ── */
@@ -699,96 +703,122 @@ footer {
   margin: 0 auto;
 }
 
-/* ── CSS connectors (replace SVG) ── */
-
-/* Three-line funnel from source row → Fuseki */
-.dag-connector-row {
-  position: relative;
-  height: 56px;
-  display: flex;
-  align-items: stretch;
-  justify-content: space-around;
-}
-.dag-conn-line {
-  flex: 1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-.dag-conn-line::before {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  background-image: linear-gradient(to bottom, var(--border) 60%, transparent 60%);
-  background-size: 2px 10px;
-  background-repeat: repeat-y;
-  transition: background-image 0.4s;
-}
-/* Active state — green flow */
-.dag-conn-line.line-active::before {
-  background-image: linear-gradient(to bottom, #22c55e 60%, transparent 60%);
-  animation: flow-down 0.5s linear infinite;
-}
+/* ── CSS connectors ── */
 @keyframes flow-down {
   from { background-position: 0 0; }
   to   { background-position: 0 10px; }
-}
-
-/* Merge bar at bottom of funnel */
-.dag-conn-merge {
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background-image: linear-gradient(to right, var(--border) 60%, transparent 60%);
-  background-size: 10px 2px;
-  background-repeat: repeat-x;
-  transition: background-image 0.4s;
-}
-.dag-conn-merge.line-active {
-  background-image: linear-gradient(to right, #22c55e 60%, transparent 60%);
-  animation: flow-right 0.5s linear infinite;
 }
 @keyframes flow-right {
   from { background-position: 0 0; }
   to   { background-position: 10px 0; }
 }
 
-/* Simple vertical line connector */
+/* Shared dashed line helper */
+.dag-conn-line::before,
+.dag-vert-line,
+.dag-conn-stem {
+  background-image: linear-gradient(to bottom, var(--border) 60%, transparent 60%);
+  background-size: 2px 10px;
+  background-repeat: repeat-y;
+  transition: background-image 0.3s;
+}
+
+/* Three-line funnel: source nodes → merge bar → Fuseki */
+.dag-connector-row {
+  position: relative;
+  height: 40px;            /* lines go down 40px to merge bar */
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  overflow: visible;       /* stem extends below */
+}
+.dag-conn-line {
+  flex: 1;
+  position: relative;
+}
+.dag-conn-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 2px;             /* stop just above the merge bar */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+}
+.dag-conn-line.line-active::before {
+  background-image: linear-gradient(to bottom, #22c55e 60%, transparent 60%);
+  animation: flow-down 0.5s linear infinite;
+}
+
+/* Horizontal merge bar — split into left half (catx→center) and right half (center→asm) */
+.dag-conn-merge-l,
+.dag-conn-merge-r {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-image: linear-gradient(to right, var(--border) 60%, transparent 60%);
+  background-size: 10px 2px;
+  background-repeat: repeat-x;
+  transition: background-image 0.3s;
+}
+.dag-conn-merge-l {
+  left: calc(100% / 6);   /* catx-line center (space-around: 1/6) */
+  right: 50%;
+}
+.dag-conn-merge-r {
+  left: 50%;
+  right: calc(100% / 6);  /* asm-line center (space-around: 5/6) */
+}
+.dag-conn-merge-l.line-active {
+  background-image: linear-gradient(to right, #22c55e 60%, transparent 60%);
+  animation: flow-right 0.5s linear infinite;
+}
+.dag-conn-merge-r.line-active {
+  background-image: linear-gradient(to right, #22c55e 60%, transparent 60%);
+  animation: flow-left 0.5s linear infinite;
+}
+@keyframes flow-left {
+  from { background-position: 0 0; }
+  to   { background-position: -10px 0; }
+}
+
+/* Center stem: from merge bar down to Fuseki node */
+.dag-conn-stem {
+  position: absolute;
+  bottom: -28px;           /* extends 28px below the connector row */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 28px;
+}
+.dag-conn-stem.line-active {
+  background-image: linear-gradient(to bottom, #22c55e 60%, transparent 60%);
+  animation: flow-down 0.5s linear infinite;
+}
+
+/* Simple vertical connector between single nodes */
 .dag-simple-conn {
   display: flex;
   justify-content: center;
-  height: 48px;
-  padding: 0 0.5rem;
+  height: 36px;
 }
 .dag-vert-line {
   width: 2px;
   height: 100%;
-  background-image: linear-gradient(to bottom, var(--border) 60%, transparent 60%);
-  background-size: 2px 10px;
-  background-repeat: repeat-y;
-  transition: background-image 0.4s;
 }
 .dag-vert-line.line-active {
   background-image: linear-gradient(to bottom, #22c55e 60%, transparent 60%);
   animation: flow-down 0.5s linear infinite;
 }
 
-/* Arrowhead at connector bottom */
-.dag-simple-conn::after,
-.dag-connector-row::after {
-  content: '↓';
+/* Downward arrow tip on simple connectors */
+.dag-simple-conn::after {
+  content: '▾';
   display: block;
   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  margin-top: -4px;
+  font-size: 0.75rem;
+  color: var(--border);
   line-height: 1;
 }
 
