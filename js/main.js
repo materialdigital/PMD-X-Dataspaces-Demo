@@ -150,10 +150,8 @@ const MODAL_STEPS = {
       code: '{\n  "materialInformation": { "materialName": "PA6GF30", "materialIdentifier": "Z1234" },\n  "mechanicalProperty":  { "impactStrength": 74, "youngsModulus": 9800 },\n  "thermophysicalProperty": { "meltingTemperature": 223 }\n}' },
     { title: 'YARRRML + RDF Converter — SAMM RDF document',
       body: 'A YARRRML mapping defines rules that bind the SAMM JSON structure to SAMM ontology IRIs. RDFConverter executes the mapping and produces a self-contained SAMM-conformant RDF document — SAMM entities, not yet PMDCO.' },
-    { title: 'SPARQL INSERT — SAMM → PMDCO',
-      body: 'A SPARQL INSERT (<code>pmdco-mapping-insert.sparql</code>) runs against the SAMM RDF document and writes PMDCO quality individuals into the same graph — mapping SAMM property IRIs to PMDCO class IRIs and SAMM units to QUDT unit individuals. In this demo the result is pre-loaded.' },
-    { title: 'Load into Triplestore',
-      body: 'The resulting PMDCO Turtle graph is loaded into the Oxigraph in-browser triplestore as named graph <code>urn:graph:catx</code>.',
+    { title: 'Load SAMM RDF into Triplestore',
+      body: 'The self-contained SAMM RDF document is loaded into the Oxigraph triplestore as named graph <code>urn:graph:catx</code>. The PMDCO transformation happens in the next node.',
       last: true },
   ],
   B: [
@@ -173,10 +171,10 @@ const MODAL_STEPS = {
       last: true },
   ],
   C: [
-    { title: 'SPARQL INSERT — quality label annotation',
-      body: 'A SPARQL INSERT queries both <code>urn:graph:catx</code> and <code>urn:graph:mfgx</code> for quality individuals typed with PMDCO/TTO classes, then writes human-readable <code>rdfs:label</code> values from the PMDCO/TTO vocabulary into the triplestore.' },
-    { title: 'Labels written to Triplestore',
-      body: '6 quality individuals receive labels — tensile strength, yield strength, elastic modulus, elongation at fracture, melting point, impact strength — stored in named graph <code>urn:graph:pmdco-labels</code>.',
+    { title: 'SPARQL INSERT — SAMM → PMDCO mapping',
+      body: 'The <code>pmdco-mapping-insert.sparql</code> INSERT runs against the SAMM triples already in the triplestore. It maps SAMM property IRIs (e.g. <code>mat:youngsModulus</code>) to PMDCO quality class IRIs and SAMM unit references to QUDT unit individuals.' },
+    { title: 'PMDCO quality individuals written',
+      body: 'PMDCO quality individuals are written into the triplestore — typed with PMDCO/TTO class IRIs, linked via <code>obo:IAO_0000417</code> to measurement datums and <code>qudt:numericValue</code> to values. Both CatX and MfgX graphs are now semantically aligned.',
       last: true },
   ],
   D: [
