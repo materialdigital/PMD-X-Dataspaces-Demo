@@ -1,8 +1,32 @@
-// ── Configurable constants ──────────────────────────────────────────────────
-const SPARQL_ENDPOINT =
-  'https://dataportal.material-digital.de/dataset/203bde74-4e5f-4a74-a1d8-261e0f8ca84a/fuseki/$/sparql';
+import initOxigraph, { Store, namedNode } from '../vendor/oxigraph.js';
 
-const SPARQL_QUERY = `PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+// ── Named graph IRIs ──────────────────────────────────────────────────────────
+const GRAPH_IRI = {
+  catx:     'urn:graph:catx',
+  mfgx:     'urn:graph:mfgx',
+  assembly: 'urn:graph:assembly',
+  labels:   'urn:graph:pmdco-labels',
+};
+
+// ── Oxigraph store (initialised once) ────────────────────────────────────────
+// namedNode() cannot be called until WASM is ready — create NamedNode objects
+// inside storeReady, not at module-load time.
+let store = null;
+let GRAPH = {};
+const storeReady = initOxigraph().then(() => {
+  store = new Store();
+  GRAPH = Object.fromEntries(
+    Object.entries(GRAPH_IRI).map(([k, v]) => [k, namedNode(v)])
+  );
+});
+
+// ── Cross-dataspace query ─────────────────────────────────────────────────────
+// Both catx-data.ttl and mfgx-pmdco.ttl follow the same PMDCO graph pattern:
+//   component → BFO_0000051 → material → RO_0000086 → quality
+//                                         → IAO_0000417 → datum → OBI_0001938 → qv
+// PMDCO as shared vocabulary makes this single query possible across two dataspaces.
+const SPARQL_QUERY = `
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX obo:   <http://purl.obolibrary.org/obo/>
 PREFIX pmd:   <https://w3id.org/pmd/co/>
@@ -10,60 +34,70 @@ PREFIX tto:   <https://w3id.org/pmd/tto/>
 PREFIX qudt:  <https://qudt.org/schema/qudt/>
 PREFIX ex:    <http://example.org/assembly/>
 
-SELECT ?componentLabel
-       (COALESCE(?materialLabel, ?componentLabel) AS ?material)
-       ?property ?value ?unitLabel
+SELECT ?componentLabel ?materialLabel ?property ?value ?unitLabel
 WHERE {
-    ex:TensionPulley_001 obo:BFO_0000051 ?component .
-    ?component rdfs:label ?componentLabel .
-    {
-      ?component obo:BFO_0000051 ?mat .
-      ?mat rdfs:label ?materialLabel .
-      ?mat obo:RO_0000086 ?quality .
-      ?quality a ?qualityType .
-      ?quality obo:IAO_0000417 ?datum .
-      ?datum obo:OBI_0001938 ?qv .
-      ?qv qudt:numericValue ?value .
-      OPTIONAL { ?qv qudt:unit ?unit }
-      BIND(STRAFTER(STR(?unit), "unit/") AS ?unitLabel)
-    }
-    UNION
-    {
-      ?component obo:RO_0000086 ?quality .
-      ?quality a ?qualityType .
-      ?quality obo:OBI_0001938 ?qv .
-      ?qv pmd:PMD_0000006 ?value .
-      OPTIONAL { ?qv obo:IAO_0000039 ?unit }
-      BIND(STRAFTER(STR(?unit), "qudt/") AS ?unitLabel)
-    }
-    OPTIONAL { ?quality rdfs:label ?instanceLabel }
-    OPTIONAL {
-      VALUES (?qualityType ?typeLabel) {
-        (tto:TTO_0000009  "yield strength")
-        (tto:TTO_0000033  "elongation at fracture")
-        (tto:TTO_0000053  "tensile strength")
-        (pmd:PMD_0000618  "elastic modulus")
-        (pmd:PMD_0000851  "melting point")
-        (pmd:PMD_0000518  "impact strength")
-      }
-    }
-    BIND(COALESCE(?instanceLabel, ?typeLabel, STRAFTER(STR(?quality), "-qual-")) AS ?property)
-    FILTER(str(?property) != "")
+  ex:TensionPulley_001 obo:BFO_0000051 ?component .
+  ?component rdfs:label ?componentLabel .
+  ?component obo:BFO_0000051 ?mat .
+  ?mat rdfs:label ?materialLabel .
+  ?mat obo:RO_0000086 ?quality .
+  ?quality a ?qualityType .
+  ?quality obo:IAO_0000417 ?datum .
+  ?datum obo:OBI_0001938 ?qv .
+  ?qv qudt:numericValue ?value .
+  OPTIONAL { ?qv qudt:unit ?unit . BIND(REPLACE(STR(?unit), "^.*/", "") AS ?unitLabel) }
+  VALUES (?qualityType ?property) {
+    (tto:TTO_0000009 "yield strength")
+    (tto:TTO_0000033 "elongation at fracture")
+    (tto:TTO_0000053 "tensile strength")
+    (pmd:PMD_0000618 "elastic modulus")
+    (pmd:PMD_0000851 "melting point")
+    (pmd:PMD_0000518 "impact strength")
+  }
 }
 ORDER BY ?componentLabel ?property`;
 
-const FETCH_TIMEOUT_MS = 10000;
+// ── Node C: PMDCO augmentation INSERT ────────────────────────────────────────
+// Reads quality type IRIs from both graphs and writes human-readable rdfs:label
+// annotations into the dedicated pmdco-labels named graph.
+const PMDCO_INSERT = `
+PREFIX tto:  <https://w3id.org/pmd/tto/>
+PREFIX pmd:  <https://w3id.org/pmd/co/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-// KG inspector COUNT queries
-const KG_QUERIES = {
-  total:    'SELECT (COUNT(*) AS ?c) WHERE { ?s ?p ?o }',
-  samm:     'SELECT (COUNT(DISTINCT ?s) AS ?c) WHERE { ?s a ?t . FILTER(STRSTARTS(STR(?t), "urn:samm:io.catenax")) }',
-  aas:      'SELECT (COUNT(DISTINCT ?s) AS ?c) WHERE { ?s a ?t . FILTER(STRSTARTS(STR(?t), "https://admin-shell.io/")) }',
-  pmdco:    'SELECT (COUNT(DISTINCT ?s) AS ?c) WHERE { ?s a ?t . FILTER(STRSTARTS(STR(?t), "https://w3id.org/pmd/")) }',
-  assembly: 'SELECT (COUNT(*) AS ?c) WHERE { <http://example.org/assembly/TensionPulley_001> ?p ?o }',
+INSERT { GRAPH <urn:graph:pmdco-labels> { ?quality rdfs:label ?label . } }
+WHERE {
+  { GRAPH <urn:graph:catx> { ?quality a ?type } }
+  UNION
+  { GRAPH <urn:graph:mfgx> { ?quality a ?type } }
+  VALUES (?type ?label) {
+    (<https://w3id.org/pmd/tto/TTO_0000053> "tensile strength")
+    (<https://w3id.org/pmd/tto/TTO_0000009> "yield strength")
+    (<https://w3id.org/pmd/tto/TTO_0000033> "elongation at fracture")
+    (<https://w3id.org/pmd/co/PMD_0000618>  "elastic modulus")
+    (<https://w3id.org/pmd/co/PMD_0000851>  "melting point")
+    (<https://w3id.org/pmd/co/PMD_0000518>  "impact strength")
+  }
+}`;
+
+// ── Node data sources ─────────────────────────────────────────────────────────
+// Use IRI strings here — namedNode() is called inside executeNode after WASM init
+const NODE_TTL = {
+  A: { url: 'assets/data/catx-data.ttl',  graphIri: GRAPH_IRI.catx },
+  B: { url: 'assets/data/mfgx-pmdco.ttl', graphIri: GRAPH_IRI.mfgx },
+  D: { url: 'assets/data/assembly.ttl',   graphIri: GRAPH_IRI.assembly },
 };
 
-// ── Node state ───────────────────────────────────────────────────────────────
+// ── KG inspector SPARQL counts ────────────────────────────────────────────────
+const KG_QUERIES = {
+  total:    `SELECT (COUNT(*) AS ?c) { { GRAPH ?g { ?s ?p ?o } } UNION { ?s ?p ?o } }`,
+  catx:     `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:catx>     { ?s ?p ?o } }`,
+  mfgx:     `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:mfgx>     { ?s ?p ?o } }`,
+  assembly: `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:assembly>  { ?s ?p ?o } }`,
+  labels:   `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:pmdco-labels> { ?s ?p ?o } }`,
+};
+
+// ── Node state ────────────────────────────────────────────────────────────────
 const nodeState = { A: 'pending', B: 'pending', C: 'pending', D: 'pending', F: 'pending' };
 let lastOpenedNode = null;
 let sparqlInFlight = false;
@@ -78,68 +112,67 @@ function setNodeState(id, state) {
   updateDAGConnectors();
 }
 
-function resetAllNodes() {
+async function resetAllNodes() {
   Object.keys(nodeState).forEach(id => setNodeState(id, 'pending'));
-  // reset result tables
-  const full = document.getElementById('result-table-full');
-  if (full) {
-    const tbody = full.querySelector('tbody');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1rem;">Run the Cross-Dataspace Query node to fetch live results.</td></tr>';
-  }
-  const preview = document.getElementById('result-table');
-  if (preview) {
-    const tbody = preview.querySelector('tbody');
-    if (tbody) tbody.innerHTML = '';
-  }
-  document.getElementById('kg-result-preview').style.display = 'none';
-  document.getElementById('kg-latest').textContent = 'Run a node to see live data.';
-  document.getElementById('kg-latest').className = 'kg-latest-result';
   sparqlInFlight = false;
+  // Reset store
+  await storeReady;
+  store = new Store();
+  // Reset result tables
+  const fullBody = document.querySelector('#result-table-full tbody');
+  if (fullBody) fullBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1rem;">Run the Cross-Dataspace Query node to fetch results.</td></tr>';
+  const prevBody = document.querySelector('#result-table tbody');
+  if (prevBody) prevBody.innerHTML = '';
+  const preview = document.getElementById('kg-result-preview');
+  if (preview) preview.style.display = 'none';
+  const latest = document.getElementById('kg-latest');
+  if (latest) { latest.textContent = 'Run a node to see live data.'; latest.className = 'kg-latest-result'; }
+  // Reset KG stats
+  ['kg-total','kg-catx','kg-mfgx','kg-assembly','kg-labels'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = '—'; el.className = 'kg-stat-value'; }
+  });
 }
 
-// ── Modal system ─────────────────────────────────────────────────────────────
-function openModal(modalId) {
-  const overlay = document.getElementById(modalId);
-  if (!overlay) return;
-  overlay.classList.add('open');
-  const focusable = overlay.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
-  if (focusable.length) focusable[0].focus();
+// ── Modal system ──────────────────────────────────────────────────────────────
+function openModal(id) {
+  const ov = document.getElementById(id);
+  if (!ov) return;
+  ov.classList.add('open');
+  const f = ov.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])');
+  if (f.length) f[0].focus();
 }
 
 function closeModal() {
-  const open = document.querySelector('.modal-overlay.open');
-  if (!open) return;
-  open.classList.remove('open');
+  const ov = document.querySelector('.modal-overlay.open');
+  if (!ov) return;
+  ov.classList.remove('open');
   if (lastOpenedNode) {
     const btn = document.querySelector(`[data-node="${lastOpenedNode}"]`);
     if (btn) btn.focus();
   }
 }
 
-// Escape key + overlay click
 document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  closeModal();
-});
-document.querySelectorAll('.modal-overlay').forEach(ov => {
-  ov.addEventListener('click', e => { if (e.target === ov) closeModal(); });
-});
-document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
-  btn.addEventListener('click', closeModal);
-});
-
-// Focus trap
-document.addEventListener('keydown', e => {
-  const open = document.querySelector('.modal-overlay.open');
-  if (!open || e.key !== 'Tab') return;
-  const focusable = Array.from(open.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])'));
-  if (!focusable.length) return;
-  const first = focusable[0], last = focusable[focusable.length - 1];
+  if (e.key === 'Escape') { closeModal(); return; }
+  if (e.key !== 'Tab') return;
+  const ov = document.querySelector('.modal-overlay.open');
+  if (!ov) return;
+  const els = Array.from(ov.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])'));
+  if (!els.length) return;
+  const [first, last] = [els[0], els[els.length - 1]];
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
   else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
 });
 
-// ── Run buttons (per-node) ───────────────────────────────────────────────────
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) closeModal(); });
+});
+document.querySelectorAll('.modal-close, .modal-close-btn').forEach(b => {
+  b.addEventListener('click', closeModal);
+});
+
+// ── Run buttons ───────────────────────────────────────────────────────────────
 document.querySelectorAll('.wf-run-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const nodeId  = btn.dataset.node;
@@ -150,20 +183,31 @@ document.querySelectorAll('.wf-run-btn').forEach(btn => {
   });
 });
 
-// ── Mark complete buttons (inside modals) ────────────────────────────────────
+// ── Mark complete ─────────────────────────────────────────────────────────────
 document.querySelectorAll('.modal-complete-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', async () => {
     const nodeId = btn.dataset.complete;
     closeModal();
+    await executeNode(nodeId);
     setNodeState(nodeId, 'done');
     refreshKGStats();
-    if (nodeId === 'F') {
-      triggerSPARQLFetch();
-    }
+    if (nodeId === 'F') triggerSPARQLQuery();
   });
 });
 
-// ── Tab toggle in Step C modal ───────────────────────────────────────────────
+async function executeNode(nodeId) {
+  await storeReady;
+  if (nodeId in NODE_TTL) {
+    const { url, graphIri } = NODE_TTL[nodeId];
+    const resp = await fetch(url);
+    const ttl  = await resp.text();
+    store.load(ttl, { format: 'text/turtle', to_graph_name: namedNode(graphIri) });
+  } else if (nodeId === 'C') {
+    store.update(PMDCO_INSERT);
+  }
+}
+
+// ── Tab toggle ────────────────────────────────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(tabBtn => {
   tabBtn.addEventListener('click', () => {
     const targetId = tabBtn.dataset.tab;
@@ -176,207 +220,161 @@ document.querySelectorAll('.tab-btn').forEach(tabBtn => {
   });
 });
 
-// ── Reset ────────────────────────────────────────────────────────────────────
+// ── Reset ─────────────────────────────────────────────────────────────────────
 const resetBtn = document.getElementById('reset-btn');
 if (resetBtn) resetBtn.addEventListener('click', resetAllNodes);
 
-// ── Re-run buttons ───────────────────────────────────────────────────────────
+// ── Re-run query buttons ──────────────────────────────────────────────────────
 ['rerun-btn', 'rerun-btn-full'].forEach(id => {
   const el = document.getElementById(id);
-  if (el) el.addEventListener('click', () => {
-    sparqlInFlight = false;
-    triggerSPARQLFetch();
-  });
+  if (el) el.addEventListener('click', () => { sparqlInFlight = false; triggerSPARQLQuery(); });
 });
 
-// ── CSS connector state updates ───────────────────────────────────────────────
+// ── CSS connector state ───────────────────────────────────────────────────────
 function updateDAGConnectors() {
-  // Top funnel: each line lights up when its source node is done
   const connMap = { A: 'catx-line', B: 'mfgx-line', D: 'asm-line' };
-  Object.entries(connMap).forEach(([nodeId, cls]) => {
+  Object.entries(connMap).forEach(([nid, cls]) => {
     const line = document.querySelector(`.dag-conn-line.${cls}`);
     if (!line) return;
-    line.classList.toggle('line-active', nodeState[nodeId] === 'done');
+    line.classList.toggle('line-active', nodeState[nid] === 'done');
   });
 
-  // Merge bar — active when any source is done
   const merge = document.querySelector('.dag-conn-merge');
   if (merge) {
-    const anySource = ['A', 'B', 'D'].some(id => nodeState[id] === 'done');
-    merge.style.background = anySource ? '#22c55e' : '';
+    const anySource = ['A','B','D'].some(id => nodeState[id] === 'done');
+    merge.classList.toggle('line-active', anySource);
   }
 
-  // Mid connector (Fuseki → PMDCO): active when A or B done
   const mid = document.querySelector('#dag-conn-mid .dag-vert-line');
   if (mid) mid.classList.toggle('line-active', nodeState.A === 'done' || nodeState.B === 'done');
 
-  // Bot connector (PMDCO → Query): active when C done
   const bot = document.querySelector('#dag-conn-bot .dag-vert-line');
   if (bot) bot.classList.toggle('line-active', nodeState.C === 'done');
 }
 
-// ── KG Inspector ─────────────────────────────────────────────────────────────
-async function sparqlCount(query) {
-  const controller = new AbortController();
-  const tid = setTimeout(() => controller.abort(), 8000);
+// ── KG Inspector ──────────────────────────────────────────────────────────────
+function sparqlCount(query) {
+  if (!store) return 0;
   try {
-    const resp = await fetch(SPARQL_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/sparql-results+json',
-      },
-      body: 'query=' + encodeURIComponent(query),
-      signal: controller.signal,
-    });
-    clearTimeout(tid);
-    if (!resp.ok) return null;
-    const data = await resp.json();
-    const val = data?.results?.bindings?.[0]?.c?.value;
-    return val != null ? parseInt(val, 10) : null;
-  } catch {
-    clearTimeout(tid);
-    return null;
-  }
+    const results = store.query(query);
+    const rows = [...results];
+    return rows.length > 0 ? parseInt(rows[0].get('c')?.value ?? '0', 10) : 0;
+  } catch { return 0; }
 }
 
 async function refreshKGStats() {
-  const ids = { total: 'kg-total', samm: 'kg-samm', aas: 'kg-aas', pmdco: 'kg-pmdco', assembly: 'kg-assembly' };
+  await storeReady;
+  const ids = {
+    total:    'kg-total',
+    catx:     'kg-catx',
+    mfgx:     'kg-mfgx',
+    assembly: 'kg-assembly',
+    labels:   'kg-labels',
+  };
 
-  // Set loading state
-  Object.values(ids).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.textContent = '…'; el.className = 'kg-stat-value loading'; }
-  });
-
-  const latestEl = document.getElementById('kg-latest');
-
-  // Fire all queries in parallel
-  const results = await Promise.all(
-    Object.entries(KG_QUERIES).map(([key, q]) => sparqlCount(q).then(n => [key, n]))
-  );
-
-  const totalVal = results.find(([k]) => k === 'total')?.[1];
-
-  results.forEach(([key, n]) => {
-    const elId = ids[key];
-    const el = document.getElementById(elId);
+  Object.entries(KG_QUERIES).forEach(([key, q]) => {
+    const el = document.getElementById(ids[key]);
     if (!el) return;
-    if (n === null) {
-      el.textContent = totalVal == null ? '—' : '0';
-      el.className = 'kg-stat-value' + (totalVal == null ? ' loading' : '');
-    } else {
-      el.textContent = n.toLocaleString();
-      el.className = 'kg-stat-value';
-    }
+    el.textContent = '…';
+    el.className = 'kg-stat-value loading';
   });
 
-  if (latestEl && totalVal != null) {
-    latestEl.textContent = `Fuseki live · ${totalVal.toLocaleString()} total triples`;
-    latestEl.className = 'kg-latest-result has-data';
-  }
-  // On failure: leave the "Run a node" placeholder — don't show an error
+  // Run all counts (synchronous Oxigraph, but wrap in setTimeout to allow repaint)
+  setTimeout(() => {
+    Object.entries(KG_QUERIES).forEach(([key, q]) => {
+      const el = document.getElementById(ids[key]);
+      if (!el) return;
+      const n = sparqlCount(q);
+      el.textContent = n.toLocaleString();
+      el.className = 'kg-stat-value' + (n === 0 ? ' empty' : '');
+    });
+    const total = sparqlCount(KG_QUERIES.total);
+    const latest = document.getElementById('kg-latest');
+    if (latest && total > 0) {
+      latest.textContent = `In-browser Oxigraph · ${total.toLocaleString()} total triples`;
+      latest.className = 'kg-latest-result has-data';
+    }
+  }, 50);
 }
 
 const kgRefreshBtn = document.getElementById('kg-refresh-btn');
 if (kgRefreshBtn) kgRefreshBtn.addEventListener('click', refreshKGStats);
 
-// ── SPARQL result fetch ───────────────────────────────────────────────────────
-function showResultTable(bindings, tableId) {
+// ── Cross-dataspace SPARQL query ──────────────────────────────────────────────
+function showResultTable(bindings, tableId, cols) {
   const table = document.getElementById(tableId);
   if (!table) return;
   const tbody = table.querySelector('tbody');
   if (!tbody) return;
   tbody.innerHTML = '';
-
-  bindings.forEach(binding => {
+  bindings.forEach(row => {
     const tr = document.createElement('tr');
-    const label = binding.componentLabel?.value ?? '';
-    tr.className = label.toLowerCase().includes('pulley') || label.toLowerCase().includes('wheel')
+    const lbl = row.get('componentLabel')?.value ?? '';
+    tr.className = lbl.toLowerCase().includes('pulley') || lbl.toLowerCase().includes('wheel')
       ? 'row-catx' : 'row-mfgx';
-
-    // compact preview: skip material col
-    const cols = tableId === 'result-table'
-      ? ['componentLabel', 'property', 'value', 'unitLabel']
-      : ['componentLabel', 'material', 'property', 'value', 'unitLabel'];
-
     cols.forEach(col => {
       const td = document.createElement('td');
-      td.textContent = binding[col]?.value ?? '';
+      td.textContent = row.get(col)?.value ?? '';
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
   });
 }
 
-async function triggerSPARQLFetch() {
+async function triggerSPARQLQuery() {
   if (sparqlInFlight) return;
   sparqlInFlight = true;
 
-  const preview = document.getElementById('kg-result-preview');
-  const spinnerInline = document.getElementById('result-spinner-inline');
-  const badgeInline = document.getElementById('result-badge-inline');
-  const spinner = document.getElementById('result-spinner');
-  const badge = document.getElementById('result-badge');
+  const preview        = document.getElementById('kg-result-preview');
+  const spinnerInline  = document.getElementById('result-spinner-inline');
+  const badgeInline    = document.getElementById('result-badge-inline');
+  const spinner        = document.getElementById('result-spinner');
+  const badge          = document.getElementById('result-badge');
 
-  if (preview) preview.style.display = 'block';
+  if (preview)       preview.style.display = 'block';
   if (spinnerInline) spinnerInline.style.display = 'block';
-  if (spinner) spinner.style.display = 'inline';
+  if (spinner)       spinner.style.display = 'inline';
 
-  const controller = new AbortController();
-  const tid = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  await storeReady;
 
   try {
-    const resp = await fetch(SPARQL_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/sparql-results+json',
-      },
-      body: 'query=' + encodeURIComponent(SPARQL_QUERY),
-      signal: controller.signal,
-    });
-    clearTimeout(tid);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
-    const bindings = data?.results?.bindings;
-    if (!Array.isArray(bindings)) throw new Error('Bad SPARQL JSON');
+    const allGraphs = Object.values(GRAPH);
+    const results = store.query(SPARQL_QUERY, { default_graph: allGraphs });
+    const bindings = [...results];
 
-    const now = new Date();
-    const hhmm = now.toUTCString().slice(17, 22);
-    const liveText = `Live · ${hhmm} UTC`;
-
+    const liveText = `Live · Oxigraph in-browser`;
     if (badgeInline) { badgeInline.className = 'badge-live'; badgeInline.textContent = liveText; }
-    if (badge) { badge.className = 'badge-live'; badge.textContent = liveText; }
+    if (badge)       { badge.className = 'badge-live';       badge.textContent = liveText; }
 
-    showResultTable(bindings, 'result-table');
-    showResultTable(bindings, 'result-table-full');
+    const previewCols = ['componentLabel', 'property', 'value', 'unitLabel'];
+    const fullCols    = ['componentLabel', 'materialLabel', 'property', 'value', 'unitLabel'];
+    showResultTable(bindings, 'result-table',      previewCols);
+    showResultTable(bindings, 'result-table-full', fullCols);
 
-    const latestEl = document.getElementById('kg-latest');
-    if (latestEl) {
-      latestEl.textContent = `Query returned ${bindings.length} rows — live from Fuseki.`;
-      latestEl.className = 'kg-latest-result has-data';
+    const latest = document.getElementById('kg-latest');
+    if (latest) {
+      latest.textContent = `Query returned ${bindings.length} rows — Oxigraph in-browser.`;
+      latest.className = 'kg-latest-result has-data';
     }
   } catch (err) {
-    clearTimeout(tid);
-    const cachedText = 'Cached result';
-    if (badgeInline) { badgeInline.className = 'badge-cached'; badgeInline.textContent = cachedText; }
-    if (badge) { badge.className = 'badge-cached'; badge.textContent = cachedText; }
-    console.info('SPARQL fetch failed, fallback shown:', err.message);
+    const errText = 'Query error — check console';
+    if (badgeInline) { badgeInline.className = 'badge-cached'; badgeInline.textContent = errText; }
+    if (badge)       { badge.className = 'badge-cached';       badge.textContent = errText; }
+    console.error('SPARQL query failed:', err);
   } finally {
     if (spinnerInline) spinnerInline.style.display = 'none';
-    if (spinner) spinner.style.display = 'none';
+    if (spinner)       spinner.style.display = 'none';
     sparqlInFlight = false;
   }
 }
 
-// Intersection Observer on the full result section (auto-trigger if node F done)
+// Auto-trigger query when result section scrolls into view and node F is done
 const resultSection = document.getElementById('result');
 if (resultSection) {
   const obs = new IntersectionObserver(entries => {
     if (!entries[0].isIntersecting) return;
     obs.disconnect();
-    if (nodeState.F === 'done') triggerSPARQLFetch();
+    if (nodeState.F === 'done') triggerSPARQLQuery();
   }, { threshold: 0.3 });
   obs.observe(resultSection);
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dataportal.material-digital.de; img-src 'self' data:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:;">
   <title>PMD-X Cross-Dataspace Demo</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -201,7 +201,7 @@ N schemas × M targets
       <!-- ── Right: KG Inspector ── -->
       <div class="kg-inspector">
         <h3>Knowledge Graph State</h3>
-        <p class="kg-inspector-sub">Live entity counts from Fuseki — updates after each step.</p>
+        <p class="kg-inspector-sub">In-browser Oxigraph WASM triplestore — triple counts update as each node loads data.</p>
 
         <div class="kg-stats-grid">
           <div class="kg-stat-row">
@@ -214,30 +214,30 @@ N schemas × M targets
           <div class="kg-stat-row">
             <span class="kg-stat-label">
               <span class="kg-stat-dot" style="background:var(--catx-blue)"></span>
-              SAMM/CatX entities
+              CatX graph triples
             </span>
-            <span class="kg-stat-value" id="kg-samm">—</span>
+            <span class="kg-stat-value" id="kg-catx">—</span>
           </div>
           <div class="kg-stat-row">
             <span class="kg-stat-label">
               <span class="kg-stat-dot" style="background:var(--mfgx-purple)"></span>
-              AAS/MfgX entities
+              MfgX graph triples
             </span>
-            <span class="kg-stat-value" id="kg-aas">—</span>
-          </div>
-          <div class="kg-stat-row">
-            <span class="kg-stat-label">
-              <span class="kg-stat-dot" style="background:var(--pmdco-green)"></span>
-              PMDCO individuals
-            </span>
-            <span class="kg-stat-value" id="kg-pmdco">—</span>
+            <span class="kg-stat-value" id="kg-mfgx">—</span>
           </div>
           <div class="kg-stat-row">
             <span class="kg-stat-label">
               <span class="kg-stat-dot" style="background:var(--text-muted)"></span>
-              Assembly triples
+              Assembly graph triples
             </span>
             <span class="kg-stat-value" id="kg-assembly">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--pmdco-green)"></span>
+              PMDCO labels (Node C)
+            </span>
+            <span class="kg-stat-value" id="kg-labels">—</span>
           </div>
         </div>
 
@@ -587,6 +587,6 @@ ex:TensionPulley_001
   </div>
 </div>
 
-<script defer src="js/main.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
