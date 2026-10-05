@@ -135,8 +135,9 @@ async function resetAllNodes() {
 }
 
 // ── Step-modal content ────────────────────────────────────────────────────────
-const STEP_DURATION = 20000;
+const STEP_DURATION = 10000;
 let stepTimer = null;
+let stepCountdown = null;
 
 const MODAL_STEPS = {
   A: [
@@ -192,19 +193,23 @@ function renderStep(modalEl, nodeId, idx) {
   const step  = steps[idx];
   const total = steps.length;
 
+  const pct = Math.round(((idx + 1) / total) * 100);
   const mount = modalEl.querySelector('.step-mount');
   if (mount) {
     mount.innerHTML = `
       <div class="step-header">
         <span class="step-counter">Step ${idx + 1} of ${total}</span>
         <div class="step-timer-bar">
-          <div class="step-timer-fill" style="animation-duration:${step.last ? 0 : STEP_DURATION}ms"></div>
+          <div class="step-timer-fill"></div>
         </div>
       </div>
       <h4 class="step-title">${step.title}</h4>
       <p class="step-body-text">${step.body}</p>
       ${step.code ? `<pre class="code-block" style="margin-top:0.5rem;font-size:0.78rem">${escHtml(step.code)}</pre>` : ''}
     `;
+    // Force layout flush so transition fires from 0% → pct%
+    const fill = mount.querySelector('.step-timer-fill');
+    if (fill) { void fill.offsetWidth; fill.style.width = pct + '%'; }
   }
 
   const nav = modalEl.querySelector('.step-nav');
@@ -220,12 +225,21 @@ function renderStep(modalEl, nodeId, idx) {
       }, { once: true });
     } else {
       nav.innerHTML = `
-        <span class="step-skip-hint">auto-advances in ${STEP_DURATION / 1000}s</span>
+        <span class="step-skip-hint">auto-advances in <span class="step-sec">${STEP_DURATION / 1000}</span>s</span>
         <button type="button" class="step-skip-btn">Skip →</button>
       `;
       nav.querySelector('.step-skip-btn').addEventListener('click', () => {
         advanceStep(modalEl, nodeId, idx);
       }, { once: true });
+      // Live countdown
+      clearStepCountdown();
+      let remaining = STEP_DURATION / 1000;
+      const secEl = nav.querySelector('.step-sec');
+      stepCountdown = setInterval(() => {
+        remaining--;
+        if (secEl) secEl.textContent = remaining;
+        if (remaining <= 0) clearStepCountdown();
+      }, 1000);
     }
   }
 }
@@ -242,11 +256,16 @@ function advanceStep(modalEl, nodeId, idx) {
 }
 
 function startStepTimer(modalEl, nodeId, idx) {
-  clearStepTimer();
+  if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
   stepTimer = setTimeout(() => advanceStep(modalEl, nodeId, idx), STEP_DURATION);
 }
 
+function clearStepCountdown() {
+  if (stepCountdown) { clearInterval(stepCountdown); stepCountdown = null; }
+}
+
 function clearStepTimer() {
+  clearStepCountdown();
   if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
 }
 
