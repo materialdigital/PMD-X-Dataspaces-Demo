@@ -1012,6 +1012,53 @@ WHERE {
 
 }`;
 
+// Walk the AAS JSON and find a Property node by idShort, return its numeric value or null.
+function aasPropertyValue(elements, idShort) {
+  for (const el of elements ?? []) {
+    if (el.idShort === idShort && el.modelType === 'Property') return Number(el.value);
+    const nested = aasPropertyValue(el.value, idShort);
+    if (nested !== null) return nested;
+  }
+  return null;
+}
+
+// Extract the ground-truth numeric values we expect the SPARQL to reconstruct.
+// Reads directly from the original AAS JSON — not a hand-crafted reference.
+function extractMfgxGroundTruth(aasDoc) {
+  const elements = aasDoc?.submodels?.[0]?.submodelElements ?? [];
+  const find = id => aasPropertyValue(elements, id);
+  return {
+    mechanicalTests: {
+      TensileStrengthMean:        find('TensileStrengthMean'),
+      YieldOrProofStrengthMean:   find('YieldOrProofStrengthMean'),
+      ElongationAfterFractureMean:find('ElongationAfterFractureMean'),
+    },
+    chemicalAnalysis: {
+      MassFraction_C:  find('MassFraction_C'),
+      MassFraction_Cr: find('MassFraction_Cr'),
+      MassFraction_Mn: find('MassFraction_Mn'),
+      MassFraction_Mo: find('MassFraction_Mo'),
+      MassFraction_N:  find('MassFraction_N'),
+      MassFraction_Ni: find('MassFraction_Ni'),
+      MassFraction_P:  find('MassFraction_P'),
+      MassFraction_S:  find('MassFraction_S'),
+      MassFraction_Si: find('MassFraction_Si'),
+    },
+  };
+}
+
+// Compare SPARQL reconstruction against ground-truth values; returns array of check results.
+function assertMfgxValues(reconstructed, ground) {
+  const checks = [];
+  for (const [section, props] of Object.entries(ground)) {
+    for (const [key, expected] of Object.entries(props)) {
+      const got = reconstructed?.[section]?.[key];
+      checks.push({ label: `${section}.${key}`, expected, got: Number(got), ok: Number(got) === expected });
+    }
+  }
+  return checks;
+}
+
 async function triggerMfgxJsonQuery() {
   const spinner  = document.getElementById('mfgx-json-spinner');
   const badge    = document.getElementById('mfgx-json-badge');
@@ -1043,24 +1090,27 @@ async function triggerMfgxJsonQuery() {
       return;
     }
 
-    const refResp = await fetch('assets/data/mfgx-reference.json');
-    const reference = await refResp.json();
-
-    const canRec = canonicalize(reconstructed);
-    const canRef = canonicalize(reference);
-    const mismatches = diffKeys(canRec, canRef);
-    const match = JSON.stringify(canRec) === JSON.stringify(canRef);
+    // Extract ground-truth values directly from the original AAS JSON (not a hand-crafted reference)
+    const aasResp = await fetch('assets/data/inspectiondocument_316_4401_alloy.json');
+    const aasDoc  = await aasResp.json();
+    const ground  = extractMfgxGroundTruth(aasDoc);
 
     if (output) output.textContent = JSON.stringify(reconstructed, null, 2);
     if (badge)  { badge.className = 'badge-live'; badge.textContent = 'Live · Oxigraph in-browser'; }
 
+    // Compare SPARQL output values against ground-truth values from original AAS
+    const checks = assertMfgxValues(reconstructed, ground);
+    const allPass = checks.every(c => c.ok);
+
     if (assertEl) {
-      if (match) {
-        assertEl.innerHTML = '<span class="assert-pass">✓ Round-trip verified — reconstructed JSON matches original MfgX inspection data exactly.</span>';
+      if (allPass) {
+        assertEl.innerHTML = '<span class="assert-pass">✓ Data round-trip verified — all ' +
+          checks.length + ' values from the original AAS inspection document match the SPARQL reconstruction.</span>' +
+          '<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.3rem;">Note: the SPARQL extracts data values, not the full AAS serialization format (nested semanticId/qualifier/displayName structures are not reproduced).</div>';
       } else {
-        assertEl.innerHTML = '<span class="assert-fail">✗ Mismatch detected:</span><ul>' +
-          mismatches.slice(0, 20).map(m => `<li>${escHtml(m)}</li>`).join('') +
-          (mismatches.length > 20 ? `<li>… and ${mismatches.length - 20} more</li>` : '') +
+        const fails = checks.filter(c => !c.ok);
+        assertEl.innerHTML = '<span class="assert-fail">✗ ' + fails.length + ' value(s) do not match:</span><ul>' +
+          fails.map(c => `<li>${escHtml(c.label)}: expected ${escHtml(String(c.expected))}, got ${escHtml(String(c.got))}</li>`).join('') +
           '</ul>';
       }
     }
