@@ -1,0 +1,3336 @@
+@prefix mat: <urn:samm:io.catenax.material_data:1.0.0#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#MaterialData_Z1234> a mat:MaterialData ;
+    mat:materialInformation <#MaterialInformation_Z1234> ;
+    mat:mechanicalProperty <#MechanicalProperty_210_9800> ;
+    mat:physicalProperty <#PhysicalProperty_1530> ;
+    mat:thermophysicalProperty <#ThermophysicalProperty_2.1_223> .
+
+<#LinearThermalExpansionCoefficient_0.0025> a mat:LinearThermalExpansionCoefficientEntity ;
+    mat:linearThermalExpansionCoefficientParallel "0.0025" ;
+    mat:linearThermalExpansionCoefficientTransverse "0.0115" .
+
+<#MaterialInformation_Z1234> a mat:MaterialInformationEntity ;
+    mat:materialIdentifier "Z1234" ;
+    mat:materialName "PA6GF30" .
+
+<#MechanicalProperty_210_9800> a mat:MechanicalPropertyEntity ;
+    mat:flexuralModulus "8600" ;
+    mat:flexuralStrength "210" ;
+    mat:impactStrength "74" ;
+    mat:strainAtBreak "3" ;
+    mat:stressAtBreak "140" ;
+    mat:youngsModulus "9800" .
+
+<#PhysicalProperty_1530> a mat:PhysicalPropertyEntity ;
+    mat:density "1530" .
+
+<#Pvt_100.046_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7213532074627305" ;
+    mat:temperature "100.046" .
+
+<#Pvt_100.369_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7260616434627305" ;
+    mat:temperature "100.369" .
+
+<#Pvt_100.75_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7427610654627305" ;
+    mat:temperature "100.75" .
+
+<#Pvt_102.05_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7370836844627305" ;
+    mat:temperature "102.05" .
+
+<#Pvt_102.245_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7316783364627305" ;
+    mat:temperature "102.245" .
+
+<#Pvt_102.324_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7216704074627305" ;
+    mat:temperature "102.324" .
+
+<#Pvt_102.6_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7265983004627304" ;
+    mat:temperature "102.6" .
+
+<#Pvt_103.06_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7434473444627305" ;
+    mat:temperature "103.06" .
+
+<#Pvt_104.075_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71749" ;
+    mat:temperature "104.075" .
+
+<#Pvt_104.365_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7377201374627305" ;
+    mat:temperature "104.365" .
+
+<#Pvt_104.569_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7321983184627305" ;
+    mat:temperature "104.569" .
+
+<#Pvt_104.697_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7222081474627305" ;
+    mat:temperature "104.697" .
+
+<#Pvt_105.03_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7273096824627305" ;
+    mat:temperature "105.03" .
+
+<#Pvt_105.41_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7444755574627305" ;
+    mat:temperature "105.41" .
+
+<#Pvt_106.78_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7385273234627305" ;
+    mat:temperature "106.78" .
+
+<#Pvt_106.973_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7329588727627305" ;
+    mat:temperature "106.973" .
+
+<#Pvt_107.124_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7226620574627305" ;
+    mat:temperature "107.124" .
+
+<#Pvt_107.5_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7276066204627305" ;
+    mat:temperature "107.5" .
+
+<#Pvt_107.86_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7450632874627305" ;
+    mat:temperature "107.86" .
+
+<#Pvt_109.11_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71834" ;
+    mat:temperature "109.11" .
+
+<#Pvt_109.23_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7392072714627305" ;
+    mat:temperature "109.23" .
+
+<#Pvt_109.502_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7334830176627305" ;
+    mat:temperature "109.502" .
+
+<#Pvt_109.586_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7233782874627305" ;
+    mat:temperature "109.586" .
+
+<#Pvt_110.004_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7281103744627305" ;
+    mat:temperature "110.004" .
+
+<#Pvt_110.299_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7460317474627305" ;
+    mat:temperature "110.299" .
+
+<#Pvt_111.676_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7401141974627304" ;
+    mat:temperature "111.676" .
+
+<#Pvt_112.042_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7342246749627305" ;
+    mat:temperature "112.042" .
+
+<#Pvt_112.25_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7238029574627305" ;
+    mat:temperature "112.25" .
+
+<#Pvt_112.49_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7291615564627305" ;
+    mat:temperature "112.49" .
+
+<#Pvt_112.822_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7466989774627305" ;
+    mat:temperature "112.822" .
+
+<#Pvt_114.134_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7410157914627304" ;
+    mat:temperature "114.134" .
+
+<#Pvt_114.145_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71961" ;
+    mat:temperature "114.145" .
+
+<#Pvt_114.604_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7349510464627305" ;
+    mat:temperature "114.604" .
+
+<#Pvt_114.817_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7245371004627305" ;
+    mat:temperature "114.817" .
+
+<#Pvt_115.08_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7294391284627305" ;
+    mat:temperature "115.08" .
+
+<#Pvt_115.335_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7476835274627305" ;
+    mat:temperature "115.335" .
+
+<#Pvt_116.74_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7415897724627305" ;
+    mat:temperature "116.74" .
+
+<#Pvt_117.145_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7355423634627305" ;
+    mat:temperature "117.145" .
+
+<#Pvt_117.36_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7248886094627305" ;
+    mat:temperature "117.36" .
+
+<#Pvt_117.644_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7301256974627305" ;
+    mat:temperature "117.644" .
+
+<#Pvt_117.824_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7483042574627304" ;
+    mat:temperature "117.824" .
+
+<#Pvt_119.295_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7423511664627305" ;
+    mat:temperature "119.295" .
+
+<#Pvt_119.306_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72065" ;
+    mat:temperature "119.306" .
+
+<#Pvt_119.64_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7362292994627305" ;
+    mat:temperature "119.64" .
+
+<#Pvt_119.98_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7256528144627304" ;
+    mat:temperature "119.98" .
+
+<#Pvt_120.126_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7307837984627304" ;
+    mat:temperature "120.126" .
+
+<#Pvt_120.305_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7491570974627305" ;
+    mat:temperature "120.305" .
+
+<#Pvt_121.775_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7430111004627304" ;
+    mat:temperature "121.775" .
+
+<#Pvt_122.133_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7372887974627305" ;
+    mat:temperature "122.133" .
+
+<#Pvt_122.415_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7260622614627305" ;
+    mat:temperature "122.415" .
+
+<#Pvt_122.625_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7315134684627305" ;
+    mat:temperature "122.625" .
+
+<#Pvt_122.852_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7499586074627305" ;
+    mat:temperature "122.852" .
+
+<#Pvt_124.255_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7438897274627305" ;
+    mat:temperature "124.255" .
+
+<#Pvt_124.453_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72151" ;
+    mat:temperature "124.453" .
+
+<#Pvt_124.61_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7379035994627305" ;
+    mat:temperature "124.61" .
+
+<#Pvt_125.005_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7267609964627305" ;
+    mat:temperature "125.005" .
+
+<#Pvt_125.215_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7320079504627305" ;
+    mat:temperature "125.215" .
+
+<#Pvt_125.297_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7509020874627305" ;
+    mat:temperature "125.297" .
+
+<#Pvt_126.686_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7448651174627305" ;
+    mat:temperature "126.686" .
+
+<#Pvt_127.102_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7388084154627305" ;
+    mat:temperature "127.102" .
+
+<#Pvt_127.546_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7274170494627304" ;
+    mat:temperature "127.546" .
+
+<#Pvt_127.73_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7517774174627305" ;
+    mat:temperature "127.73" .
+
+<#Pvt_127.7_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7328101384627305" ;
+    mat:temperature "127.7" .
+
+<#Pvt_129.163_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7455917674627305" ;
+    mat:temperature "129.163" .
+
+<#Pvt_129.578_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7394245564627305" ;
+    mat:temperature "129.578" .
+
+<#Pvt_129.5_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72276" ;
+    mat:temperature "129.5" .
+
+<#Pvt_130.032_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7281025334627305" ;
+    mat:temperature "130.032" .
+
+<#Pvt_130.21_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7525396674627305" ;
+    mat:temperature "130.21" .
+
+<#Pvt_130.355_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7334989352627305" ;
+    mat:temperature "130.355" .
+
+<#Pvt_131.76_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7462312774627304" ;
+    mat:temperature "131.76" .
+
+<#Pvt_132.196_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7400246614627305" ;
+    mat:temperature "132.196" .
+
+<#Pvt_132.694_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7286596214627304" ;
+    mat:temperature "132.694" .
+
+<#Pvt_132.774_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7534660074627305" ;
+    mat:temperature "132.774" .
+
+<#Pvt_132.858_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7343653212627305" ;
+    mat:temperature "132.858" .
+
+<#Pvt_134.295_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7472277874627304" ;
+    mat:temperature "134.295" .
+
+<#Pvt_134.653_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72379" ;
+    mat:temperature "134.653" .
+
+<#Pvt_134.676_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7407145104627305" ;
+    mat:temperature "134.676" .
+
+<#Pvt_135.243_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7542455474627305" ;
+    mat:temperature "135.243" .
+
+<#Pvt_135.274_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7294457754627305" ;
+    mat:temperature "135.274" .
+
+<#Pvt_135.373_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7350614804627305" ;
+    mat:temperature "135.373" .
+
+<#Pvt_136.825_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7477637174627305" ;
+    mat:temperature "136.825" .
+
+<#Pvt_137.285_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7415333364627305" ;
+    mat:temperature "137.285" .
+
+<#Pvt_137.702_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7300823414627305" ;
+    mat:temperature "137.702" .
+
+<#Pvt_137.715_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7553789874627305" ;
+    mat:temperature "137.715" .
+
+<#Pvt_138.026_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7355228564627305" ;
+    mat:temperature "138.026" .
+
+<#Pvt_139.296_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7489258474627305" ;
+    mat:temperature "139.296" .
+
+<#Pvt_139.752_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72491" ;
+    mat:temperature "139.752" .
+
+<#Pvt_139.75_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7423000824627305" ;
+    mat:temperature "139.75" .
+
+<#Pvt_140.068_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7562202974627305" ;
+    mat:temperature "140.068" .
+
+<#Pvt_140.335_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7308128684627305" ;
+    mat:temperature "140.335" .
+
+<#Pvt_140.49_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7365598734627304" ;
+    mat:temperature "140.49" .
+
+<#Pvt_141.875_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7494343974627304" ;
+    mat:temperature "141.875" .
+
+<#Pvt_142.35_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7431342154627305" ;
+    mat:temperature "142.35" .
+
+<#Pvt_142.564_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7571152474627305" ;
+    mat:temperature "142.564" .
+
+<#Pvt_142.905_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7312020364627305" ;
+    mat:temperature "142.905" .
+
+<#Pvt_143.111_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7370965114627305" ;
+    mat:temperature "143.111" .
+
+<#Pvt_144.4_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7503367374627304" ;
+    mat:temperature "144.4" .
+
+<#Pvt_144.929_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7262" ;
+    mat:temperature "144.929" .
+
+<#Pvt_144.945_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7437267604627305" ;
+    mat:temperature "144.945" .
+
+<#Pvt_145.135_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7581144574627305" ;
+    mat:temperature "145.135" .
+
+<#Pvt_145.443_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7321504914627305" ;
+    mat:temperature "145.443" .
+
+<#Pvt_145.599_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7378825004627305" ;
+    mat:temperature "145.599" .
+
+<#Pvt_146.945_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7512281574627305" ;
+    mat:temperature "146.945" .
+
+<#Pvt_147.46_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7447451974627305" ;
+    mat:temperature "147.46" .
+
+<#Pvt_147.685_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7589595274627305" ;
+    mat:temperature "147.685" .
+
+<#Pvt_147.865_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7327076154627304" ;
+    mat:temperature "147.865" .
+
+<#Pvt_148.16_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7385522664627305" ;
+    mat:temperature "148.16" .
+
+<#Pvt_149.378_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7522580574627304" ;
+    mat:temperature "149.378" .
+
+<#Pvt_150.006_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7453050774627304" ;
+    mat:temperature "150.006" .
+
+<#Pvt_150.009_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72768" ;
+    mat:temperature "150.009" .
+
+<#Pvt_150.267_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7597253174627305" ;
+    mat:temperature "150.267" .
+
+<#Pvt_150.555_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7334065419627305" ;
+    mat:temperature "150.555" .
+
+<#Pvt_150.61_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7392131974627305" ;
+    mat:temperature "150.61" .
+
+<#Pvt_151.91_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7529311574627305" ;
+    mat:temperature "151.91" .
+
+<#Pvt_152.506_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7461276074627304" ;
+    mat:temperature "152.506" .
+
+<#Pvt_152.748_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7606184074627305" ;
+    mat:temperature "152.748" .
+
+<#Pvt_153.055_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7339812507627305" ;
+    mat:temperature "153.055" .
+
+<#Pvt_153.192_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7400028734627305" ;
+    mat:temperature "153.192" .
+
+<#Pvt_154.439_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7540638974627305" ;
+    mat:temperature "154.439" .
+
+<#Pvt_155.075_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7471084174627305" ;
+    mat:temperature "155.075" .
+
+<#Pvt_155.084_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.72912" ;
+    mat:temperature "155.084" .
+
+<#Pvt_155.202_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7617588174627304" ;
+    mat:temperature "155.202" .
+
+<#Pvt_155.572_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7347121958627305" ;
+    mat:temperature "155.572" .
+
+<#Pvt_155.67_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7407035854627305" ;
+    mat:temperature "155.67" .
+
+<#Pvt_156.906_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7548516074627305" ;
+    mat:temperature "156.906" .
+
+<#Pvt_157.465_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7478978074627305" ;
+    mat:temperature "157.465" .
+
+<#Pvt_157.645_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7626093574627305" ;
+    mat:temperature "157.645" .
+
+<#Pvt_158.105_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7354977104627305" ;
+    mat:temperature "158.105" .
+
+<#Pvt_158.2_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7414570664627305" ;
+    mat:temperature "158.2" .
+
+<#Pvt_159.388_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7558450174627305" ;
+    mat:temperature "159.388" .
+
+<#Pvt_159.982_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7638068674627305" ;
+    mat:temperature "159.982" .
+
+<#Pvt_160.04_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7485856174627304" ;
+    mat:temperature "160.04" .
+
+<#Pvt_160.23_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7301" ;
+    mat:temperature "160.23" .
+
+<#Pvt_160.619_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7421928454627305" ;
+    mat:temperature "160.619" .
+
+<#Pvt_160.67_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7360427894627305" ;
+    mat:temperature "160.67" .
+
+<#Pvt_161.829_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7568687874627305" ;
+    mat:temperature "161.829" .
+
+<#Pvt_162.455_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7495178574627305" ;
+    mat:temperature "162.455" .
+
+<#Pvt_162.52_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7648149774627305" ;
+    mat:temperature "162.52" .
+
+<#Pvt_163.173_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7367551174627305" ;
+    mat:temperature "163.173" .
+
+<#Pvt_163.29_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7430138654627305" ;
+    mat:temperature "163.29" .
+
+<#Pvt_164.383_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7578004074627305" ;
+    mat:temperature "164.383" .
+
+<#Pvt_164.905_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7504296474627304" ;
+    mat:temperature "164.905" .
+
+<#Pvt_164.921_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7659741374627305" ;
+    mat:temperature "164.921" .
+
+<#Pvt_165.285_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73152" ;
+    mat:temperature "165.285" .
+
+<#Pvt_165.706_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7374462724627305" ;
+    mat:temperature "165.706" .
+
+<#Pvt_165.795_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7438350994627305" ;
+    mat:temperature "165.795" .
+
+<#Pvt_166.787_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7586417374627304" ;
+    mat:temperature "166.787" .
+
+<#Pvt_167.429_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7670583074627305" ;
+    mat:temperature "167.429" .
+
+<#Pvt_167.496_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7512456574627305" ;
+    mat:temperature "167.496" .
+
+<#Pvt_168.275_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7446840874627305" ;
+    mat:temperature "168.275" .
+
+<#Pvt_168.275_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7382806254627305" ;
+    mat:temperature "168.275" .
+
+<#Pvt_169.29_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7595393974627305" ;
+    mat:temperature "169.29" .
+
+<#Pvt_169.92_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7681614174627305" ;
+    mat:temperature "169.92" .
+
+<#Pvt_170.07_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7522805274627304" ;
+    mat:temperature "170.07" .
+
+<#Pvt_170.403_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73273" ;
+    mat:temperature "170.403" .
+
+<#Pvt_170.765_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7390222194627305" ;
+    mat:temperature "170.765" .
+
+<#Pvt_170.816_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7454164974627305" ;
+    mat:temperature "170.816" .
+
+<#Pvt_171.81_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7606499574627305" ;
+    mat:temperature "171.81" .
+
+<#Pvt_172.43_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7692450174627304" ;
+    mat:temperature "172.43" .
+
+<#Pvt_172.645_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7529593174627305" ;
+    mat:temperature "172.645" .
+
+<#Pvt_173.295_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7396386784627305" ;
+    mat:temperature "173.295" .
+
+<#Pvt_173.373_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7461366874627305" ;
+    mat:temperature "173.373" .
+
+<#Pvt_174.34_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7619134574627305" ;
+    mat:temperature "174.34" .
+
+<#Pvt_174.94_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7705515374627305" ;
+    mat:temperature "174.94" .
+
+<#Pvt_175.158_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7538865874627305" ;
+    mat:temperature "175.158" .
+
+<#Pvt_175.548_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73408" ;
+    mat:temperature "175.548" .
+
+<#Pvt_175.905_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7403790534627305" ;
+    mat:temperature "175.905" .
+
+<#Pvt_175.965_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7471354574627305" ;
+    mat:temperature "175.965" .
+
+<#Pvt_176.905_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7628324974627305" ;
+    mat:temperature "176.905" .
+
+<#Pvt_177.46_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7716883474627305" ;
+    mat:temperature "177.46" .
+
+<#Pvt_177.618_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7550744374627305" ;
+    mat:temperature "177.618" .
+
+<#Pvt_178.485_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7477267874627305" ;
+    mat:temperature "178.485" .
+
+<#Pvt_178.51_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7410232134627305" ;
+    mat:temperature "178.51" .
+
+<#Pvt_179.546_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7637126874627305" ;
+    mat:temperature "179.546" .
+
+<#Pvt_180.055_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7730794774627305" ;
+    mat:temperature "180.055" .
+
+<#Pvt_180.3_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7558806874627305" ;
+    mat:temperature "180.3" .
+
+<#Pvt_180.635_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73552" ;
+    mat:temperature "180.635" .
+
+<#Pvt_181.06_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7486580374627305" ;
+    mat:temperature "181.06" .
+
+<#Pvt_181.088_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7418993994627305" ;
+    mat:temperature "181.088" .
+
+<#Pvt_182.037_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7649629474627305" ;
+    mat:temperature "182.037" .
+
+<#Pvt_182.69_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7740745974627304" ;
+    mat:temperature "182.69" .
+
+<#Pvt_182.765_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7567644774627305" ;
+    mat:temperature "182.765" .
+
+<#Pvt_183.195_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73632" ;
+    mat:temperature "183.195" .
+
+<#Pvt_183.522_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7495120674627305" ;
+    mat:temperature "183.522" .
+
+<#Pvt_183.635_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7425156994627304" ;
+    mat:temperature "183.635" .
+
+<#Pvt_184.54_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7661577574627305" ;
+    mat:temperature "184.54" .
+
+<#Pvt_185.015_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7757821774627305" ;
+    mat:temperature "185.015" .
+
+<#Pvt_185.25_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7577118474627305" ;
+    mat:temperature "185.25" .
+
+<#Pvt_185.76_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7371" ;
+    mat:temperature "185.76" .
+
+<#Pvt_186.15_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7505400474627305" ;
+    mat:temperature "186.15" .
+
+<#Pvt_186.255_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7435151734627304" ;
+    mat:temperature "186.255" .
+
+<#Pvt_186.915_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7676477874627305" ;
+    mat:temperature "186.915" .
+
+<#Pvt_187.475_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7773951274627305" ;
+    mat:temperature "187.475" .
+
+<#Pvt_187.71_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7586692774627305" ;
+    mat:temperature "187.71" .
+
+<#Pvt_188.275_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73754" ;
+    mat:temperature "188.275" .
+
+<#Pvt_188.737_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7510805574627305" ;
+    mat:temperature "188.737" .
+
+<#Pvt_188.795_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7444411974627305" ;
+    mat:temperature "188.795" .
+
+<#Pvt_189.35_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7686590274627305" ;
+    mat:temperature "189.35" .
+
+<#Pvt_190.045_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7790863674627305" ;
+    mat:temperature "190.045" .
+
+<#Pvt_190.255_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7596518174627305" ;
+    mat:temperature "190.255" .
+
+<#Pvt_190.835_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73854" ;
+    mat:temperature "190.835" .
+
+<#Pvt_191.252_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7521967274627305" ;
+    mat:temperature "191.252" .
+
+<#Pvt_191.315_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7450560574627305" ;
+    mat:temperature "191.315" .
+
+<#Pvt_191.895_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7700348174627305" ;
+    mat:temperature "191.895" .
+
+<#Pvt_192.598_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7814340574627305" ;
+    mat:temperature "192.598" .
+
+<#Pvt_192.74_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7608750674627305" ;
+    mat:temperature "192.74" .
+
+<#Pvt_193.48_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.73912" ;
+    mat:temperature "193.48" .
+
+<#Pvt_193.745_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7533158474627305" ;
+    mat:temperature "193.745" .
+
+<#Pvt_193.862_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7461619474627305" ;
+    mat:temperature "193.862" .
+
+<#Pvt_194.535_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7713350774627304" ;
+    mat:temperature "194.535" .
+
+<#Pvt_195.225_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7621055274627305" ;
+    mat:temperature "195.225" .
+
+<#Pvt_195.235_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7850382474627304" ;
+    mat:temperature "195.235" .
+
+<#Pvt_195.995_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74" ;
+    mat:temperature "195.995" .
+
+<#Pvt_196.195_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7542335374627305" ;
+    mat:temperature "196.195" .
+
+<#Pvt_196.364_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7467283274627305" ;
+    mat:temperature "196.364" .
+
+<#Pvt_197.11_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7731849274627305" ;
+    mat:temperature "197.11" .
+
+<#Pvt_197.68_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7910279774627305" ;
+    mat:temperature "197.68" .
+
+<#Pvt_197.736_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7631736274627305" ;
+    mat:temperature "197.736" .
+
+<#Pvt_198.552_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74077" ;
+    mat:temperature "198.552" .
+
+<#Pvt_198.828_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7549507274627305" ;
+    mat:temperature "198.828" .
+
+<#Pvt_198.915_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7476305274627305" ;
+    mat:temperature "198.915" .
+
+<#Pvt_199.622_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7754545674627304" ;
+    mat:temperature "199.622" .
+
+<#Pvt_200.075_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8014493174627305" ;
+    mat:temperature "200.075" .
+
+<#Pvt_200.35_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7644569274627305" ;
+    mat:temperature "200.35" .
+
+<#Pvt_201.093_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74134" ;
+    mat:temperature "201.093" .
+
+<#Pvt_201.372_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7561044674627305" ;
+    mat:temperature "201.372" .
+
+<#Pvt_201.39_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7482676974627305" ;
+    mat:temperature "201.39" .
+
+<#Pvt_202.19_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7791407774627305" ;
+    mat:temperature "202.19" .
+
+<#Pvt_202.445_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8087716474627304" ;
+    mat:temperature "202.445" .
+
+<#Pvt_202.824_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7659683174627305" ;
+    mat:temperature "202.824" .
+
+<#Pvt_203.649_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74218" ;
+    mat:temperature "203.649" .
+
+<#Pvt_203.915_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7494585374627305" ;
+    mat:temperature "203.915" .
+
+<#Pvt_203.92_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7571097774627304" ;
+    mat:temperature "203.92" .
+
+<#Pvt_204.66_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7852949174627305" ;
+    mat:temperature "204.66" .
+
+<#Pvt_204.865_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8102317774627305" ;
+    mat:temperature "204.865" .
+
+<#Pvt_205.375_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7675330674627305" ;
+    mat:temperature "205.375" .
+
+<#Pvt_206.175_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74313" ;
+    mat:temperature "206.175" .
+
+<#Pvt_206.435_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7580608674627305" ;
+    mat:temperature "206.435" .
+
+<#Pvt_206.465_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7502019974627305" ;
+    mat:temperature "206.465" .
+
+<#Pvt_207.073_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7951914174627305" ;
+    mat:temperature "207.073" .
+
+<#Pvt_207.28_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8110615274627305" ;
+    mat:temperature "207.28" .
+
+<#Pvt_207.965_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7696430174627304" ;
+    mat:temperature "207.965" .
+
+<#Pvt_208.777_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74379" ;
+    mat:temperature "208.777" .
+
+<#Pvt_208.935_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7593109674627305" ;
+    mat:temperature "208.935" .
+
+<#Pvt_208.946_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7512815374627305" ;
+    mat:temperature "208.946" .
+
+<#Pvt_209.63_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8007442774627305" ;
+    mat:temperature "209.63" .
+
+<#Pvt_209.775_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8119758774627305" ;
+    mat:temperature "209.775" .
+
+<#Pvt_210.511_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7730072074627304" ;
+    mat:temperature "210.511" .
+
+<#Pvt_211.25_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74474" ;
+    mat:temperature "211.25" .
+
+<#Pvt_211.431_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7522911074627305" ;
+    mat:temperature "211.431" .
+
+<#Pvt_211.552_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7609950074627305" ;
+    mat:temperature "211.552" .
+
+<#Pvt_212.08_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8017124274627305" ;
+    mat:temperature "212.08" .
+
+<#Pvt_212.399_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8127872074627305" ;
+    mat:temperature "212.399" .
+
+<#Pvt_213.025_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7788233474627305" ;
+    mat:temperature "213.025" .
+
+<#Pvt_213.884_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74555" ;
+    mat:temperature "213.884" .
+
+<#Pvt_214.09_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7532423874627305" ;
+    mat:temperature "214.09" .
+
+<#Pvt_214.105_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7625056874627305" ;
+    mat:temperature "214.105" .
+
+<#Pvt_214.585_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8025748474627304" ;
+    mat:temperature "214.585" .
+
+<#Pvt_214.824_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8138916374627305" ;
+    mat:temperature "214.824" .
+
+<#Pvt_215.455_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7876682074627305" ;
+    mat:temperature "215.455" .
+
+<#Pvt_216.463_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74652" ;
+    mat:temperature "216.463" .
+
+<#Pvt_216.555_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7545534374627305" ;
+    mat:temperature "216.555" .
+
+<#Pvt_216.743_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7649026774627304" ;
+    mat:temperature "216.743" .
+
+<#Pvt_217.125_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8034027474627305" ;
+    mat:temperature "217.125" .
+
+<#Pvt_217.42_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8148017174627304" ;
+    mat:temperature "217.42" .
+
+<#Pvt_217.885_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7924861974627305" ;
+    mat:temperature "217.885" .
+
+<#Pvt_218.955_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7474" ;
+    mat:temperature "218.955" .
+
+<#Pvt_219.185_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7558342974627305" ;
+    mat:temperature "219.185" .
+
+<#Pvt_219.26_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7689305774627305" ;
+    mat:temperature "219.26" .
+
+<#Pvt_219.595_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8043442074627305" ;
+    mat:temperature "219.595" .
+
+<#Pvt_219.901_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8157840474627305" ;
+    mat:temperature "219.901" .
+
+<#Pvt_220.41_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7933701174627305" ;
+    mat:temperature "220.41" .
+
+<#Pvt_221.486_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74864" ;
+    mat:temperature "221.486" .
+
+<#Pvt_221.772_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7749374474627305" ;
+    mat:temperature "221.772" .
+
+<#Pvt_221.853_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7573570974627305" ;
+    mat:temperature "221.853" .
+
+<#Pvt_222.18_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8050719374627305" ;
+    mat:temperature "222.18" .
+
+<#Pvt_222.31_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8167469774627305" ;
+    mat:temperature "222.31" .
+
+<#Pvt_222.855_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7940821174627305" ;
+    mat:temperature "222.855" .
+
+<#Pvt_224.058_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.74967" ;
+    mat:temperature "224.058" .
+
+<#Pvt_224.113_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7828782474627305" ;
+    mat:temperature "224.113" .
+
+<#Pvt_224.385_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7598716774627305" ;
+    mat:temperature "224.385" .
+
+<#Pvt_224.77_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8056602874627306" ;
+    mat:temperature "224.77" .
+
+<#Pvt_224.879_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8175328474627305" ;
+    mat:temperature "224.879" .
+
+<#Pvt_225.455_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7946224774627305" ;
+    mat:temperature "225.455" .
+
+<#Pvt_226.605_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7853517074627305" ;
+    mat:temperature "226.605" .
+
+<#Pvt_226.615_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.75088" ;
+    mat:temperature "226.615" .
+
+<#Pvt_226.975_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7634436974627304" ;
+    mat:temperature "226.975" .
+
+<#Pvt_227.202_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8067062574627305" ;
+    mat:temperature "227.202" .
+
+<#Pvt_227.291_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8184197874627305" ;
+    mat:temperature "227.291" .
+
+<#Pvt_227.94_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7955245074627305" ;
+    mat:temperature "227.94" .
+
+<#Pvt_229.073_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7860127974627305" ;
+    mat:temperature "229.073" .
+
+<#Pvt_229.096_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.75259" ;
+    mat:temperature "229.096" .
+
+<#Pvt_229.34_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7695329474627305" ;
+    mat:temperature "229.34" .
+
+<#Pvt_229.601_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8074211074627304" ;
+    mat:temperature "229.601" .
+
+<#Pvt_229.825_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8193623574627305" ;
+    mat:temperature "229.825" .
+
+<#Pvt_230.425_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7961970574627305" ;
+    mat:temperature "230.425" .
+
+<#Pvt_231.628_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7865425574627305" ;
+    mat:temperature "231.628" .
+
+<#Pvt_231.72_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7547" ;
+    mat:temperature "231.72" .
+
+<#Pvt_231.765_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7763078974627304" ;
+    mat:temperature "231.765" .
+
+<#Pvt_231.968_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8084263374627305" ;
+    mat:temperature "231.968" .
+
+<#Pvt_232.145_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8202527374627305" ;
+    mat:temperature "232.145" .
+
+<#Pvt_233.005_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7968203674627305" ;
+    mat:temperature "233.005" .
+
+<#Pvt_234.005_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7872560674627305" ;
+    mat:temperature "234.005" .
+
+<#Pvt_234.15_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7785760274627305" ;
+    mat:temperature "234.15" .
+
+<#Pvt_234.29_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.75826" ;
+    mat:temperature "234.29" .
+
+<#Pvt_234.38_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8213246274627305" ;
+    mat:temperature "234.38" .
+
+<#Pvt_234.536_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8090210074627305" ;
+    mat:temperature "234.536" .
+
+<#Pvt_235.419_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7977609074627305" ;
+    mat:temperature "235.419" .
+
+<#Pvt_236.535_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7793945974627305" ;
+    mat:temperature "236.535" .
+
+<#Pvt_236.536_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7880140374627305" ;
+    mat:temperature "236.536" .
+
+<#Pvt_236.61_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.76396" ;
+    mat:temperature "236.61" .
+
+<#Pvt_236.914_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8222596674627305" ;
+    mat:temperature "236.914" .
+
+<#Pvt_236.9_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8101035974627305" ;
+    mat:temperature "236.9" .
+
+<#Pvt_237.94_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7982760274627305" ;
+    mat:temperature "237.94" .
+
+<#Pvt_239.008_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7886535674627305" ;
+    mat:temperature "239.008" .
+
+<#Pvt_239.025_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77043" ;
+    mat:temperature "239.025" .
+
+<#Pvt_239.146_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7796302874627304" ;
+    mat:temperature "239.146" .
+
+<#Pvt_239.175_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8231780374627304" ;
+    mat:temperature "239.175" .
+
+<#Pvt_239.535_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8107961074627305" ;
+    mat:temperature "239.535" .
+
+<#Pvt_240.41_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7991143474627305" ;
+    mat:temperature "240.41" .
+
+<#Pvt_241.505_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7721" ;
+    mat:temperature "241.505" .
+
+<#Pvt_241.52_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7893533274627305" ;
+    mat:temperature "241.52" .
+
+<#Pvt_241.633_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8239570374627305" ;
+    mat:temperature "241.633" .
+
+<#Pvt_241.645_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7803590874627305" ;
+    mat:temperature "241.645" .
+
+<#Pvt_242.079_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8113222174627305" ;
+    mat:temperature "242.079" .
+
+<#Pvt_242.885_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7997934974627305" ;
+    mat:temperature "242.885" .
+
+<#Pvt_244.02_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8248606474627305" ;
+    mat:temperature "244.02" .
+
+<#Pvt_244.09_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7901455374627305" ;
+    mat:temperature "244.09" .
+
+<#Pvt_244.15_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7811747874627305" ;
+    mat:temperature "244.15" .
+
+<#Pvt_244.15_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77255" ;
+    mat:temperature "244.15" .
+
+<#Pvt_244.396_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8122990574627305" ;
+    mat:temperature "244.396" .
+
+<#Pvt_245.446_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8006321874627305" ;
+    mat:temperature "245.446" .
+
+<#Pvt_246.512_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8258261374627305" ;
+    mat:temperature "246.512" .
+
+<#Pvt_246.67_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77324" ;
+    mat:temperature "246.67" .
+
+<#Pvt_246.68_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7907141874627305" ;
+    mat:temperature "246.68" .
+
+<#Pvt_246.786_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7814507674627305" ;
+    mat:temperature "246.786" .
+
+<#Pvt_247.0_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8132836974627304" ;
+    mat:temperature "247.0" .
+
+<#Pvt_247.995_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8016329974627305" ;
+    mat:temperature "247.995" .
+
+<#Pvt_249.14_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8267085974627305" ;
+    mat:temperature "249.14" .
+
+<#Pvt_249.156_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7915070074627305" ;
+    mat:temperature "249.156" .
+
+<#Pvt_249.32_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77399" ;
+    mat:temperature "249.32" .
+
+<#Pvt_249.378_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7821299374627305" ;
+    mat:temperature "249.378" .
+
+<#Pvt_249.612_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8142048874627305" ;
+    mat:temperature "249.612" .
+
+<#Pvt_250.665_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8021847474627305" ;
+    mat:temperature "250.665" .
+
+<#Pvt_251.714_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8275450974627305" ;
+    mat:temperature "251.714" .
+
+<#Pvt_251.844_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7922913574627305" ;
+    mat:temperature "251.844" .
+
+<#Pvt_251.915_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7828291674627305" ;
+    mat:temperature "251.915" .
+
+<#Pvt_251.925_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77462" ;
+    mat:temperature "251.925" .
+
+<#Pvt_252.33_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8149868174627305" ;
+    mat:temperature "252.33" .
+
+<#Pvt_253.345_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8029415474627305" ;
+    mat:temperature "253.345" .
+
+<#Pvt_254.336_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8287079074627305" ;
+    mat:temperature "254.336" .
+
+<#Pvt_254.535_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77523" ;
+    mat:temperature "254.535" .
+
+<#Pvt_254.582_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7927699374627305" ;
+    mat:temperature "254.582" .
+
+<#Pvt_254.718_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7835162374627305" ;
+    mat:temperature "254.718" .
+
+<#Pvt_255.094_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8157941474627305" ;
+    mat:temperature "255.094" .
+
+<#Pvt_256.145_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8036952574627305" ;
+    mat:temperature "256.145" .
+
+<#Pvt_257.175_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77575" ;
+    mat:temperature "257.175" .
+
+<#Pvt_257.18_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8298680374627305" ;
+    mat:temperature "257.18" .
+
+<#Pvt_257.2_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7936121874627304" ;
+    mat:temperature "257.2" .
+
+<#Pvt_257.45_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7841746174627305" ;
+    mat:temperature "257.45" .
+
+<#Pvt_257.845_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8166664074627304" ;
+    mat:temperature "257.845" .
+
+<#Pvt_258.926_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8048225074627304" ;
+    mat:temperature "258.926" .
+
+<#Pvt_259.97_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8310588474627305" ;
+    mat:temperature "259.97" .
+
+<#Pvt_260.035_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77651" ;
+    mat:temperature "260.035" .
+
+<#Pvt_260.09_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7942657774627305" ;
+    mat:temperature "260.09" .
+
+<#Pvt_260.335_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7849429974627304" ;
+    mat:temperature "260.335" .
+
+<#Pvt_260.607_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8178487374627305" ;
+    mat:temperature "260.607" .
+
+<#Pvt_261.74_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8054248574627305" ;
+    mat:temperature "261.74" .
+
+<#Pvt_262.905_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77696" ;
+    mat:temperature "262.905" .
+
+<#Pvt_262.998_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8323746574627304" ;
+    mat:temperature "262.998" .
+
+<#Pvt_262.99_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7952702774627305" ;
+    mat:temperature "262.99" .
+
+<#Pvt_263.17_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7855277074627305" ;
+    mat:temperature "263.17" .
+
+<#Pvt_263.577_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8190293774627305" ;
+    mat:temperature "263.577" .
+
+<#Pvt_264.641_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8065325574627304" ;
+    mat:temperature "264.641" .
+
+<#Pvt_265.855_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77759" ;
+    mat:temperature "265.855" .
+
+<#Pvt_266.04_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7864881374627305" ;
+    mat:temperature "266.04" .
+
+<#Pvt_266.086_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7958563574627305" ;
+    mat:temperature "266.086" .
+
+<#Pvt_266.104_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8337915274627304" ;
+    mat:temperature "266.104" .
+
+<#Pvt_266.538_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8197178074627305" ;
+    mat:temperature "266.538" .
+
+<#Pvt_267.655_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8073237274627305" ;
+    mat:temperature "267.655" .
+
+<#Pvt_268.925_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77828" ;
+    mat:temperature "268.925" .
+
+<#Pvt_268.965_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7871291774627305" ;
+    mat:temperature "268.965" .
+
+<#Pvt_269.157_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7966380374627304" ;
+    mat:temperature "269.157" .
+
+<#Pvt_269.26_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8347852874627305" ;
+    mat:temperature "269.26" .
+
+<#Pvt_269.415_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8209489574627304" ;
+    mat:temperature "269.415" .
+
+<#Pvt_270.698_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8079981874627304" ;
+    mat:temperature "270.698" .
+
+<#Pvt_271.845_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77919" ;
+    mat:temperature "271.845" .
+
+<#Pvt_271.885_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7879132274627305" ;
+    mat:temperature "271.885" .
+
+<#Pvt_271.918_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7974047474627305" ;
+    mat:temperature "271.918" .
+
+<#Pvt_272.32_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8359159874627304" ;
+    mat:temperature "272.32" .
+
+<#Pvt_272.35_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8215074274627305" ;
+    mat:temperature "272.35" .
+
+<#Pvt_273.15_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8089156674627305" ;
+    mat:temperature "273.15" .
+
+<#Pvt_274.585_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7982306874627305" ;
+    mat:temperature "274.585" .
+
+<#Pvt_274.615_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.77975" ;
+    mat:temperature "274.615" .
+
+<#Pvt_274.665_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8222777174627305" ;
+    mat:temperature "274.665" .
+
+<#Pvt_274.698_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7886805774627305" ;
+    mat:temperature "274.698" .
+
+<#Pvt_275.022_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8368560874627304" ;
+    mat:temperature "275.022" .
+
+<#Pvt_275.611_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8096919974627305" ;
+    mat:temperature "275.611" .
+
+<#Pvt_276.583_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8229019774627305" ;
+    mat:temperature "276.583" .
+
+<#Pvt_276.974_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7988815574627305" ;
+    mat:temperature "276.974" .
+
+<#Pvt_277.11_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7892860774627305" ;
+    mat:temperature "277.11" .
+
+<#Pvt_277.25_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7804" ;
+    mat:temperature "277.25" .
+
+<#Pvt_277.365_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8378174874627304" ;
+    mat:temperature "277.365" .
+
+<#Pvt_277.5771_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8097593074627305" ;
+    mat:temperature "277.5771" .
+
+<#Pvt_278.005_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.8231695374627305" ;
+    mat:temperature "278.005" .
+
+<#Pvt_278.915_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7991698874627304" ;
+    mat:temperature "278.915" .
+
+<#Pvt_279.076_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.8100796574627305" ;
+    mat:temperature "279.076" .
+
+<#Pvt_279.085_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.8380747874627305" ;
+    mat:temperature "279.085" .
+
+<#Pvt_279.26_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7897607974627305" ;
+    mat:temperature "279.26" .
+
+<#Pvt_279.568_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.78055" ;
+    mat:temperature "279.568" .
+
+<#Pvt_280.364_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7992963374627304" ;
+    mat:temperature "280.364" .
+
+<#Pvt_280.674_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7897768074627305" ;
+    mat:temperature "280.674" .
+
+<#Pvt_281.18_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.78093" ;
+    mat:temperature "281.18" .
+
+<#Pvt_61.034_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7130246674627305" ;
+    mat:temperature "61.034" .
+
+<#Pvt_61.08601_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7216386374627305" ;
+    mat:temperature "61.08601" .
+
+<#Pvt_61.24_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7168840774627305" ;
+    mat:temperature "61.24" .
+
+<#Pvt_61.74_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7261067044627305" ;
+    mat:temperature "61.74" .
+
+<#Pvt_61.84_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7313703784627305" ;
+    mat:temperature "61.84" .
+
+<#Pvt_62.23_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7216779274627305" ;
+    mat:temperature "62.23" .
+
+<#Pvt_62.316_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7128845774627305" ;
+    mat:temperature "62.316" .
+
+<#Pvt_62.32_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7174434674627305" ;
+    mat:temperature "62.32" .
+
+<#Pvt_62.894_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7265238394627305" ;
+    mat:temperature "62.894" .
+
+<#Pvt_62.935_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7318119634627305" ;
+    mat:temperature "62.935" .
+
+<#Pvt_63.14_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.70897" ;
+    mat:temperature "63.14" .
+
+<#Pvt_63.325_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7220685374627305" ;
+    mat:temperature "63.325" .
+
+<#Pvt_63.38_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7130512174627305" ;
+    mat:temperature "63.38" .
+
+<#Pvt_63.48_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7175465674627305" ;
+    mat:temperature "63.48" .
+
+<#Pvt_63.984_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7268868914627304" ;
+    mat:temperature "63.984" .
+
+<#Pvt_64.08199_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7321943564627305" ;
+    mat:temperature "64.08199" .
+
+<#Pvt_64.58801_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7223617274627305" ;
+    mat:temperature "64.58801" .
+
+<#Pvt_64.63501_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7132698574627305" ;
+    mat:temperature "64.63501" .
+
+<#Pvt_64.748_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7178407274627305" ;
+    mat:temperature "64.748" .
+
+<#Pvt_65.113_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7273618944627305" ;
+    mat:temperature "65.113" .
+
+<#Pvt_65.24_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7328366604627304" ;
+    mat:temperature "65.24" .
+
+<#Pvt_65.53_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7095" ;
+    mat:temperature "65.53" .
+
+<#Pvt_65.81999_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7136099474627305" ;
+    mat:temperature "65.81999" .
+
+<#Pvt_65.84999_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7226435374627305" ;
+    mat:temperature "65.84999" .
+
+<#Pvt_65.90999_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7180736974627305" ;
+    mat:temperature "65.90999" .
+
+<#Pvt_66.34999_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7275209934627305" ;
+    mat:temperature "66.34999" .
+
+<#Pvt_66.53999_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7328334754627305" ;
+    mat:temperature "66.53999" .
+
+<#Pvt_67.08001_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7230535774627305" ;
+    mat:temperature "67.08001" .
+
+<#Pvt_67.11501_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7139758974627305" ;
+    mat:temperature "67.11501" .
+
+<#Pvt_67.225_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7183011974627305" ;
+    mat:temperature "67.225" .
+
+<#Pvt_67.61_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7276998234627305" ;
+    mat:temperature "67.61" .
+
+<#Pvt_67.772_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7334514501627305" ;
+    mat:temperature "67.772" .
+
+<#Pvt_68.039_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71037" ;
+    mat:temperature "68.039" .
+
+<#Pvt_68.35001_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7231069874627305" ;
+    mat:temperature "68.35001" .
+
+<#Pvt_68.38_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7141212074627304" ;
+    mat:temperature "68.38" .
+
+<#Pvt_68.55_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7185593774627305" ;
+    mat:temperature "68.55" .
+
+<#Pvt_68.89001_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7280752304627305" ;
+    mat:temperature "68.89001" .
+
+<#Pvt_68.98_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7338583768627305" ;
+    mat:temperature "68.98" .
+
+<#Pvt_69.65_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7236985474627304" ;
+    mat:temperature "69.65" .
+
+<#Pvt_69.675_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7146627674627305" ;
+    mat:temperature "69.675" .
+
+<#Pvt_69.846_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7186986274627305" ;
+    mat:temperature "69.846" .
+
+<#Pvt_70.19_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7284376004627305" ;
+    mat:temperature "70.19" .
+
+<#Pvt_70.40001_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7341661086627305" ;
+    mat:temperature "70.40001" .
+
+<#Pvt_70.828_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71067" ;
+    mat:temperature "70.828" .
+
+<#Pvt_71.064_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7237944974627305" ;
+    mat:temperature "71.064" .
+
+<#Pvt_71.11301_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7147466974627305" ;
+    mat:temperature "71.11301" .
+
+<#Pvt_71.259_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7192632274627305" ;
+    mat:temperature "71.259" .
+
+<#Pvt_71.585_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7285671744627304" ;
+    mat:temperature "71.585" .
+
+<#Pvt_71.832_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7341514726627305" ;
+    mat:temperature "71.832" .
+
+<#Pvt_72.50999_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7150984074627305" ;
+    mat:temperature "72.50999" .
+
+<#Pvt_72.54801_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7240734214627305" ;
+    mat:temperature "72.54801" .
+
+<#Pvt_72.69499_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7195731874627305" ;
+    mat:temperature "72.69499" .
+
+<#Pvt_73.014_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7290872124627304" ;
+    mat:temperature "73.014" .
+
+<#Pvt_73.26001_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7347214781627305" ;
+    mat:temperature "73.26001" .
+
+<#Pvt_73.655_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71141" ;
+    mat:temperature "73.655" .
+
+<#Pvt_73.96999_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7246279624627305" ;
+    mat:temperature "73.96999" .
+
+<#Pvt_74.045_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7153634274627305" ;
+    mat:temperature "74.045" .
+
+<#Pvt_74.21_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7199437574627305" ;
+    mat:temperature "74.21" .
+
+<#Pvt_74.38_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7294675494627305" ;
+    mat:temperature "74.38" .
+
+<#Pvt_74.78999_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7352002344627305" ;
+    mat:temperature "74.78999" .
+
+<#Pvt_75.53_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7249485254627305" ;
+    mat:temperature "75.53" .
+
+<#Pvt_75.558_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7159991874627305" ;
+    mat:temperature "75.558" .
+
+<#Pvt_75.785_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7202125974627305" ;
+    mat:temperature "75.785" .
+
+<#Pvt_75.91001_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7301584974627305" ;
+    mat:temperature "75.91001" .
+
+<#Pvt_76.255_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7356664624627305" ;
+    mat:temperature "76.255" .
+
+<#Pvt_76.73_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.7119" ;
+    mat:temperature "76.73" .
+
+<#Pvt_76.99501_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7254496044627304" ;
+    mat:temperature "76.99501" .
+
+<#Pvt_77.08499_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7162370674627305" ;
+    mat:temperature "77.08499" .
+
+<#Pvt_77.30201_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7206949674627305" ;
+    mat:temperature "77.30201" .
+
+<#Pvt_77.4_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7303411874627305" ;
+    mat:temperature "77.4" .
+
+<#Pvt_77.85999_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7360325794627305" ;
+    mat:temperature "77.85999" .
+
+<#Pvt_78.62801_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7259376084627305" ;
+    mat:temperature "78.62801" .
+
+<#Pvt_78.68201_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7166114074627304" ;
+    mat:temperature "78.68201" .
+
+<#Pvt_78.94001_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7211400574627305" ;
+    mat:temperature "78.94001" .
+
+<#Pvt_79.02_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7305016094627305" ;
+    mat:temperature "79.02" .
+
+<#Pvt_79.401_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7362006634627305" ;
+    mat:temperature "79.401" .
+
+<#Pvt_79.955_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71266" ;
+    mat:temperature "79.955" .
+
+<#Pvt_80.30501_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7260733754627305" ;
+    mat:temperature "80.30501" .
+
+<#Pvt_80.45499_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7166587874627305" ;
+    mat:temperature "80.45499" .
+
+<#Pvt_80.567_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7215305974627305" ;
+    mat:temperature "80.567" .
+
+<#Pvt_80.63501_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7310005514627305" ;
+    mat:temperature "80.63501" .
+
+<#Pvt_81.175_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7367432094627305" ;
+    mat:temperature "81.175" .
+
+<#Pvt_82.01801_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7264780534627305" ;
+    mat:temperature "82.01801" .
+
+<#Pvt_82.08001_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7170316874627305" ;
+    mat:temperature "82.08001" .
+
+<#Pvt_82.342_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7219230274627305" ;
+    mat:temperature "82.342" .
+
+<#Pvt_82.34999_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7314185574627304" ;
+    mat:temperature "82.34999" .
+
+<#Pvt_82.77_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7371842264627305" ;
+    mat:temperature "82.77" .
+
+<#Pvt_83.395_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71316" ;
+    mat:temperature "83.395" .
+
+<#Pvt_83.72_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7271119074627305" ;
+    mat:temperature "83.72" .
+
+<#Pvt_83.83498_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7177766674627305" ;
+    mat:temperature "83.83498" .
+
+<#Pvt_84.04601_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7319538584627305" ;
+    mat:temperature "84.04601" .
+
+<#Pvt_84.105_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7219705674627305" ;
+    mat:temperature "84.105" .
+
+<#Pvt_84.62601_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7378395134627305" ;
+    mat:temperature "84.62601" .
+
+<#Pvt_85.624_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7271447884627305" ;
+    mat:temperature "85.624" .
+
+<#Pvt_85.701_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7181513374627305" ;
+    mat:temperature "85.701" .
+
+<#Pvt_85.806_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7323671584627305" ;
+    mat:temperature "85.806" .
+
+<#Pvt_85.91899_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7226715174627305" ;
+    mat:temperature "85.91899" .
+
+<#Pvt_86.43001_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7383410914627305" ;
+    mat:temperature "86.43001" .
+
+<#Pvt_87.096_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71394" ;
+    mat:temperature "87.096" .
+
+<#Pvt_87.437_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7279510124627305" ;
+    mat:temperature "87.437" .
+
+<#Pvt_87.595_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7182184374627305" ;
+    mat:temperature "87.595" .
+
+<#Pvt_87.675_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7329048451627305" ;
+    mat:temperature "87.675" .
+
+<#Pvt_87.80099_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7231446974627305" ;
+    mat:temperature "87.80099" .
+
+<#Pvt_88.246_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7387673334627305" ;
+    mat:temperature "88.246" .
+
+<#Pvt_89.355_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7286279644627305" ;
+    mat:temperature "89.355" .
+
+<#Pvt_89.466_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7189389574627305" ;
+    mat:temperature "89.466" .
+
+<#Pvt_89.54501_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7335264950627305" ;
+    mat:temperature "89.54501" .
+
+<#Pvt_89.77201_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7236758274627305" ;
+    mat:temperature "89.77201" .
+
+<#Pvt_90.21_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7393066864627305" ;
+    mat:temperature "90.21" .
+
+<#Pvt_90.959_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71486" ;
+    mat:temperature "90.959" .
+
+<#Pvt_91.29999_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7290170694627305" ;
+    mat:temperature "91.29999" .
+
+<#Pvt_91.46899_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7193729974627305" ;
+    mat:temperature "91.46899" .
+
+<#Pvt_91.49199_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7341885259627305" ;
+    mat:temperature "91.49199" .
+
+<#Pvt_91.78_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7240551834627305" ;
+    mat:temperature "91.78" .
+
+<#Pvt_92.19401_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7399120084627305" ;
+    mat:temperature "92.19401" .
+
+<#Pvt_93.436_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7347070447627305" ;
+    mat:temperature "93.436" .
+
+<#Pvt_93.451_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7293027114627305" ;
+    mat:temperature "93.451" .
+
+<#Pvt_93.476_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7199344774627305" ;
+    mat:temperature "93.476" .
+
+<#Pvt_93.85_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7243523974627305" ;
+    mat:temperature "93.85" .
+
+<#Pvt_94.21999_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7407975594627305" ;
+    mat:temperature "94.21999" .
+
+<#Pvt_95.11_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71565" ;
+    mat:temperature "95.11" .
+
+<#Pvt_95.50001_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7299005224627305" ;
+    mat:temperature "95.50001" .
+
+<#Pvt_95.53999_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7204680074627305" ;
+    mat:temperature "95.53999" .
+
+<#Pvt_95.557_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7352696214627304" ;
+    mat:temperature "95.557" .
+
+<#Pvt_95.94099_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7251110014627304" ;
+    mat:temperature "95.94099" .
+
+<#Pvt_96.31998_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7414052574627304" ;
+    mat:temperature "96.31998" .
+
+<#Pvt_97.62801_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7356749794627305" ;
+    mat:temperature "97.62801" .
+
+<#Pvt_97.69801_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7304365834627304" ;
+    mat:temperature "97.69801" .
+
+<#Pvt_97.74001_160.0> a mat:PvtEntity ;
+    mat:pressure "160.0" ;
+    mat:specificVolume "0.7208380274627305" ;
+    mat:temperature "97.74001" .
+
+<#Pvt_98.11_120.0> a mat:PvtEntity ;
+    mat:pressure "120.0" ;
+    mat:specificVolume "0.7255418694627305" ;
+    mat:temperature "98.11" .
+
+<#Pvt_98.51001_10.0> a mat:PvtEntity ;
+    mat:pressure "10.0" ;
+    mat:specificVolume "0.7421760904627305" ;
+    mat:temperature "98.51001" .
+
+<#Pvt_99.465_200.0> a mat:PvtEntity ;
+    mat:pressure "200.0" ;
+    mat:specificVolume "0.71645" ;
+    mat:temperature "99.465" .
+
+<#Pvt_99.775_40.0> a mat:PvtEntity ;
+    mat:pressure "40.0" ;
+    mat:specificVolume "0.7363519464627305" ;
+    mat:temperature "99.775" .
+
+<#Pvt_99.94499_80.0> a mat:PvtEntity ;
+    mat:pressure "80.0" ;
+    mat:specificVolume "0.7309258384627305" ;
+    mat:temperature "99.94499" .
+
+<#ThermophysicalProperty_2.1_223> a mat:ThermophysicalPropertyEntity ;
+    mat:glassTransitionTemperature "20" ;
+    mat:humidity "2.1" ;
+    mat:linearThermalExpansionCoefficient <#LinearThermalExpansionCoefficient_0.0025> ;
+    mat:meltingTemperature "223" ;
+    mat:pvt <#Pvt_100.046_160.0>,
+        <#Pvt_100.369_120.0>,
+        <#Pvt_100.75_10.0>,
+        <#Pvt_102.05_40.0>,
+        <#Pvt_102.245_80.0>,
+        <#Pvt_102.324_160.0>,
+        <#Pvt_102.6_120.0>,
+        <#Pvt_103.06_10.0>,
+        <#Pvt_104.075_200.0>,
+        <#Pvt_104.365_40.0>,
+        <#Pvt_104.569_80.0>,
+        <#Pvt_104.697_160.0>,
+        <#Pvt_105.03_120.0>,
+        <#Pvt_105.41_10.0>,
+        <#Pvt_106.78_40.0>,
+        <#Pvt_106.973_80.0>,
+        <#Pvt_107.124_160.0>,
+        <#Pvt_107.5_120.0>,
+        <#Pvt_107.86_10.0>,
+        <#Pvt_109.11_200.0>,
+        <#Pvt_109.23_40.0>,
+        <#Pvt_109.502_80.0>,
+        <#Pvt_109.586_160.0>,
+        <#Pvt_110.004_120.0>,
+        <#Pvt_110.299_10.0>,
+        <#Pvt_111.676_40.0>,
+        <#Pvt_112.042_80.0>,
+        <#Pvt_112.25_160.0>,
+        <#Pvt_112.49_120.0>,
+        <#Pvt_112.822_10.0>,
+        <#Pvt_114.134_40.0>,
+        <#Pvt_114.145_200.0>,
+        <#Pvt_114.604_80.0>,
+        <#Pvt_114.817_160.0>,
+        <#Pvt_115.08_120.0>,
+        <#Pvt_115.335_10.0>,
+        <#Pvt_116.74_40.0>,
+        <#Pvt_117.145_80.0>,
+        <#Pvt_117.36_160.0>,
+        <#Pvt_117.644_120.0>,
+        <#Pvt_117.824_10.0>,
+        <#Pvt_119.295_40.0>,
+        <#Pvt_119.306_200.0>,
+        <#Pvt_119.64_80.0>,
+        <#Pvt_119.98_160.0>,
+        <#Pvt_120.126_120.0>,
+        <#Pvt_120.305_10.0>,
+        <#Pvt_121.775_40.0>,
+        <#Pvt_122.133_80.0>,
+        <#Pvt_122.415_160.0>,
+        <#Pvt_122.625_120.0>,
+        <#Pvt_122.852_10.0>,
+        <#Pvt_124.255_40.0>,
+        <#Pvt_124.453_200.0>,
+        <#Pvt_124.61_80.0>,
+        <#Pvt_125.005_160.0>,
+        <#Pvt_125.215_120.0>,
+        <#Pvt_125.297_10.0>,
+        <#Pvt_126.686_40.0>,
+        <#Pvt_127.102_80.0>,
+        <#Pvt_127.546_160.0>,
+        <#Pvt_127.73_10.0>,
+        <#Pvt_127.7_120.0>,
+        <#Pvt_129.163_40.0>,
+        <#Pvt_129.578_80.0>,
+        <#Pvt_129.5_200.0>,
+        <#Pvt_130.032_160.0>,
+        <#Pvt_130.21_10.0>,
+        <#Pvt_130.355_120.0>,
+        <#Pvt_131.76_40.0>,
+        <#Pvt_132.196_80.0>,
+        <#Pvt_132.694_160.0>,
+        <#Pvt_132.774_10.0>,
+        <#Pvt_132.858_120.0>,
+        <#Pvt_134.295_40.0>,
+        <#Pvt_134.653_200.0>,
+        <#Pvt_134.676_80.0>,
+        <#Pvt_135.243_10.0>,
+        <#Pvt_135.274_160.0>,
+        <#Pvt_135.373_120.0>,
+        <#Pvt_136.825_40.0>,
+        <#Pvt_137.285_80.0>,
+        <#Pvt_137.702_160.0>,
+        <#Pvt_137.715_10.0>,
+        <#Pvt_138.026_120.0>,
+        <#Pvt_139.296_40.0>,
+        <#Pvt_139.752_200.0>,
+        <#Pvt_139.75_80.0>,
+        <#Pvt_140.068_10.0>,
+        <#Pvt_140.335_160.0>,
+        <#Pvt_140.49_120.0>,
+        <#Pvt_141.875_40.0>,
+        <#Pvt_142.35_80.0>,
+        <#Pvt_142.564_10.0>,
+        <#Pvt_142.905_160.0>,
+        <#Pvt_143.111_120.0>,
+        <#Pvt_144.4_40.0>,
+        <#Pvt_144.929_200.0>,
+        <#Pvt_144.945_80.0>,
+        <#Pvt_145.135_10.0>,
+        <#Pvt_145.443_160.0>,
+        <#Pvt_145.599_120.0>,
+        <#Pvt_146.945_40.0>,
+        <#Pvt_147.46_80.0>,
+        <#Pvt_147.685_10.0>,
+        <#Pvt_147.865_160.0>,
+        <#Pvt_148.16_120.0>,
+        <#Pvt_149.378_40.0>,
+        <#Pvt_150.006_80.0>,
+        <#Pvt_150.009_200.0>,
+        <#Pvt_150.267_10.0>,
+        <#Pvt_150.555_160.0>,
+        <#Pvt_150.61_120.0>,
+        <#Pvt_151.91_40.0>,
+        <#Pvt_152.506_80.0>,
+        <#Pvt_152.748_10.0>,
+        <#Pvt_153.055_160.0>,
+        <#Pvt_153.192_120.0>,
+        <#Pvt_154.439_40.0>,
+        <#Pvt_155.075_80.0>,
+        <#Pvt_155.084_200.0>,
+        <#Pvt_155.202_10.0>,
+        <#Pvt_155.572_160.0>,
+        <#Pvt_155.67_120.0>,
+        <#Pvt_156.906_40.0>,
+        <#Pvt_157.465_80.0>,
+        <#Pvt_157.645_10.0>,
+        <#Pvt_158.105_160.0>,
+        <#Pvt_158.2_120.0>,
+        <#Pvt_159.388_40.0>,
+        <#Pvt_159.982_10.0>,
+        <#Pvt_160.04_80.0>,
+        <#Pvt_160.23_200.0>,
+        <#Pvt_160.619_120.0>,
+        <#Pvt_160.67_160.0>,
+        <#Pvt_161.829_40.0>,
+        <#Pvt_162.455_80.0>,
+        <#Pvt_162.52_10.0>,
+        <#Pvt_163.173_160.0>,
+        <#Pvt_163.29_120.0>,
+        <#Pvt_164.383_40.0>,
+        <#Pvt_164.905_80.0>,
+        <#Pvt_164.921_10.0>,
+        <#Pvt_165.285_200.0>,
+        <#Pvt_165.706_160.0>,
+        <#Pvt_165.795_120.0>,
+        <#Pvt_166.787_40.0>,
+        <#Pvt_167.429_10.0>,
+        <#Pvt_167.496_80.0>,
+        <#Pvt_168.275_120.0>,
+        <#Pvt_168.275_160.0>,
+        <#Pvt_169.29_40.0>,
+        <#Pvt_169.92_10.0>,
+        <#Pvt_170.07_80.0>,
+        <#Pvt_170.403_200.0>,
+        <#Pvt_170.765_160.0>,
+        <#Pvt_170.816_120.0>,
+        <#Pvt_171.81_40.0>,
+        <#Pvt_172.43_10.0>,
+        <#Pvt_172.645_80.0>,
+        <#Pvt_173.295_160.0>,
+        <#Pvt_173.373_120.0>,
+        <#Pvt_174.34_40.0>,
+        <#Pvt_174.94_10.0>,
+        <#Pvt_175.158_80.0>,
+        <#Pvt_175.548_200.0>,
+        <#Pvt_175.905_160.0>,
+        <#Pvt_175.965_120.0>,
+        <#Pvt_176.905_40.0>,
+        <#Pvt_177.46_10.0>,
+        <#Pvt_177.618_80.0>,
+        <#Pvt_178.485_120.0>,
+        <#Pvt_178.51_160.0>,
+        <#Pvt_179.546_40.0>,
+        <#Pvt_180.055_10.0>,
+        <#Pvt_180.3_80.0>,
+        <#Pvt_180.635_200.0>,
+        <#Pvt_181.06_120.0>,
+        <#Pvt_181.088_160.0>,
+        <#Pvt_182.037_40.0>,
+        <#Pvt_182.69_10.0>,
+        <#Pvt_182.765_80.0>,
+        <#Pvt_183.195_200.0>,
+        <#Pvt_183.522_120.0>,
+        <#Pvt_183.635_160.0>,
+        <#Pvt_184.54_40.0>,
+        <#Pvt_185.015_10.0>,
+        <#Pvt_185.25_80.0>,
+        <#Pvt_185.76_200.0>,
+        <#Pvt_186.15_120.0>,
+        <#Pvt_186.255_160.0>,
+        <#Pvt_186.915_40.0>,
+        <#Pvt_187.475_10.0>,
+        <#Pvt_187.71_80.0>,
+        <#Pvt_188.275_200.0>,
+        <#Pvt_188.737_120.0>,
+        <#Pvt_188.795_160.0>,
+        <#Pvt_189.35_40.0>,
+        <#Pvt_190.045_10.0>,
+        <#Pvt_190.255_80.0>,
+        <#Pvt_190.835_200.0>,
+        <#Pvt_191.252_120.0>,
+        <#Pvt_191.315_160.0>,
+        <#Pvt_191.895_40.0>,
+        <#Pvt_192.598_10.0>,
+        <#Pvt_192.74_80.0>,
+        <#Pvt_193.48_200.0>,
+        <#Pvt_193.745_120.0>,
+        <#Pvt_193.862_160.0>,
+        <#Pvt_194.535_40.0>,
+        <#Pvt_195.225_80.0>,
+        <#Pvt_195.235_10.0>,
+        <#Pvt_195.995_200.0>,
+        <#Pvt_196.195_120.0>,
+        <#Pvt_196.364_160.0>,
+        <#Pvt_197.11_40.0>,
+        <#Pvt_197.68_10.0>,
+        <#Pvt_197.736_80.0>,
+        <#Pvt_198.552_200.0>,
+        <#Pvt_198.828_120.0>,
+        <#Pvt_198.915_160.0>,
+        <#Pvt_199.622_40.0>,
+        <#Pvt_200.075_10.0>,
+        <#Pvt_200.35_80.0>,
+        <#Pvt_201.093_200.0>,
+        <#Pvt_201.372_120.0>,
+        <#Pvt_201.39_160.0>,
+        <#Pvt_202.19_40.0>,
+        <#Pvt_202.445_10.0>,
+        <#Pvt_202.824_80.0>,
+        <#Pvt_203.649_200.0>,
+        <#Pvt_203.915_160.0>,
+        <#Pvt_203.92_120.0>,
+        <#Pvt_204.66_40.0>,
+        <#Pvt_204.865_10.0>,
+        <#Pvt_205.375_80.0>,
+        <#Pvt_206.175_200.0>,
+        <#Pvt_206.435_120.0>,
+        <#Pvt_206.465_160.0>,
+        <#Pvt_207.073_40.0>,
+        <#Pvt_207.28_10.0>,
+        <#Pvt_207.965_80.0>,
+        <#Pvt_208.777_200.0>,
+        <#Pvt_208.935_120.0>,
+        <#Pvt_208.946_160.0>,
+        <#Pvt_209.63_40.0>,
+        <#Pvt_209.775_10.0>,
+        <#Pvt_210.511_80.0>,
+        <#Pvt_211.25_200.0>,
+        <#Pvt_211.431_160.0>,
+        <#Pvt_211.552_120.0>,
+        <#Pvt_212.08_40.0>,
+        <#Pvt_212.399_10.0>,
+        <#Pvt_213.025_80.0>,
+        <#Pvt_213.884_200.0>,
+        <#Pvt_214.09_160.0>,
+        <#Pvt_214.105_120.0>,
+        <#Pvt_214.585_40.0>,
+        <#Pvt_214.824_10.0>,
+        <#Pvt_215.455_80.0>,
+        <#Pvt_216.463_200.0>,
+        <#Pvt_216.555_160.0>,
+        <#Pvt_216.743_120.0>,
+        <#Pvt_217.125_40.0>,
+        <#Pvt_217.42_10.0>,
+        <#Pvt_217.885_80.0>,
+        <#Pvt_218.955_200.0>,
+        <#Pvt_219.185_160.0>,
+        <#Pvt_219.26_120.0>,
+        <#Pvt_219.595_40.0>,
+        <#Pvt_219.901_10.0>,
+        <#Pvt_220.41_80.0>,
+        <#Pvt_221.486_200.0>,
+        <#Pvt_221.772_120.0>,
+        <#Pvt_221.853_160.0>,
+        <#Pvt_222.18_40.0>,
+        <#Pvt_222.31_10.0>,
+        <#Pvt_222.855_80.0>,
+        <#Pvt_224.058_200.0>,
+        <#Pvt_224.113_120.0>,
+        <#Pvt_224.385_160.0>,
+        <#Pvt_224.77_40.0>,
+        <#Pvt_224.879_10.0>,
+        <#Pvt_225.455_80.0>,
+        <#Pvt_226.605_120.0>,
+        <#Pvt_226.615_200.0>,
+        <#Pvt_226.975_160.0>,
+        <#Pvt_227.202_40.0>,
+        <#Pvt_227.291_10.0>,
+        <#Pvt_227.94_80.0>,
+        <#Pvt_229.073_120.0>,
+        <#Pvt_229.096_200.0>,
+        <#Pvt_229.34_160.0>,
+        <#Pvt_229.601_40.0>,
+        <#Pvt_229.825_10.0>,
+        <#Pvt_230.425_80.0>,
+        <#Pvt_231.628_120.0>,
+        <#Pvt_231.72_200.0>,
+        <#Pvt_231.765_160.0>,
+        <#Pvt_231.968_40.0>,
+        <#Pvt_232.145_10.0>,
+        <#Pvt_233.005_80.0>,
+        <#Pvt_234.005_120.0>,
+        <#Pvt_234.15_160.0>,
+        <#Pvt_234.29_200.0>,
+        <#Pvt_234.38_10.0>,
+        <#Pvt_234.536_40.0>,
+        <#Pvt_235.419_80.0>,
+        <#Pvt_236.535_160.0>,
+        <#Pvt_236.536_120.0>,
+        <#Pvt_236.61_200.0>,
+        <#Pvt_236.914_10.0>,
+        <#Pvt_236.9_40.0>,
+        <#Pvt_237.94_80.0>,
+        <#Pvt_239.008_120.0>,
+        <#Pvt_239.025_200.0>,
+        <#Pvt_239.146_160.0>,
+        <#Pvt_239.175_10.0>,
+        <#Pvt_239.535_40.0>,
+        <#Pvt_240.41_80.0>,
+        <#Pvt_241.505_200.0>,
+        <#Pvt_241.52_120.0>,
+        <#Pvt_241.633_10.0>,
+        <#Pvt_241.645_160.0>,
+        <#Pvt_242.079_40.0>,
+        <#Pvt_242.885_80.0>,
+        <#Pvt_244.02_10.0>,
+        <#Pvt_244.09_120.0>,
+        <#Pvt_244.15_160.0>,
+        <#Pvt_244.15_200.0>,
+        <#Pvt_244.396_40.0>,
+        <#Pvt_245.446_80.0>,
+        <#Pvt_246.512_10.0>,
+        <#Pvt_246.67_200.0>,
+        <#Pvt_246.68_120.0>,
+        <#Pvt_246.786_160.0>,
+        <#Pvt_247.0_40.0>,
+        <#Pvt_247.995_80.0>,
+        <#Pvt_249.14_10.0>,
+        <#Pvt_249.156_120.0>,
+        <#Pvt_249.32_200.0>,
+        <#Pvt_249.378_160.0>,
+        <#Pvt_249.612_40.0>,
+        <#Pvt_250.665_80.0>,
+        <#Pvt_251.714_10.0>,
+        <#Pvt_251.844_120.0>,
+        <#Pvt_251.915_160.0>,
+        <#Pvt_251.925_200.0>,
+        <#Pvt_252.33_40.0>,
+        <#Pvt_253.345_80.0>,
+        <#Pvt_254.336_10.0>,
+        <#Pvt_254.535_200.0>,
+        <#Pvt_254.582_120.0>,
+        <#Pvt_254.718_160.0>,
+        <#Pvt_255.094_40.0>,
+        <#Pvt_256.145_80.0>,
+        <#Pvt_257.175_200.0>,
+        <#Pvt_257.18_10.0>,
+        <#Pvt_257.2_120.0>,
+        <#Pvt_257.45_160.0>,
+        <#Pvt_257.845_40.0>,
+        <#Pvt_258.926_80.0>,
+        <#Pvt_259.97_10.0>,
+        <#Pvt_260.035_200.0>,
+        <#Pvt_260.09_120.0>,
+        <#Pvt_260.335_160.0>,
+        <#Pvt_260.607_40.0>,
+        <#Pvt_261.74_80.0>,
+        <#Pvt_262.905_200.0>,
+        <#Pvt_262.998_10.0>,
+        <#Pvt_262.99_120.0>,
+        <#Pvt_263.17_160.0>,
+        <#Pvt_263.577_40.0>,
+        <#Pvt_264.641_80.0>,
+        <#Pvt_265.855_200.0>,
+        <#Pvt_266.04_160.0>,
+        <#Pvt_266.086_120.0>,
+        <#Pvt_266.104_10.0>,
+        <#Pvt_266.538_40.0>,
+        <#Pvt_267.655_80.0>,
+        <#Pvt_268.925_200.0>,
+        <#Pvt_268.965_160.0>,
+        <#Pvt_269.157_120.0>,
+        <#Pvt_269.26_10.0>,
+        <#Pvt_269.415_40.0>,
+        <#Pvt_270.698_80.0>,
+        <#Pvt_271.845_200.0>,
+        <#Pvt_271.885_160.0>,
+        <#Pvt_271.918_120.0>,
+        <#Pvt_272.32_10.0>,
+        <#Pvt_272.35_40.0>,
+        <#Pvt_273.15_80.0>,
+        <#Pvt_274.585_120.0>,
+        <#Pvt_274.615_200.0>,
+        <#Pvt_274.665_40.0>,
+        <#Pvt_274.698_160.0>,
+        <#Pvt_275.022_10.0>,
+        <#Pvt_275.611_80.0>,
+        <#Pvt_276.583_40.0>,
+        <#Pvt_276.974_120.0>,
+        <#Pvt_277.11_160.0>,
+        <#Pvt_277.25_200.0>,
+        <#Pvt_277.365_10.0>,
+        <#Pvt_277.5771_80.0>,
+        <#Pvt_278.005_40.0>,
+        <#Pvt_278.915_120.0>,
+        <#Pvt_279.076_80.0>,
+        <#Pvt_279.085_10.0>,
+        <#Pvt_279.26_160.0>,
+        <#Pvt_279.568_200.0>,
+        <#Pvt_280.364_120.0>,
+        <#Pvt_280.674_160.0>,
+        <#Pvt_281.18_200.0>,
+        <#Pvt_61.034_160.0>,
+        <#Pvt_61.08601_80.0>,
+        <#Pvt_61.24_120.0>,
+        <#Pvt_61.74_40.0>,
+        <#Pvt_61.84_10.0>,
+        <#Pvt_62.23_80.0>,
+        <#Pvt_62.316_160.0>,
+        <#Pvt_62.32_120.0>,
+        <#Pvt_62.894_40.0>,
+        <#Pvt_62.935_10.0>,
+        <#Pvt_63.14_200.0>,
+        <#Pvt_63.325_80.0>,
+        <#Pvt_63.38_160.0>,
+        <#Pvt_63.48_120.0>,
+        <#Pvt_63.984_40.0>,
+        <#Pvt_64.08199_10.0>,
+        <#Pvt_64.58801_80.0>,
+        <#Pvt_64.63501_160.0>,
+        <#Pvt_64.748_120.0>,
+        <#Pvt_65.113_40.0>,
+        <#Pvt_65.24_10.0>,
+        <#Pvt_65.53_200.0>,
+        <#Pvt_65.81999_160.0>,
+        <#Pvt_65.84999_80.0>,
+        <#Pvt_65.90999_120.0>,
+        <#Pvt_66.34999_40.0>,
+        <#Pvt_66.53999_10.0>,
+        <#Pvt_67.08001_80.0>,
+        <#Pvt_67.11501_160.0>,
+        <#Pvt_67.225_120.0>,
+        <#Pvt_67.61_40.0>,
+        <#Pvt_67.772_10.0>,
+        <#Pvt_68.039_200.0>,
+        <#Pvt_68.35001_80.0>,
+        <#Pvt_68.38_160.0>,
+        <#Pvt_68.55_120.0>,
+        <#Pvt_68.89001_40.0>,
+        <#Pvt_68.98_10.0>,
+        <#Pvt_69.65_80.0>,
+        <#Pvt_69.675_160.0>,
+        <#Pvt_69.846_120.0>,
+        <#Pvt_70.19_40.0>,
+        <#Pvt_70.40001_10.0>,
+        <#Pvt_70.828_200.0>,
+        <#Pvt_71.064_80.0>,
+        <#Pvt_71.11301_160.0>,
+        <#Pvt_71.259_120.0>,
+        <#Pvt_71.585_40.0>,
+        <#Pvt_71.832_10.0>,
+        <#Pvt_72.50999_160.0>,
+        <#Pvt_72.54801_80.0>,
+        <#Pvt_72.69499_120.0>,
+        <#Pvt_73.014_40.0>,
+        <#Pvt_73.26001_10.0>,
+        <#Pvt_73.655_200.0>,
+        <#Pvt_73.96999_80.0>,
+        <#Pvt_74.045_160.0>,
+        <#Pvt_74.21_120.0>,
+        <#Pvt_74.38_40.0>,
+        <#Pvt_74.78999_10.0>,
+        <#Pvt_75.53_80.0>,
+        <#Pvt_75.558_160.0>,
+        <#Pvt_75.785_120.0>,
+        <#Pvt_75.91001_40.0>,
+        <#Pvt_76.255_10.0>,
+        <#Pvt_76.73_200.0>,
+        <#Pvt_76.99501_80.0>,
+        <#Pvt_77.08499_160.0>,
+        <#Pvt_77.30201_120.0>,
+        <#Pvt_77.4_40.0>,
+        <#Pvt_77.85999_10.0>,
+        <#Pvt_78.62801_80.0>,
+        <#Pvt_78.68201_160.0>,
+        <#Pvt_78.94001_120.0>,
+        <#Pvt_79.02_40.0>,
+        <#Pvt_79.401_10.0>,
+        <#Pvt_79.955_200.0>,
+        <#Pvt_80.30501_80.0>,
+        <#Pvt_80.45499_160.0>,
+        <#Pvt_80.567_120.0>,
+        <#Pvt_80.63501_40.0>,
+        <#Pvt_81.175_10.0>,
+        <#Pvt_82.01801_80.0>,
+        <#Pvt_82.08001_160.0>,
+        <#Pvt_82.342_120.0>,
+        <#Pvt_82.34999_40.0>,
+        <#Pvt_82.77_10.0>,
+        <#Pvt_83.395_200.0>,
+        <#Pvt_83.72_80.0>,
+        <#Pvt_83.83498_160.0>,
+        <#Pvt_84.04601_40.0>,
+        <#Pvt_84.105_120.0>,
+        <#Pvt_84.62601_10.0>,
+        <#Pvt_85.624_80.0>,
+        <#Pvt_85.701_160.0>,
+        <#Pvt_85.806_40.0>,
+        <#Pvt_85.91899_120.0>,
+        <#Pvt_86.43001_10.0>,
+        <#Pvt_87.096_200.0>,
+        <#Pvt_87.437_80.0>,
+        <#Pvt_87.595_160.0>,
+        <#Pvt_87.675_40.0>,
+        <#Pvt_87.80099_120.0>,
+        <#Pvt_88.246_10.0>,
+        <#Pvt_89.355_80.0>,
+        <#Pvt_89.466_160.0>,
+        <#Pvt_89.54501_40.0>,
+        <#Pvt_89.77201_120.0>,
+        <#Pvt_90.21_10.0>,
+        <#Pvt_90.959_200.0>,
+        <#Pvt_91.29999_80.0>,
+        <#Pvt_91.46899_160.0>,
+        <#Pvt_91.49199_40.0>,
+        <#Pvt_91.78_120.0>,
+        <#Pvt_92.19401_10.0>,
+        <#Pvt_93.436_40.0>,
+        <#Pvt_93.451_80.0>,
+        <#Pvt_93.476_160.0>,
+        <#Pvt_93.85_120.0>,
+        <#Pvt_94.21999_10.0>,
+        <#Pvt_95.11_200.0>,
+        <#Pvt_95.50001_80.0>,
+        <#Pvt_95.53999_160.0>,
+        <#Pvt_95.557_40.0>,
+        <#Pvt_95.94099_120.0>,
+        <#Pvt_96.31998_10.0>,
+        <#Pvt_97.62801_40.0>,
+        <#Pvt_97.69801_80.0>,
+        <#Pvt_97.74001_160.0>,
+        <#Pvt_98.11_120.0>,
+        <#Pvt_98.51001_10.0>,
+        <#Pvt_99.465_200.0>,
+        <#Pvt_99.775_40.0>,
+        <#Pvt_99.94499_80.0> ;
+    mat:waterAbsorption "6.5" .
+
+<https://github.com/Mat-O-Lab/RDFConverter/releases/tag/v1.3.0> a prov:SoftwareAgent ;
+    rdfs:label "RDFConverterv1.3.0" ;
+    prov:hadPrimarySource <https://github.com/Mat-O-Lab/RDFConverter> .
+
+<http://localhost:6003/api/createrdf> a prov:Activity ;
+    prov:wasAssociatedWith <https://github.com/Mat-O-Lab/RDFConverter/releases/tag/v1.3.0> ;
+    prov:wasInformedBy <https://dataportal.material-digital.de/dataset/73bfee6b-a1c2-48dc-b807-3aeb35ffcbe7/resource/89022b74-1aa6-40cb-b0d1-c0e404c221fd/download/catenax-material-map.yaml> .
+
+<https://dataportal.material-digital.de/dataset/f2bca6a2-04df-47cb-9439-589e46ba60e2/resource/5f7d5a69-f8f5-49d1-9780-c3ecdc0e11ec/download/material_data_test_pa6gf30.json> a prov:Entity .
+
+[] prov:generatedAtTime "2026-03-24T10:18:12.367391"^^xsd:dateTime ;
+    prov:qualifiedDerivation [ a prov:Derivation ;
+            prov:entity <https://dataportal.material-digital.de/dataset/f2bca6a2-04df-47cb-9439-589e46ba60e2/resource/5f7d5a69-f8f5-49d1-9780-c3ecdc0e11ec/download/material_data_test_pa6gf30.json> ;
+            prov:hadActivity <http://localhost:6003/api/createrdf> ] ;
+    prov:wasDerivedFrom <https://dataportal.material-digital.de/dataset/f2bca6a2-04df-47cb-9439-589e46ba60e2/resource/5f7d5a69-f8f5-49d1-9780-c3ecdc0e11ec/download/material_data_test_pa6gf30.json> ;
+    prov:wasGeneratedBy <http://localhost:6003/api/createrdf> .
+

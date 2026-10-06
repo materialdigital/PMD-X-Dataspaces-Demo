@@ -14,6 +14,7 @@
     <a href="index.html" aria-current="page">Demo</a>
     <a href="detail-catena-x.html">Catena-X pipeline</a>
     <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-pmdco-transform.html">PMDCO Transform</a>
     <a href="detail-query.html">SPARQL query</a>
   </div>
 </nav>
@@ -97,7 +98,7 @@ N schemas × M targets
             <div class="wf-node-header">
               <div>
                 <div class="wf-node-title">Catena-X Source</div>
-                <div class="wf-node-sub">EDC negotiate → YARRRML → Triplestore</div>
+                <div class="wf-node-sub">EDC negotiate → YARRRML → SAMM/RDF staging</div>
               </div>
               <div class="wf-status-dot"></div>
             </div>
@@ -110,7 +111,7 @@ N schemas × M targets
             <div class="wf-node-header">
               <div>
                 <div class="wf-node-title">Manufacturing-X Source</div>
-                <div class="wf-node-sub">EDC negotiate → YARRRML → Triplestore</div>
+                <div class="wf-node-sub">EDC negotiate → AAS2KG → Triplestore</div>
               </div>
               <div class="wf-status-dot"></div>
             </div>
@@ -165,7 +166,7 @@ N schemas × M targets
             <div class="wf-node-header">
               <div>
                 <div class="wf-node-title">PMDCO Transform</div>
-                <div class="wf-node-sub">SPARQL INSERT — maps SAMM entities to PMDCO/TTO classes</div>
+                <div class="wf-node-sub">SPARQL INSERT — maps CatX SAMM and MfgX AAS/RDF to PMDCO/TTO classes</div>
               </div>
               <div class="wf-status-dot"></div>
             </div>
@@ -174,29 +175,10 @@ N schemas × M targets
           </div>
         </div>
 
-        <!-- Connector: PMDCO → Query -->
-        <div class="dag-simple-conn" id="dag-conn-bot" aria-hidden="true">
-          <div class="dag-vert-line"></div>
-        </div>
-
-        <!-- Cross-dataspace query node -->
-        <div class="dag-row">
-          <div class="wf-node query" id="node-F" style="max-width:300px;">
-            <div class="wf-checkmark">✓</div>
-            <div class="wf-node-header">
-              <div>
-                <div class="wf-node-title">Cross-Dataspace Query</div>
-                <div class="wf-node-sub">SPARQL traversal — follows part links from assembly graph</div>
-              </div>
-              <div class="wf-status-dot"></div>
-            </div>
-            <button type="button" class="wf-run-btn" data-node="F" data-modal="modal-F">▶ Run</button>
-          </div>
-        </div>
-
         <!-- Controls -->
         <div class="workflow-controls">
-          <button type="button" id="reset-btn">↺ Reset all nodes</button>
+          <button type="button" id="reset-btn">↺ Reset</button>
+          <button type="button" id="run-all-btn">▶▶ Run All</button>
         </div>
       </div>
 
@@ -213,33 +195,57 @@ N schemas × M targets
             </span>
             <span class="kg-stat-value" id="kg-total">—</span>
           </div>
+          <div class="kg-stat-section-label">Input data</div>
           <div class="kg-stat-row">
             <span class="kg-stat-label">
               <span class="kg-stat-dot" style="background:var(--catx-blue)"></span>
-              CatX graph triples
+              Catena-X SAMM/RDF
+            </span>
+            <span class="kg-stat-value" id="kg-catx-samm">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--mfgx-purple)"></span>
+              Manufacturing-X AAS/RDF
+            </span>
+            <span class="kg-stat-value" id="kg-mfgx-aas">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--text-muted)"></span>
+              Company product KG
+            </span>
+            <span class="kg-stat-value" id="kg-assembly">—</span>
+          </div>
+          <div class="kg-stat-section-label">Ontologies</div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--pmdco-green)"></span>
+              PMDCO 3.0
+            </span>
+            <span class="kg-stat-value" id="kg-pmdco-ontology">—</span>
+          </div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--pmdco-green); opacity:0.6"></span>
+              TTO (Tensile Test Ontology)
+            </span>
+            <span class="kg-stat-value" id="kg-tto-ontology">—</span>
+          </div>
+          <div class="kg-stat-section-label">PMDCO Transform output</div>
+          <div class="kg-stat-row">
+            <span class="kg-stat-label">
+              <span class="kg-stat-dot" style="background:var(--catx-blue)"></span>
+              Catena-X PMDCO
             </span>
             <span class="kg-stat-value" id="kg-catx">—</span>
           </div>
           <div class="kg-stat-row">
             <span class="kg-stat-label">
-              <span class="kg-stat-dot" style="background:var(--mfgx-purple)"></span>
-              MfgX graph triples
+              <span class="kg-stat-dot" style="background:var(--mfgx-purple); opacity:0.6"></span>
+              Manufacturing-X PMDCO
             </span>
             <span class="kg-stat-value" id="kg-mfgx">—</span>
-          </div>
-          <div class="kg-stat-row">
-            <span class="kg-stat-label">
-              <span class="kg-stat-dot" style="background:var(--text-muted)"></span>
-              Assembly graph triples
-            </span>
-            <span class="kg-stat-value" id="kg-assembly">—</span>
-          </div>
-          <div class="kg-stat-row">
-            <span class="kg-stat-label">
-              <span class="kg-stat-dot" style="background:var(--pmdco-green)"></span>
-              PMDCO labels (Node C)
-            </span>
-            <span class="kg-stat-value" id="kg-labels">—</span>
           </div>
         </div>
 
@@ -248,34 +254,11 @@ N schemas × M targets
         <hr class="kg-divider">
 
         <div class="kg-query-section">
-          <h4>Last query result</h4>
-          <p class="kg-latest-result" id="kg-latest">Run a node to see live data.</p>
-        </div>
-
-        <hr class="kg-divider">
-
-        <!-- Mini result preview for node F -->
-        <div id="kg-result-preview" style="display:none;">
-          <h4 style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 0.5rem;">Query preview</h4>
-          <div id="result-badge-inline"></div>
-          <div id="result-spinner-inline" style="font-size:0.75rem; color:var(--text-muted); display:none;">⏳ Querying…</div>
-          <table id="result-table" class="result-table" style="font-size:0.75rem; margin-top:0.5rem;">
-            <thead>
-              <tr>
-                <th>Component</th><th>Property</th><th>Value</th><th>Unit</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="row-catx"><td>Pulley Wheel</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td></tr>
-              <tr class="row-catx"><td>Pulley Wheel</td><td>impact strength</td><td>74000</td><td>J/m²</td></tr>
-              <tr class="row-catx"><td>Pulley Wheel</td><td>melting point</td><td>223</td><td>DEG_C</td></tr>
-              <tr class="row-catx"><td>Pulley Wheel</td><td>tensile strength</td><td>140</td><td>MegaPA</td></tr>
-              <tr class="row-mfgx"><td>Tensioner Bracket</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td></tr>
-              <tr class="row-mfgx"><td>Tensioner Bracket</td><td>tensile strength</td><td>632</td><td>MegaPA</td></tr>
-              <tr class="row-mfgx"><td>Tensioner Bracket</td><td>yield strength</td><td>276</td><td>MegaPA</td></tr>
-            </tbody>
-          </table>
-          <button type="button" id="rerun-btn" style="margin-top:0.5rem; font-size:0.75rem;">↻ Re-run</button>
+          <div class="kg-stat-section-label" style="margin-top:0;">Queries</div>
+          <div class="kg-query-row">
+            <span class="kg-query-label">Cross-dataspace SPARQL<br><a href="detail-query.html" style="font-size:0.72rem;">view query →</a></span>
+            <button type="button" class="kg-run-query-btn" id="run-query-btn">▶ Run</button>
+          </div>
         </div>
       </div>
 
@@ -292,7 +275,7 @@ N schemas × M targets
       <span id="result-spinner" style="display:none; color:var(--text-muted); font-size:0.9rem;">⏳ Querying triplestore…</span>
     </div>
     <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
-      Run the Cross-Dataspace Query node above to populate this table. Load at least the Catena-X or Manufacturing-X source first for results to appear.
+      Use the Run button in the Knowledge Graph State panel to execute the query. Load at least one source node first for results to appear.
     </p>
     <table id="result-table-full" class="result-table">
       <thead>
@@ -300,14 +283,8 @@ N schemas × M targets
           <th>Component</th><th>Material</th><th>Property</th><th>Value</th><th>Unit</th>
         </tr>
       </thead>
-      <tbody>
-        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>elastic modulus</td><td>9800</td><td>MegaPA</td></tr>
-        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>impact strength</td><td>74000</td><td>J/m²</td></tr>
-        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>melting point</td><td>223</td><td>DEG_C</td></tr>
-        <tr class="row-catx"><td>Pulley Wheel</td><td>PA6GF30</td><td>tensile strength</td><td>140</td><td>MegaPA</td></tr>
-        <tr class="row-mfgx"><td>Tensioner Bracket</td><td>Steel 316/4401</td><td>elongation at fracture</td><td>60</td><td>PERCENT</td></tr>
-        <tr class="row-mfgx"><td>Tensioner Bracket</td><td>Steel 316/4401</td><td>tensile strength</td><td>632</td><td>MegaPA</td></tr>
-        <tr class="row-mfgx"><td>Tensioner Bracket</td><td>Steel 316/4401</td><td>yield strength</td><td>276</td><td>MegaPA</td></tr>
+      <tbody id="result-table-full-body">
+        <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.5rem;">Run the pipeline nodes then click ▶ Run to execute the live query.</td></tr>
       </tbody>
     </table>
     <button type="button" id="rerun-btn-full">↻ Re-run query</button>
@@ -323,7 +300,7 @@ N schemas × M targets
       <a href="https://w3id.org/pmd/co" target="_blank" rel="noopener noreferrer">PMDCO ontology</a>
     </div>
     <div class="footer-built">
-      Built with: PMDCO · Oxigraph WASM · RDFConverter · YARRRML · AAS2KG · Eclipse Dataspace Connector
+      Built with: PMDCO · Oxigraph WASM · RDFConverter · YARRRML · AAS2KG (py-aas-rdf) · Eclipse Dataspace Connector
     </div>
   </div>
 </footer>
@@ -394,48 +371,6 @@ N schemas × M targets
   </div>
 </div>
 
-<!-- Modal F: Cross-Dataspace SPARQL Query -->
-<div class="modal-overlay modal-query" id="modal-F" role="dialog" aria-modal="true" aria-labelledby="modal-F-title">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="modal-F-title">Cross-Dataspace Query — SPARQL graph traversal</h3>
-      <button type="button" class="modal-close" aria-label="Close modal">×</button>
-    </div>
-    <div class="modal-body">
-      <p>Because both dataspace parts were converted to the same PMDCO pattern, a single SPARQL SELECT can traverse the full assembly graph — starting from the Tension Pulley, following BFO part-whole links into both component subgraphs, and reading material properties uniformly. No UNION needed; the shared ontology makes both paths structurally identical.</p>
-      <pre class="code-block"><span class="kw">SELECT</span> ?componentLabel ?materialLabel ?property ?value ?unitLabel
-<span class="kw">WHERE</span> {
-  ex:TensionPulley_001 obo:BFO_0000051 ?component .
-  ?component rdfs:label ?componentLabel .
-  ?component obo:BFO_0000051 ?mat .
-  ?mat rdfs:label ?materialLabel .
-  ?mat obo:RO_0000086 ?quality .
-  ?quality <span class="kw">a</span> ?qualityType .
-  ?quality obo:IAO_0000417 ?datum .
-  ?datum obo:OBI_0001938 ?qv .
-  ?qv qudt:numericValue ?value .
-  <span class="kw">OPTIONAL</span> { ?qv qudt:unit ?unit .
-    <span class="kw">BIND</span>(<span class="kw">REPLACE</span>(<span class="kw">STR</span>(?unit), <span class="str">"^.*/"</span>, <span class="str">""</span>) <span class="kw">AS</span> ?unitLabel) }
-  <span class="kw">VALUES</span> (?qualityType ?property) {
-    (tto:TTO_0000009 <span class="str">"yield strength"</span>)
-    (tto:TTO_0000033 <span class="str">"elongation at fracture"</span>)
-    (tto:TTO_0000053 <span class="str">"tensile strength"</span>)
-    (pmd:PMD_0000618 <span class="str">"elastic modulus"</span>)
-    (pmd:PMD_0000851 <span class="str">"melting point"</span>)
-    (pmd:PMD_0000518 <span class="str">"impact strength"</span>)
-  }
-}
-<span class="kw">ORDER BY</span> ?componentLabel ?property</pre>
-      <div class="section-note">
-        The query traverses: <code>TensionPulley_001 → hasPart → component → hasPart → material → bearerOf → quality → measuredIn → datum → hasValue → quantityValue</code>. Both dataspace subgraphs are reachable through the same path because both were mapped to the same PMDCO pattern.
-      </div>
-    </div>
-    <div class="modal-footer">
-      <span></span>
-      <button type="button" class="modal-complete-btn" data-complete="F">▶ Run &amp; show results</button>
-    </div>
-  </div>
-</div>
 
 <script type="module" src="js/main.js"></script>
 </body>

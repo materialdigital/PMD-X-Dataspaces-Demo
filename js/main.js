@@ -2,10 +2,13 @@ import initOxigraph, { Store, namedNode } from '../vendor/oxigraph.js';
 
 // ── Named graph IRIs ──────────────────────────────────────────────────────────
 const GRAPH_IRI = {
-  catx:     'urn:graph:catx',
-  mfgx:     'urn:graph:mfgx',
-  assembly: 'urn:graph:assembly',
-  labels:   'urn:graph:pmdco-labels',
+  catxSamm:     'urn:graph:catx-samm',
+  catx:         'urn:graph:catx',
+  mfgxAas:      'urn:graph:mfgx-aas',
+  mfgx:         'urn:graph:mfgx',
+  assembly:     'urn:graph:assembly',
+  pmdcoOntology:'urn:graph:pmdco-ontology',
+  ttoOntology:  'urn:graph:tto-ontology',
 };
 
 // ── Oxigraph store (initialised once) ────────────────────────────────────────
@@ -15,13 +18,14 @@ let store = null;
 let GRAPH = {};
 const storeReady = initOxigraph().then(() => {
   store = new Store();
+  window._store = store;
   GRAPH = Object.fromEntries(
     Object.entries(GRAPH_IRI).map(([k, v]) => [k, namedNode(v)])
   );
 });
 
 // ── Cross-dataspace query ─────────────────────────────────────────────────────
-// Both catx-data.ttl and mfgx-pmdco.ttl follow the same PMDCO graph pattern:
+// Both urn:graph:catx and urn:graph:mfgx (after PMDCO INSERT) follow the same PMDCO graph pattern:
 //   component → BFO_0000051 → material → RO_0000086 → quality
 //                                         → IAO_0000417 → datum → OBI_0001938 → qv
 // PMDCO as shared vocabulary makes this single query possible across two dataspaces.
@@ -35,6 +39,9 @@ PREFIX qudt:  <https://qudt.org/schema/qudt/>
 PREFIX ex:    <http://example.org/assembly/>
 
 SELECT ?componentLabel ?materialLabel ?property ?value ?unitLabel
+FROM <urn:graph:assembly>
+FROM <urn:graph:catx>
+FROM <urn:graph:mfgx>
 WHERE {
   ex:TensionPulley_001 obo:BFO_0000051 ?component .
   ?component rdfs:label ?componentLabel .
@@ -57,48 +64,276 @@ WHERE {
 }
 ORDER BY ?componentLabel ?property`;
 
-// ── Node C: PMDCO augmentation INSERT ────────────────────────────────────────
-// Reads quality type IRIs from both graphs and writes human-readable rdfs:label
-// annotations into the dedicated pmdco-labels named graph.
-const PMDCO_INSERT = `
-PREFIX tto:  <https://w3id.org/pmd/tto/>
-PREFIX pmd:  <https://w3id.org/pmd/co/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+// ── Node C: SAMM → PMDCO INSERT (CatX) ───────────────────────────────────────
+// Reads SAMM/RDF from any graph in the store (GRAPH ?dataGraph / ?schemaGraph),
+// matches mat:Property values against the SAMM characteristic schema, and writes
+// PMDCO quality individuals into urn:graph:catx.
+const CATX_INSERT = `
+PREFIX samm:   <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#>
+PREFIX samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#>
+PREFIX mat:    <urn:samm:io.catenax.material_data:1.0.0#>
+PREFIX qudt:   <https://qudt.org/schema/qudt/>
+PREFIX unit:   <https://qudt.org/vocab/unit/>
+PREFIX obo:    <http://purl.obolibrary.org/obo/>
+PREFIX pmd:    <https://w3id.org/pmd/co/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
+PREFIX sunit:  <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-INSERT { GRAPH <urn:graph:pmdco-labels> { ?quality rdfs:label ?label . } }
+INSERT { GRAPH <urn:graph:catx> {
+
+    ?material a      obo:BFO_0000040 ;
+              rdfs:label ?matLabel .
+
+    ?quality a              ?qualityClass ;
+             rdfs:label     ?propLabel ;
+             obo:RO_0000052 ?material ;
+             obo:IAO_0000417 ?datum .
+
+    ?material obo:RO_0000086 ?quality .
+
+    ?datum a                obo:OBI_0001931 ;
+           rdfs:label       ?propLabel ;
+           obo:OBI_0001938  ?qv .
+
+    ?qv a                  qudt:QuantityValue ;
+        qudt:unit          ?qdtUnit ;
+        qudt:numericValue  ?convertedValue ;
+        rdfs:label         ?propLabel .
+
+} }
 WHERE {
-  { GRAPH <urn:graph:catx> { ?quality a ?type } }
-  UNION
-  { GRAPH <urn:graph:mfgx> { ?quality a ?type } }
-  VALUES (?type ?label) {
-    (<https://w3id.org/pmd/tto/TTO_0000053> "tensile strength")
-    (<https://w3id.org/pmd/tto/TTO_0000009> "yield strength")
-    (<https://w3id.org/pmd/tto/TTO_0000033> "elongation at fracture")
-    (<https://w3id.org/pmd/co/PMD_0000618>  "elastic modulus")
-    (<https://w3id.org/pmd/co/PMD_0000851>  "melting point")
-    (<https://w3id.org/pmd/co/PMD_0000518>  "impact strength")
+
+    GRAPH ?dataGraph {
+        ?dataEntity ?prop ?value .
+        FILTER(isLiteral(?value))
+
+        ?materialData a mat:MaterialData ;
+                     ?groupProp ?dataEntity .
+        FILTER(?groupProp != rdf:type)
+
+        OPTIONAL {
+            ?materialData mat:materialInformation ?matInfo .
+            ?matInfo mat:materialName       ?matName ;
+                     mat:materialIdentifier ?matId .
+        }
+    }
+
+    GRAPH ?schemaGraph {
+        ?prop a samm:Property ;
+              samm:characteristic ?char .
+        ?char samm-c:unit   ?sammUnit ;
+              samm:dataType ?dtype .
+        OPTIONAL {
+            ?prop samm:preferredName ?propLabel .
+            FILTER(LANG(?propLabel) = "en")
+        }
+    }
+
+    FILTER(?dtype IN (
+        xsd:float, xsd:double, xsd:decimal,
+        xsd:integer, xsd:int, xsd:long,
+        xsd:nonNegativeInteger, xsd:positiveInteger
+    ))
+
+    VALUES (?sammUnit ?qdtUnit ?factor) {
+        ( sunit:megapascal              unit:MegaPA            1    )
+        ( sunit:percent                 unit:PERCENT           1    )
+        ( sunit:degreeCelsius           unit:DEG_C             1    )
+        ( sunit:kilogramPerCubicMetre   unit:KiloGM-PER-M3     1    )
+        ( sunit:percentWeight           unit:PERCENT           1    )
+        ( sunit:percentPerDegreeCelsius unit:PERCENT-PER-DEG_C 1    )
+        ( mat:kiloJoulePerSquareMeter   unit:J-PER-M2          1000 )
+    }
+
+    VALUES (?prop ?qualityClass) {
+        ( mat:stressAtBreak                               pmd:PMD_0000952 )
+        ( mat:flexuralStrength                            pmd:PMD_0000952 )
+        ( mat:youngsModulus                               pmd:PMD_0000618 )
+        ( mat:flexuralModulus                             pmd:PMD_0000618 )
+        ( mat:strainAtBreak                               pmd:PMD_0000005 )
+        ( mat:impactStrength                              pmd:PMD_0000518 )
+        ( mat:density                                     pmd:PMD_0000597 )
+        ( mat:meltingTemperature                          pmd:PMD_0000851 )
+        ( mat:glassTransitionTemperature                  pmd:PMD_0000981 )
+        ( mat:humidity                                    pmd:PMD_0000005 )
+        ( mat:waterAbsorption                             pmd:PMD_0000005 )
+        ( mat:linearThermalExpansionCoefficientParallel   pmd:PMD_0000981 )
+        ( mat:linearThermalExpansionCoefficientTransverse pmd:PMD_0000981 )
+    }
+
+    BIND(xsd:decimal(?value) * ?factor AS ?convertedValue)
+    BIND(IF(BOUND(?matName) && BOUND(?matId),
+            CONCAT(STR(?matName), " (", STR(?matId), ")"),
+            STR(?materialData)) AS ?matLabel)
+
+    BIND(IRI(CONCAT("https://pmdx.materials-data.space/catx/", STRAFTER(STR(?materialData), "#"), "-material"))                                        AS ?material)
+    BIND(IRI(CONCAT("https://pmdx.materials-data.space/catx/", STRAFTER(STR(?dataEntity),   "#"), "-qual-",  STRAFTER(STR(?prop), "#")))               AS ?quality)
+    BIND(IRI(CONCAT("https://pmdx.materials-data.space/catx/", STRAFTER(STR(?dataEntity),   "#"), "-datum-", STRAFTER(STR(?prop), "#")))               AS ?datum)
+    BIND(IRI(CONCAT("https://pmdx.materials-data.space/catx/", STRAFTER(STR(?dataEntity),   "#"), "-qv-",    STRAFTER(STR(?prop), "#")))               AS ?qv)
+}`;
+
+// ── Node C: AAS → PMDCO INSERT (MfgX) ───────────────────────────────────────
+// Reads raw AAS RDF (admin-shell.io ontology, produced by py-aas-rdf) from the
+// mfgx-aas staging graph and writes PMDCO triples into urn:graph:mfgx.
+// Matches each aas:Property by its semanticId key value, extracts the numeric
+// value and English display name, and emits the same quality/datum/qv pattern
+// that urn:graph:catx uses — enabling the single cross-dataspace SPARQL query.
+const AAS2KG_INSERT = `
+PREFIX aas:   <https://admin-shell.io/aas/3/0/>
+PREFIX aasP:  <https://admin-shell.io/aas/3/0/Property/>
+PREFIX aasK:  <https://admin-shell.io/aas/3/0/Key/>
+PREFIX aasR:  <https://admin-shell.io/aas/3/0/Reference/>
+PREFIX aasSM: <https://admin-shell.io/aas/3/0/HasSemantics/>
+PREFIX aasRf: <https://admin-shell.io/aas/3/0/Referable/>
+PREFIX aasLS: <https://admin-shell.io/aas/3/0/AbstractLangString/>
+PREFIX tto:   <https://w3id.org/pmd/tto/>
+PREFIX pmd:   <https://w3id.org/pmd/co/>
+PREFIX obo:   <http://purl.obolibrary.org/obo/>
+PREFIX qudt:  <https://qudt.org/schema/qudt/>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex:    <http://www.example.org/#>
+
+INSERT { GRAPH <urn:graph:mfgx> {
+
+  ex:316-4401_material a pmd:PMD_0000000, obo:BFO_0000040 ;
+    rdfs:label "316/4401 – 2R-2BB – Cold Rolled Stainless Steel" ;
+    obo:RO_0000086 ex:316-4401_tensile_strength,
+                   ex:316-4401_yield_strength,
+                   ex:316-4401_elongation_after_fracture .
+
+  ex:316-4401_tensile_strength a tto:TTO_0000053 ;
+    obo:RO_0000052 ex:316-4401_material ;
+    obo:IAO_0000417 ex:316-4401_tensile_strength_scalar_value_specification .
+  ex:316-4401_tensile_strength_scalar_value_specification a obo:OBI_0001931 ;
+    rdfs:label ?tensileLabel ;
+    obo:OBI_0001938 ex:316-4401_tensile_strength_value .
+  ex:316-4401_tensile_strength_value a qudt:QuantityValue ;
+    qudt:unit qudt:MegaPA ;
+    qudt:numericValue ?tensileValue ;
+    rdfs:label ?tensileLabel .
+
+  ex:316-4401_yield_strength a tto:TTO_0000009 ;
+    obo:RO_0000052 ex:316-4401_material ;
+    obo:IAO_0000417 ex:316-4401_yield_strength_scalar_value_specification .
+  ex:316-4401_yield_strength_scalar_value_specification a obo:OBI_0001931 ;
+    rdfs:label ?yieldLabel ;
+    obo:OBI_0001938 ex:316-4401_yield_strength_value .
+  ex:316-4401_yield_strength_value a qudt:QuantityValue ;
+    qudt:unit qudt:MegaPA ;
+    qudt:numericValue ?yieldValue ;
+    rdfs:label ?yieldLabel .
+
+  ex:316-4401_elongation_after_fracture a tto:TTO_0000033 ;
+    obo:RO_0000052 ex:316-4401_material ;
+    obo:IAO_0000417 ex:316-4401_elongation_after_fracture_scalar_value_specification .
+  ex:316-4401_elongation_after_fracture_scalar_value_specification a obo:OBI_0001931 ;
+    rdfs:label ?elongLabel ;
+    obo:OBI_0001938 ex:316-4401_elongation_after_fracture_value .
+  ex:316-4401_elongation_after_fracture_value a qudt:QuantityValue ;
+    qudt:unit qudt:MegaPA ;
+    qudt:numericValue ?elongValue ;
+    rdfs:label ?elongLabel .
+
+  ex:316-4401_chem_comp a pmd:PMD_0000551 ;
+    obo:RO_0000080 ex:316-4401_material ;
+    pmd:PMD_0000004 ex:316-4401_chem_comp_spec .
+  ex:316-4401_chem_comp_spec a pmd:PMD_0025002 ;
+    obo:RO_0002351 ex:316-4401_fraction_carbon, ex:316-4401_fraction_chromium,
+                   ex:316-4401_fraction_manganese, ex:316-4401_fraction_molybdenum,
+                   ex:316-4401_fraction_nickel, ex:316-4401_fraction_nitrogen,
+                   ex:316-4401_fraction_phosphorus, ex:316-4401_fraction_silicon,
+                   ex:316-4401_fraction_sulfur .
+
+  ex:316-4401_some_carbon    a pmd:PMD_0020030 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_chromium  a pmd:PMD_0020029 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_manganese a pmd:PMD_0020078 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_molybdenum a pmd:PMD_0020034 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_nickel    a pmd:PMD_0020051 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_nitrogen  a pmd:PMD_0020038 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_phosphorus a pmd:PMD_0020047 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_silicon   a pmd:PMD_0020050 ; obo:BFO_0000050 ex:316-4401_material .
+  ex:316-4401_some_sulfur    a pmd:PMD_0020059 ; obo:BFO_0000050 ex:316-4401_material .
+
+  ex:316-4401_mass_proportion_carbon     a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_carbon    ; pmd:PMD_0000077 ex:316-4401_fraction_carbon .
+  ex:316-4401_mass_proportion_chromium   a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_chromium  ; pmd:PMD_0000077 ex:316-4401_fraction_chromium .
+  ex:316-4401_mass_proportion_manganese  a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_manganese ; pmd:PMD_0000077 ex:316-4401_fraction_manganese .
+  ex:316-4401_mass_proportion_molybdenum a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_molybdenum ; pmd:PMD_0000077 ex:316-4401_fraction_molybdenum .
+  ex:316-4401_mass_proportion_nickel     a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_nickel    ; pmd:PMD_0000077 ex:316-4401_fraction_nickel .
+  ex:316-4401_mass_proportion_nitrogen   a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_nitrogen  ; pmd:PMD_0000077 ex:316-4401_fraction_nitrogen .
+  ex:316-4401_mass_proportion_phosphorus a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_phosphorus ; pmd:PMD_0000077 ex:316-4401_fraction_phosphorus .
+  ex:316-4401_mass_proportion_silicon    a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_silicon   ; pmd:PMD_0000077 ex:316-4401_fraction_silicon .
+  ex:316-4401_mass_proportion_sulfur     a pmd:PMD_0020102 ; pmd:PMD_0025999 ex:316-4401_some_sulfur    ; pmd:PMD_0000077 ex:316-4401_fraction_sulfur .
+
+  ex:316-4401_fraction_carbon     a pmd:PMD_0025997 ; obo:OBI_0001937 ?carbonValue    ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_chromium   a pmd:PMD_0025997 ; obo:OBI_0001937 ?chromiumValue  ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_manganese  a pmd:PMD_0025997 ; obo:OBI_0001937 ?manganeseValue ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_molybdenum a pmd:PMD_0025997 ; obo:OBI_0001937 ?molybdenumValue ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_nickel     a pmd:PMD_0025997 ; obo:OBI_0001937 ?nickelValue    ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_nitrogen   a pmd:PMD_0025997 ; obo:OBI_0001937 ?nitrogenValue  ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_phosphorus a pmd:PMD_0025997 ; obo:OBI_0001937 ?phosphorusValue ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_silicon    a pmd:PMD_0025997 ; obo:OBI_0001937 ?siliconValue   ; obo:IAO_0000039 obo:UO_0000163 .
+  ex:316-4401_fraction_sulfur     a pmd:PMD_0025997 ; obo:OBI_0001937 ?sulfurValue    ; obo:IAO_0000039 obo:UO_0000163 .
+} }
+WHERE {
+  GRAPH <urn:graph:mfgx-aas> {
+    OPTIONAL {
+      ?tensileP a aas:Property ; aasP:value ?tensileValue ;
+        aasRf:displayName ?tdn ; aasSM:semanticId ?tss .
+      ?tss aasR:keys ?tk . ?tk aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/TensileStrengthMean/1/0" .
+      ?tdn aasLS:language "en" ; aasLS:text ?tensileLabel .
+    }
+    OPTIONAL {
+      ?yieldP a aas:Property ; aasP:value ?yieldValue ;
+        aasRf:displayName ?ydn ; aasSM:semanticId ?yss .
+      ?yss aasR:keys ?yk . ?yk aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/YieldOrProofStrengthMean/1/0" .
+      ?ydn aasLS:language "en" ; aasLS:text ?yieldLabel .
+    }
+    OPTIONAL {
+      ?elongP a aas:Property ; aasP:value ?elongValue ;
+        aasRf:displayName ?edn ; aasSM:semanticId ?ess .
+      ?ess aasR:keys ?ek . ?ek aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/ElongationAfterFractureMean/1/0" .
+      ?edn aasLS:language "en" ; aasLS:text ?elongLabel .
+    }
+    OPTIONAL { ?cP a aas:Property ; aasP:value ?carbonValue    ; aasSM:semanticId ?css  . ?css  aasR:keys ?ck  . ?ck  aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_C/1/0" . }
+    OPTIONAL { ?crP a aas:Property ; aasP:value ?chromiumValue  ; aasSM:semanticId ?crss . ?crss aasR:keys ?crk . ?crk aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_Cr/1/0" . }
+    OPTIONAL { ?mnP a aas:Property ; aasP:value ?manganeseValue ; aasSM:semanticId ?mnss . ?mnss aasR:keys ?mnk . ?mnk aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_Mn/1/0" . }
+    OPTIONAL { ?moP a aas:Property ; aasP:value ?molybdenumValue ; aasSM:semanticId ?moss . ?moss aasR:keys ?mok . ?mok aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_Mo/1/0" . }
+    OPTIONAL { ?niP a aas:Property ; aasP:value ?nickelValue    ; aasSM:semanticId ?niss . ?niss aasR:keys ?nik . ?nik aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_Ni/1/0" . }
+    OPTIONAL { ?nP  a aas:Property ; aasP:value ?nitrogenValue  ; aasSM:semanticId ?nss  . ?nss  aasR:keys ?nk  . ?nk  aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_N/1/0" . }
+    OPTIONAL { ?pP  a aas:Property ; aasP:value ?phosphorusValue ; aasSM:semanticId ?pss  . ?pss  aasR:keys ?pk  . ?pk  aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_P/1/0" . }
+    OPTIONAL { ?siP a aas:Property ; aasP:value ?siliconValue   ; aasSM:semanticId ?siss . ?siss aasR:keys ?sik . ?sik aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_Si/1/0" . }
+    OPTIONAL { ?sP  a aas:Property ; aasP:value ?sulfurValue    ; aasSM:semanticId ?suss . ?suss aasR:keys ?suk . ?suk aasK:value "https://admin-shell.io/idta/InspectionDocumentsOfSteelProducts/MassFraction_S/1/0" . }
   }
 }`;
 
 // ── Node data sources ─────────────────────────────────────────────────────────
 // Use IRI strings here — namedNode() is called inside executeNode after WASM init
 const NODE_TTL = {
-  A: { url: 'assets/data/catx-data.ttl',  graphIri: GRAPH_IRI.catx },
-  B: { url: 'assets/data/mfgx-pmdco.ttl', graphIri: GRAPH_IRI.mfgx },
-  D: { url: 'assets/data/assembly.ttl',   graphIri: GRAPH_IRI.assembly },
+  A: { url: 'assets/data/catx-samm.ttl',         graphIri: GRAPH_IRI.catxSamm,
+       baseIri: 'https://dataportal.material-digital.de/dataset/f2bca6a2-04df-47cb-9439-589e46ba60e2/resource/6ffde9ce-f6c6-4214-8949-a60fb3123157/download/material_data_test_pa6gf30-joined.ttl' },
+  A_model: { url: 'assets/data/catx-samm-model.ttl', graphIri: GRAPH_IRI.catxSamm },
+  B: { url: 'assets/data/mfgx-aas.ttl',          graphIri: GRAPH_IRI.mfgxAas },
+  D: { url: 'assets/data/assembly.ttl',           graphIri: GRAPH_IRI.assembly },
+  C_pmdco: { url: 'assets/data/pmdco-ontology.ttl', graphIri: GRAPH_IRI.pmdcoOntology },
+  C_tto:   { url: 'assets/data/tto-ontology.ttl',   graphIri: GRAPH_IRI.ttoOntology },
 };
 
 // ── KG inspector SPARQL counts ────────────────────────────────────────────────
 const KG_QUERIES = {
-  total:    `SELECT (COUNT(*) AS ?c) { { GRAPH ?g { ?s ?p ?o } } UNION { ?s ?p ?o } }`,
-  catx:     `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:catx>     { ?s ?p ?o } }`,
-  mfgx:     `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:mfgx>     { ?s ?p ?o } }`,
-  assembly: `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:assembly>  { ?s ?p ?o } }`,
-  labels:   `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:pmdco-labels> { ?s ?p ?o } }`,
+  total:        `SELECT (COUNT(*) AS ?c) { { GRAPH ?g { ?s ?p ?o } } UNION { ?s ?p ?o } }`,
+  catxSamm:     `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:catx-samm>          { ?s ?p ?o } }`,
+  mfgxAas:      `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:mfgx-aas>           { ?s ?p ?o } }`,
+  assembly:     `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:assembly>            { ?s ?p ?o } }`,
+  pmdcoOntology:`SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:pmdco-ontology>      { ?s ?p ?o } }`,
+  ttoOntology:  `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:tto-ontology>        { ?s ?p ?o } }`,
+  catx:         `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:catx>                { ?s ?p ?o } }`,
+  mfgx:         `SELECT (COUNT(*) AS ?c) { GRAPH <urn:graph:mfgx>                { ?s ?p ?o } }`,
 };
 
 // ── Node state ────────────────────────────────────────────────────────────────
-const nodeState = { A: 'pending', B: 'pending', C: 'pending', D: 'pending', F: 'pending' };
+const nodeState = { A: 'pending', B: 'pending', C: 'pending', D: 'pending' };
 let lastOpenedNode = null;
 let sparqlInFlight = false;
 
@@ -106,9 +341,10 @@ function setNodeState(id, state) {
   nodeState[id] = state;
   const el = document.getElementById('node-' + id);
   if (!el) return;
-  el.classList.remove('done', 'running');
+  el.classList.remove('done', 'running', 'error');
   if (state === 'done')    el.classList.add('done');
   if (state === 'running') el.classList.add('running');
+  if (state === 'error')   el.classList.add('error');
   updateDAGConnectors();
 }
 
@@ -118,17 +354,12 @@ async function resetAllNodes() {
   // Reset store
   await storeReady;
   store = new Store();
-  // Reset result tables
+  window._store = store;
+  // Reset result table
   const fullBody = document.querySelector('#result-table-full tbody');
-  if (fullBody) fullBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1rem;">Run the Cross-Dataspace Query node to fetch results.</td></tr>';
-  const prevBody = document.querySelector('#result-table tbody');
-  if (prevBody) prevBody.innerHTML = '';
-  const preview = document.getElementById('kg-result-preview');
-  if (preview) preview.style.display = 'none';
-  const latest = document.getElementById('kg-latest');
-  if (latest) { latest.textContent = 'Run a node to see live data.'; latest.className = 'kg-latest-result'; }
+  if (fullBody) fullBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1rem;">Use the Run button in the Knowledge Graph State panel to execute the query.</td></tr>';
   // Reset KG stats
-  ['kg-total','kg-catx','kg-mfgx','kg-assembly','kg-labels'].forEach(id => {
+  ['kg-total','kg-catx-samm','kg-mfgx-aas','kg-assembly','kg-pmdco-ontology','kg-tto-ontology','kg-catx','kg-mfgx'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.textContent = '—'; el.className = 'kg-stat-value'; }
   });
@@ -150,8 +381,10 @@ const MODAL_STEPS = {
       code: '{\n  "materialInformation": { "materialName": "PA6GF30", "materialIdentifier": "Z1234" },\n  "mechanicalProperty":  { "impactStrength": 74, "youngsModulus": 9800 },\n  "thermophysicalProperty": { "meltingTemperature": 223 }\n}' },
     { title: 'YARRRML + RDF Converter — SAMM RDF document',
       body: 'A YARRRML mapping defines rules that bind the SAMM JSON structure to SAMM ontology IRIs. RDFConverter executes the mapping and produces a self-contained SAMM-conformant RDF document — SAMM entities, not yet PMDCO.' },
-    { title: 'Load SAMM RDF into Triplestore',
-      body: 'The self-contained SAMM RDF document is loaded into the Oxigraph triplestore as named graph <code>urn:graph:catx</code>. The PMDCO transformation happens in the next node.',
+    { title: 'SAMM/RDF instance data loaded',
+      body: 'The RDF document with material instance data (PA6GF30 measurements) is loaded into the Oxigraph triplestore as named graph <code>urn:graph:catx-samm</code>.' },
+    { title: 'SAMM aspect model loaded — staging graph ready',
+      body: 'The SAMM aspect model (<code>materialdataam3010.ttl</code>) is loaded into the same staging graph <code>urn:graph:catx-samm</code>. It defines the <code>samm:Property</code> descriptions, <code>samm:characteristic</code> links, and <code>samm-c:unit</code> annotations the PMDCO Transform INSERT uses to identify property semantics and units.',
       last: true },
   ],
   B: [
@@ -164,17 +397,19 @@ const MODAL_STEPS = {
       code: '{\n  "assetAdministrationShells": [{ "idShort": "InspectionDocumentsOfSteelProductsAAS" }],\n  "submodels": [{\n    "semanticId": { "keys": [{ "value": "https://admin-shell.io/idta/...InspectionDocumentsOfSteelProducts/1/0" }] },\n    "submodelElements": [ /* EN 10204 sections with tensile / yield / elongation values */ ]\n  }]\n}' },
     { title: 'AAS2KG — AAS-ontology RDF document',
       body: 'The AAS2KG tool converts the AAS JSON to a self-contained RDF document using admin-shell.io ontology IRIs. Submodel elements are identified by their <code>semanticId</code> — AAS structure, not yet PMDCO.' },
-    { title: 'SPARQL CONSTRUCT — AAS semanticId → PMDCO',
-      body: 'A SPARQL CONSTRUCT matches submodel elements by their <code>semanticId</code> IRIs and maps them to TTO/PMDCO quality class IRIs (e.g. tensile strength → <code>tto:TTO_0000053</code>) with QUDT unit annotations.' },
-    { title: 'Load into Triplestore',
-      body: 'The resulting PMDCO Turtle graph is loaded into Oxigraph as named graph <code>urn:graph:mfgx</code>.',
+    { title: 'AAS/RDF loaded — staging graph ready',
+      body: 'Raw AAS-ontology RDF is now in the staging graph <code>urn:graph:mfgx-aas</code>. The PMDCO mapping INSERT runs next as the <strong>PMDCO Transform</strong> step — the same INSERT that also processes the Catena-X SAMM graph.',
       last: true },
   ],
   C: [
-    { title: 'SPARQL INSERT — SAMM → PMDCO mapping',
-      body: 'The <code>pmdco-mapping-insert.sparql</code> INSERT runs against the SAMM triples already in the triplestore. It maps SAMM property IRIs (e.g. <code>mat:youngsModulus</code>) to PMDCO quality class IRIs and SAMM unit references to QUDT unit individuals.' },
-    { title: 'PMDCO quality individuals written',
-      body: 'PMDCO quality individuals are written into the triplestore — typed with PMDCO/TTO class IRIs, linked via <code>obo:IAO_0000417</code> to measurement datums and <code>qudt:numericValue</code> to values. Both CatX and MfgX graphs are now semantically aligned.',
+    { title: 'Load PMDCO 3.0 ontology',
+      body: 'The PMD Core Ontology (PMDCO 3.0) is loaded into the triplestore as named graph <code>urn:graph:pmdco-ontology</code>. It defines the quality class hierarchy (<code>pmd:PMD_0000618</code> elastic modulus, <code>pmd:PMD_0000851</code> melting point, …), the BFO/RO/OBI predicates used in the data pattern, and their <code>rdfs:label</code> annotations — so the triplestore can answer label lookups and, with inference enabled, subclass queries without hard-coded VALUES tables.' },
+    { title: 'Load TTO ontology',
+      body: 'The Tensile Test Ontology (TTO), aligned with PMDCO, is loaded into <code>urn:graph:tto-ontology</code>. It defines the mechanical property classes used for the steel inspection data: <code>tto:TTO_0000053</code> (tensile strength), <code>tto:TTO_0000009</code> (yield strength), <code>tto:TTO_0000033</code> (elongation at fracture). Both ontologies are now in the triplestore — the INSERT can mint typed individuals using their canonical class IRIs.' },
+    { title: 'SPARQL INSERT — map both source graphs to PMDCO',
+      body: 'One SPARQL INSERT reads both staging graphs. For <code>urn:graph:catx</code> it resolves SAMM property IRIs to TTO/PMDCO quality classes; for <code>urn:graph:mfgx-aas</code> it navigates the <code>aas:Property → semanticId → keys → value</code> chain to match IDTA IRI strings (e.g. <code>…TensileStrengthMean/1/0</code>) and writes PMDCO quality individuals with QUDT units into <code>urn:graph:mfgx</code>. One query — two dataspaces, two vocabularies, one output pattern.' },
+    { title: 'Cross-dataspace alignment complete',
+      body: 'All graphs are live: CatX SAMM/RDF, MfgX AAS/RDF, MfgX PMDCO output, company product KG, PMDCO ontology, and TTO ontology. A single SPARQL SELECT can now traverse across dataspaces — component → material → quality — using the canonical class IRIs the ontologies define.',
       last: true },
   ],
   D: [
@@ -221,8 +456,13 @@ function renderStep(modalEl, nodeId, idx) {
       nav.querySelector('.step-complete-btn').addEventListener('click', async () => {
         clearStepTimer();
         closeModal();
-        await executeNode(nodeId);
-        setNodeState(nodeId, 'done');
+        try {
+          await executeNode(nodeId);
+          setNodeState(nodeId, 'done');
+        } catch (e) {
+          setNodeState(nodeId, 'error');
+          alert(`Node ${nodeId} failed: ${e.message}`);
+        }
         refreshKGStats();
       }, { once: true });
     } else {
@@ -341,19 +581,36 @@ document.querySelectorAll('.modal-complete-btn').forEach(btn => {
     await executeNode(nodeId);
     setNodeState(nodeId, 'done');
     refreshKGStats();
-    if (nodeId === 'F') triggerSPARQLQuery();
   });
 });
 
+async function loadTtl(key) {
+  const { url, graphIri, baseIri } = NODE_TTL[key];
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`fetch ${url}: ${resp.status}`);
+  const ttl  = await resp.text();
+  try {
+    const opts = { format: 'text/turtle', to_graph_name: namedNode(graphIri) };
+    if (baseIri) opts.base_iri = baseIri;
+    store.load(ttl, opts);
+  } catch (e) {
+    console.error(`store.load failed for ${key}:`, e);
+    throw e;
+  }
+}
+
 async function executeNode(nodeId) {
   await storeReady;
-  if (nodeId in NODE_TTL) {
-    const { url, graphIri } = NODE_TTL[nodeId];
-    const resp = await fetch(url);
-    const ttl  = await resp.text();
-    store.load(ttl, { format: 'text/turtle', to_graph_name: namedNode(graphIri) });
-  } else if (nodeId === 'C') {
-    store.update(PMDCO_INSERT);
+  if (nodeId === 'C') {
+    await loadTtl('C_pmdco');
+    await loadTtl('C_tto');
+    store.update(CATX_INSERT);
+    store.update(AAS2KG_INSERT);
+  } else if (nodeId === 'A') {
+    await loadTtl('A');
+    await loadTtl('A_model');
+  } else if (nodeId in NODE_TTL) {
+    await loadTtl(nodeId);
   }
 }
 
@@ -374,11 +631,39 @@ document.querySelectorAll('.tab-btn').forEach(tabBtn => {
 const resetBtn = document.getElementById('reset-btn');
 if (resetBtn) resetBtn.addEventListener('click', resetAllNodes);
 
-// ── Re-run query buttons ──────────────────────────────────────────────────────
-['rerun-btn', 'rerun-btn-full'].forEach(id => {
+// ── Query buttons ─────────────────────────────────────────────────────────────
+['run-query-btn', 'rerun-btn-full'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', () => { sparqlInFlight = false; triggerSPARQLQuery(); });
 });
+
+// ── Run All button ────────────────────────────────────────────────────────────
+const runAllBtn = document.getElementById('run-all-btn');
+if (runAllBtn) {
+  runAllBtn.addEventListener('click', async () => {
+    runAllBtn.disabled = true;
+    runAllBtn.textContent = '⏳ Running…';
+    await resetAllNodes();
+    for (const nodeId of ['A', 'B', 'D', 'C']) {
+      setNodeState(nodeId, 'running');
+      try {
+        await executeNode(nodeId);
+        setNodeState(nodeId, 'done');
+      } catch (e) {
+        setNodeState(nodeId, 'error');
+        console.error(`Run All: node ${nodeId} failed`, e);
+        runAllBtn.disabled = false;
+        runAllBtn.textContent = '▶▶ Run All';
+        return;
+      }
+      refreshKGStats();
+    }
+    runAllBtn.disabled = false;
+    runAllBtn.textContent = '▶▶ Run All';
+    sparqlInFlight = false;
+    triggerSPARQLQuery();
+  });
+}
 
 // ── CSS connector state ───────────────────────────────────────────────────────
 function updateDAGConnectors() {
@@ -400,8 +685,6 @@ function updateDAGConnectors() {
   const mid = document.querySelector('#dag-conn-mid .dag-vert-line');
   if (mid) mid.classList.toggle('line-active', nodeState.A === 'done' || nodeState.B === 'done');
 
-  const bot = document.querySelector('#dag-conn-bot .dag-vert-line');
-  if (bot) bot.classList.toggle('line-active', nodeState.C === 'done');
 }
 
 // ── KG Inspector ──────────────────────────────────────────────────────────────
@@ -417,11 +700,14 @@ function sparqlCount(query) {
 async function refreshKGStats() {
   await storeReady;
   const ids = {
-    total:    'kg-total',
-    catx:     'kg-catx',
-    mfgx:     'kg-mfgx',
-    assembly: 'kg-assembly',
-    labels:   'kg-labels',
+    total:         'kg-total',
+    catxSamm:      'kg-catx-samm',
+    mfgxAas:       'kg-mfgx-aas',
+    assembly:      'kg-assembly',
+    pmdcoOntology: 'kg-pmdco-ontology',
+    ttoOntology:   'kg-tto-ontology',
+    catx:          'kg-catx',
+    mfgx:          'kg-mfgx',
   };
 
   Object.entries(KG_QUERIES).forEach(([key, q]) => {
@@ -440,12 +726,6 @@ async function refreshKGStats() {
       el.textContent = n.toLocaleString();
       el.className = 'kg-stat-value' + (n === 0 ? ' empty' : '');
     });
-    const total = sparqlCount(KG_QUERIES.total);
-    const latest = document.getElementById('kg-latest');
-    if (latest && total > 0) {
-      latest.textContent = `In-browser Oxigraph · ${total.toLocaleString()} total triples`;
-      latest.className = 'kg-latest-result has-data';
-    }
   }, 50);
 }
 
@@ -477,56 +757,28 @@ async function triggerSPARQLQuery() {
   if (sparqlInFlight) return;
   sparqlInFlight = true;
 
-  const preview        = document.getElementById('kg-result-preview');
-  const spinnerInline  = document.getElementById('result-spinner-inline');
-  const badgeInline    = document.getElementById('result-badge-inline');
-  const spinner        = document.getElementById('result-spinner');
-  const badge          = document.getElementById('result-badge');
+  const spinner = document.getElementById('result-spinner');
+  const badge   = document.getElementById('result-badge');
 
-  if (preview)       preview.style.display = 'block';
-  if (spinnerInline) spinnerInline.style.display = 'block';
-  if (spinner)       spinner.style.display = 'inline';
+  if (spinner) spinner.style.display = 'inline';
 
   await storeReady;
 
   try {
-    const allGraphs = Object.values(GRAPH);
-    const results = store.query(SPARQL_QUERY, { default_graph: allGraphs });
+    const results = store.query(SPARQL_QUERY);
     const bindings = [...results];
 
-    const liveText = `Live · Oxigraph in-browser`;
-    if (badgeInline) { badgeInline.className = 'badge-live'; badgeInline.textContent = liveText; }
-    if (badge)       { badge.className = 'badge-live';       badge.textContent = liveText; }
+    if (badge) { badge.className = 'badge-live'; badge.textContent = `Live · Oxigraph in-browser`; }
 
-    const previewCols = ['componentLabel', 'property', 'value', 'unitLabel'];
-    const fullCols    = ['componentLabel', 'materialLabel', 'property', 'value', 'unitLabel'];
-    showResultTable(bindings, 'result-table',      previewCols);
+    const fullCols = ['componentLabel', 'materialLabel', 'property', 'value', 'unitLabel'];
     showResultTable(bindings, 'result-table-full', fullCols);
 
-    const latest = document.getElementById('kg-latest');
-    if (latest) {
-      latest.textContent = `Query returned ${bindings.length} rows — Oxigraph in-browser.`;
-      latest.className = 'kg-latest-result has-data';
-    }
+    document.getElementById('result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
-    const errText = 'Query error — check console';
-    if (badgeInline) { badgeInline.className = 'badge-cached'; badgeInline.textContent = errText; }
-    if (badge)       { badge.className = 'badge-cached';       badge.textContent = errText; }
+    if (badge) { badge.className = 'badge-cached'; badge.textContent = 'Query error — check console'; }
     console.error('SPARQL query failed:', err);
   } finally {
-    if (spinnerInline) spinnerInline.style.display = 'none';
-    if (spinner)       spinner.style.display = 'none';
+    if (spinner) spinner.style.display = 'none';
     sparqlInFlight = false;
   }
-}
-
-// Auto-trigger query when result section scrolls into view and node F is done
-const resultSection = document.getElementById('result');
-if (resultSection) {
-  const obs = new IntersectionObserver(entries => {
-    if (!entries[0].isIntersecting) return;
-    obs.disconnect();
-    if (nodeState.F === 'done') triggerSPARQLQuery();
-  }, { threshold: 0.3 });
-  obs.observe(resultSection);
 }

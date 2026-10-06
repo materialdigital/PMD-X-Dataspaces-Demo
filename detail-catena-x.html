@@ -14,6 +14,7 @@
     <a href="index.html">Demo</a>
     <a href="detail-catena-x.html" aria-current="page">Catena-X pipeline</a>
     <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-pmdco-transform.html">PMDCO Transform</a>
     <a href="detail-query.html">SPARQL query</a>
   </div>
 </nav>
@@ -83,6 +84,13 @@
         (<code>urn:samm:org.eclipse.esmf.samm:unit:2.2.0#megapascal</code>) is not the same as QUDT
         (<code>https://qudt.org/vocab/unit/MegaPA</code>), and property IRIs are SAMM-specific.
       </p>
+      <p>
+        Both files are loaded together into the staging graph <code>urn:graph:catx-samm</code>:
+      </p>
+      <ul style="font-size:0.875rem; color:var(--text-muted); margin:0.5rem 0 0.5rem 1.5rem; line-height:1.8;">
+        <li><strong>Instance data</strong> — <code>catx-samm.ttl</code>: the YARRRML-transformed measurement values</li>
+        <li><strong>SAMM aspect model</strong> — <code>catx-samm-model.ttl</code>: defines each <code>samm:Property</code>, its <code>samm:characteristic</code>, and <code>samm-c:unit</code> — the schema the PMDCO Transform INSERT reads to identify property semantics and units</li>
+      </ul>
       <p>
         YARRRML mappings for this pipeline are maintained at:
         <a href="https://futurecarproduction.materialsdata.space/group/mappings" target="_blank" rel="noopener noreferrer">futurecarproduction.materialsdata.space/group/mappings ↗</a>
@@ -181,23 +189,25 @@
 <span class="kw">@prefix</span> qudt: &lt;https://qudt.org/schema/qudt/&gt; .
 <span class="kw">@prefix</span> unit: &lt;https://qudt.org/vocab/unit/&gt; .
 
+<span class="kw">@prefix</span> catx: &lt;https://pmdx.materials-data.space/catx/&gt; .
+
 <span class="cm"># Material entity</span>
-&lt;…#MaterialData_Z1234-material&gt;
+catx:MaterialData_Z1234-material
     <span class="kw">a</span> obo:BFO_0000040 ;
     rdfs:label <span class="str">"PA6GF30 (Z1234)"</span> .
 
-<span class="cm"># Tensile strength quality</span>
-&lt;…-qual-stressAtBreak&gt;
+<span class="cm"># Stress at break quality</span>
+catx:MechanicalProperty_210_9800-qual-stressAtBreak
     <span class="kw">a</span> pmd:PMD_0000952 ;           <span class="cm"># strength</span>
-    obo:RO_0000052 &lt;…-material&gt; ;
-    obo:IAO_0000417 &lt;…-datum-stressAtBreak&gt; .
+    obo:RO_0000052 catx:MaterialData_Z1234-material ;
+    obo:IAO_0000417 catx:MechanicalProperty_210_9800-datum-stressAtBreak .
 
 <span class="cm"># Datum + quantity value</span>
-&lt;…-datum-stressAtBreak&gt;
+catx:MechanicalProperty_210_9800-datum-stressAtBreak
     <span class="kw">a</span> obo:OBI_0001931 ;
-    obo:OBI_0001938 &lt;…-qv-stressAtBreak&gt; .
+    obo:OBI_0001938 catx:MechanicalProperty_210_9800-qv-stressAtBreak .
 
-&lt;…-qv-stressAtBreak&gt;
+catx:MechanicalProperty_210_9800-qv-stressAtBreak
     <span class="kw">a</span> qudt:QuantityValue ;
     qudt:unit unit:MegaPA ;
     qudt:numericValue <span class="num">140</span> .

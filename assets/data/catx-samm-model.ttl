@@ -1,0 +1,229 @@
+# ######################################################################
+# Copyright (c) 2025 Schaeffler Technologies AG & Co. KG
+# 
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+# 
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+# 
+# SPDX-License-Identifier: CC-BY-4.0
+# ######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.material_data:1.0.0#> .
+
+:MaterialData a samm:Aspect ;
+   samm:properties (
+      :thermophysicalProperty
+      :materialInformation
+      :mechanicalProperty
+      :physicalProperty
+   ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:thermophysicalProperty a samm:Property ;
+   samm:characteristic :ThermophysicalPropertyCharacteristic .
+
+:materialInformation a samm:Property ;
+   samm:characteristic :MaterialInformationCharacteristic .
+
+:mechanicalProperty a samm:Property ;
+   samm:preferredName "Mechanical Property"@en ;
+   samm:characteristic :MechanicalPropertyCharacteristic .
+
+:ThermophysicalPropertyCharacteristic a samm:Characteristic ;
+   samm:dataType :ThermophysicalPropertyEntity .
+
+:MechanicalPropertyCharacteristic a samm:Characteristic ;
+   samm:dataType :MechanicalPropertyEntity .
+
+:ThermophysicalPropertyEntity a samm:Entity ;
+   samm:properties (
+      :humidity
+      :linearThermalExpansionCoefficient
+      :glassTransitionTemperature
+      :meltingTemperature
+      :waterAbsorption
+   ) .
+
+:MechanicalPropertyEntity a samm:Entity ;
+   samm:properties (
+      :flexuralStrength
+      :impactStrength
+      :youngsModulus
+      :strainAtBreak
+      :stressAtBreak
+      :flexuralModulus
+   ) .
+
+:flexuralStrength a samm:Property ;
+   samm:description "According to ISO 178"@en ;
+   samm:characteristic :FlexuralStrengthCharacteristic ;
+   samm:exampleValue "210"^^xsd:float .
+
+:impactStrength a samm:Property ;
+   samm:characteristic :ImpactStrengthCharacteristic ;
+   samm:exampleValue "74"^^xsd:float .
+
+:youngsModulus a samm:Property ;
+   samm:characteristic :YoungsModulusCharacteristic ;
+   samm:exampleValue "9800"^^xsd:float .
+
+:strainAtBreak a samm:Property ;
+   samm:characteristic :StrainAtBreak ;
+   samm:exampleValue "3"^^xsd:float .
+
+:stressAtBreak a samm:Property ;
+   samm:characteristic :StressAtBreak ;
+   samm:exampleValue "140"^^xsd:float .
+
+:flexuralModulus a samm:Property ;
+   samm:description "According to ISO 178"@en ;
+   samm:characteristic :FlexuralModulusCharacteristic .
+
+:humidity a samm:Property ;
+   samm:preferredName "Humidity"@en ;
+   samm:description "Amount of water absorbed after exposure to 50 % relative humidity, according to ISO 62"@en ;
+   samm:characteristic :HumidityCharacteristic ;
+   samm:exampleValue "0.20"^^xsd:float .
+
+:linearThermalExpansionCoefficient a samm:Property ;
+   samm:characteristic :LinearThermalExpansionCoefficientCharacteristic .
+
+:glassTransitionTemperature a samm:Property ;
+   samm:characteristic :GlassTransitionTemperature ;
+   samm:exampleValue "50" .
+
+:meltingTemperature a samm:Property ;
+   samm:characteristic :MeltingTemperatureCharacteristic ;
+   samm:exampleValue "223"^^xsd:float .
+
+:waterAbsorption a samm:Property ;
+   samm:preferredName "Water Absorption"@en ;
+   samm:description "Amount of water absorbed after immersion in water at 23 °C, according to ISO 62"@en ;
+   samm:characteristic :WaterMeasurementCharacteristic .
+
+:FlexuralStrengthCharacteristic a samm-c:Measurement ;
+   samm:preferredName "Flexural Strength / Modulus"@en ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:megapascal .
+
+:ImpactStrengthCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit :kiloJoulePerSquareMeter .
+
+:YoungsModulusCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:megapascal .
+
+:StrainAtBreak a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:percent .
+
+:StressAtBreak a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:megapascal .
+
+:materialClass a samm:Property ;
+   samm:characteristic :MaterialClassCharacteristic .
+
+:MaterialClassCharacteristic a samm-c:Enumeration ;
+   samm:dataType xsd:string ;
+   samm-c:values (
+      "Ceramic"
+      "Glass"
+      "Polymer"
+      "Steel"
+   ) .
+
+:LinearThermalExpansionCoefficientCharacteristic a samm:Characteristic ;
+   samm:preferredName "Coefficient of linear thermal expansion"@en ;
+   samm:dataType :LinearThermalExpansionCoefficientEntity .
+
+:GlassTransitionTemperature a samm-c:Measurement ;
+   samm:dataType xsd:string ;
+   samm-c:unit unit:degreeCelsius .
+
+:MeltingTemperatureCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:degreeCelsius .
+
+:LinearThermalExpansionCoefficientEntity a samm:Entity ;
+   samm:properties ( :linearThermalExpansionCoefficientTransverse :linearThermalExpansionCoefficientParallel ) .
+
+:linearThermalExpansionCoefficientTransverse a samm:Property ;
+   samm:preferredName "Linear thermal expansion coefficient transverse to flow"@en ;
+   samm:description "According to ISO 11359-1/-2"@en ;
+   samm:characteristic :LinearThermalExpansionCoefficientTransverseCharacteristic ;
+   samm:exampleValue "115e-4"^^xsd:float .
+
+:linearThermalExpansionCoefficientParallel a samm:Property ;
+   samm:preferredName "Linear thermal expansion coefficient parallel to flow"@en ;
+   samm:description "According to ISO 11359-1/-2"@en ;
+   samm:characteristic :LinearThermalExpansionCoefficientParallelCharacteristic ;
+   samm:exampleValue "25e-4"^^xsd:float .
+
+:LinearThermalExpansionCoefficientTransverseCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:percentPerDegreeCelsius .
+
+:LinearThermalExpansionCoefficientParallelCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:percentPerDegreeCelsius .
+
+:kiloJoulePerSquareMeter a samm:Unit .
+
+:MaterialInformationCharacteristic a samm:Characteristic ;
+   samm:dataType :MaterialInformationEntity .
+
+:MaterialInformationEntity a samm:Entity ;
+   samm:properties ( :materialClass :materialName :materialIdentifier ) .
+
+:materialName a samm:Property ;
+   samm:characteristic :MaterialNameCharacteristic .
+
+:materialIdentifier a samm:Property ;
+   samm:characteristic :MaterialIdentifierCharacteristic .
+
+:MaterialNameCharacteristic a samm:Characteristic ;
+   samm:dataType xsd:string .
+
+:MaterialIdentifierCharacteristic a samm:Characteristic ;
+   samm:dataType xsd:string .
+
+:FlexuralModulusCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:string ;
+   samm-c:unit unit:megapascal .
+
+:HumidityCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:percentWeight .
+
+:WaterMeasurementCharacteristic a samm-c:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:percentWeight .
+
+:physicalProperty a samm:Property ;
+   samm:characteristic :PhysicalPropertyCharacteristic .
+
+:PhysicalPropertyCharacteristic a samm:Characteristic ;
+   samm:dataType :PhysicalPropertyEntity .
+
+:PhysicalPropertyEntity a samm:Entity ;
+   samm:properties ( :density ) .
+
+:density a samm:Property ;
+   samm:characteristic :Density ;
+   samm:exampleValue "1530" .
+
+:Density a samm-c:Measurement ;
+   samm:dataType xsd:string ;
+   samm-c:unit unit:kilogramPerCubicMetre .
+

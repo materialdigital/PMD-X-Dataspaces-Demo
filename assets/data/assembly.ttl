@@ -20,7 +20,7 @@ ex:TensionPulley_001
     a pmdco:Object ;
     rdfs:label "Pulley Wheel"@en ;
     obo:BFO_0000050 ex:TensionPulley_001 ;
-    obo:BFO_0000051 <http://dataportal.material-digital.de/f2bca6a2-04df-47cb-9439-589e46ba60e2/data?graph=https%3A%2F%2Fdataportal.material-digital.de%2Fdataset%2Ff2bca6a2-04df-47cb-9439-589e46ba60e2%2Fresource%2F6ffde9ce-f6c6-4214-8949-a60fb3123157%2Fdownload%2Fmaterial_data_test_pa6gf30-joined.ttl#MaterialData_Z1234-material> .
+    obo:BFO_0000051 <https://pmdx.materials-data.space/catx/MaterialData_Z1234-material> .
 
 # === Part 2: Tensioner Bracket (Manufacturing-X Asset) ===
 

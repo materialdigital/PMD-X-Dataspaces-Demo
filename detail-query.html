@@ -14,6 +14,7 @@
     <a href="index.html">Demo</a>
     <a href="detail-catena-x.html">Catena-X pipeline</a>
     <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-pmdco-transform.html">PMDCO Transform</a>
     <a href="detail-query.html" aria-current="page">SPARQL query</a>
   </div>
 </nav>
@@ -72,6 +73,9 @@
 <span class="kw">PREFIX</span> ex:    &lt;http://example.org/assembly/&gt;
 
 <span class="kw">SELECT</span> ?componentLabel ?materialLabel ?property ?value ?unitLabel
+<span class="kw">FROM</span> &lt;urn:graph:assembly&gt;
+<span class="kw">FROM</span> &lt;urn:graph:catx&gt;
+<span class="kw">FROM</span> &lt;urn:graph:mfgx&gt;
 <span class="kw">WHERE</span> {
   <span class="cm"># Start from the assembly: Tension Pulley has two components</span>
   ex:TensionPulley_001 obo:BFO_0000051 ?component .
@@ -163,15 +167,19 @@
         Each dataset is fetched as a Turtle file and loaded into a named graph; the SPARQL query
         runs inside the worker and returns a JSON result set to the main thread.
       </p>
-      <div class="info-box">Named graphs loaded at runtime:
+      <div class="info-box">Named graphs in the store at query time:
 
-  urn:graph:catx      ← assets/data/catx-data.ttl    (CatX PMDCO output)
-  urn:graph:mfgx      ← assets/data/mfgx-pmdco.ttl   (MfgX PMDCO output)
-  urn:graph:assembly  ← assets/data/assembly.ttl      (product knowledge)
-  urn:graph:pmdco-labels ← written by Node C INSERT   (rdfs:labels)</div>
+  urn:graph:catx-samm      ← assets/data/catx-samm.ttl + catx-samm-model.ttl  (CatX SAMM/RDF staging + aspect model)
+  urn:graph:mfgx-aas       ← assets/data/mfgx-aas.ttl       (MfgX AAS/RDF staging)
+  urn:graph:assembly       ← assets/data/assembly.ttl        (company product KG)
+  urn:graph:pmdco-ontology ← assets/data/pmdco-ontology.ttl  (PMDCO 3.0 ontology)
+  urn:graph:tto-ontology   ← assets/data/tto-ontology.ttl    (TTO ontology)
+  urn:graph:catx           ← written by PMDCO Transform INSERT (CatX PMDCO output)
+  urn:graph:mfgx           ← written by PMDCO Transform INSERT (MfgX PMDCO output)</div>
       <p style="margin-top:0.75rem;">
-        The query traverses all named graphs at once — Oxigraph's default dataset includes all
-        loaded graphs, so no <code>FROM NAMED</code> clause is needed.
+        Three <code>FROM</code> clauses merge the assembly, CatX PMDCO, and MfgX PMDCO named graphs
+        into the query's default dataset — so the WHERE clause needs no <code>GRAPH</code> pattern
+        to traverse across all three.
       </p>
     </div>
 
