@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:;">
+  <title>CatX Round-Trip Query — PMD-X Demo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="container">
+    <a href="index.html">Demo</a>
+    <a href="detail-catena-x.html">Catena-X pipeline</a>
+    <a href="detail-mfg-x.html">Manufacturing-X pipeline</a>
+    <a href="detail-pmdco-transform.html">PMDCO Transform</a>
+    <a href="detail-query.html">SPARQL query</a>
+  </div>
+</nav>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Back to demo</a>
+</div>
+
+<div class="detail-content">
+  <div class="container">
+    <h1>Catena-X Round-Trip Query</h1>
+    <p style="color:var(--text-muted);">
+      A SPARQL SELECT over <code>urn:graph:catx-samm</code> reconstructs the original SAMM JSON
+      payload via CONCAT aggregation. The result is asserted against the reference file
+      <code>material_data_test_pa6gf30.json</code> to confirm the CatX → RDF conversion
+      preserves all values without loss.
+    </p>
+
+    <div class="detail-section">
+      <h2>1. What the query verifies</h2>
+      <p>
+        Node A loads two files into <code>urn:graph:catx-samm</code>: the YARRRML-converted
+        instance data (<code>catx-samm.ttl</code>) and the SAMM aspect model
+        (<code>catx-samm-model.ttl</code>). The round-trip query reads both to reconstruct every
+        section of the original CatX SAMM JSON — including the 547-entry PvT table — and verifies
+        that the reconstructed JSON is semantically identical to the source document.
+      </p>
+      <div class="section-note">
+        Reference file: <code>material_data_test_pa6gf30.json</code> (PA6GF30 material data,
+        5 top-level sections: materialInformation, mechanicalProperty, physicalProperty,
+        thermophysicalProperty, pvt).
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>2. Query structure</h2>
+      <p>
+        Four correlated sub-SELECTs each aggregate a section into a JSON fragment, then the outer
+        SELECT concatenates them. The SAMM aspect model's RDF property list
+        (<code>n3:properties/rdf:rest*/rdf:first</code>) drives the general sections; thermophysical
+        scalars, linearThermalExpansionCoefficient, and pvt are handled by dedicated sub-SELECTs
+        because they require path traversal.
+      </p>
+      <pre class="code-block"><span class="kw">PREFIX</span> rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+<span class="kw">PREFIX</span> n1:  &lt;urn:samm:io.catenax.material_data:1.0.0#&gt;
+<span class="kw">PREFIX</span> n3:  &lt;urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#&gt;
+
+<span class="kw">SELECT</span> (<span class="kw">CONCAT</span>(
+  <span class="str">'{'</span>,
+    ?sectionsJson, <span class="str">','</span>,
+    <span class="str">'"thermophysicalProperty":{'</span>, ?thermoScalarsJson,
+      <span class="str">',"linearThermalExpansionCoefficient":{'</span>, ?ltecJson, <span class="str">'}}'</span>, <span class="str">','</span>,
+    <span class="str">'"pvt":'</span>, ?pvtJson,
+  <span class="str">'}'</span>
+) <span class="kw">AS</span> ?json)
+
+<span class="kw">FROM</span> &lt;urn:graph:catx-samm&gt;
+<span class="kw">WHERE</span> {
+
+  <span class="cm"># pvt — 547 entries, each a {temperature, specificVolume, pressure} object</span>
+  {
+    <span class="kw">SELECT</span> ?mat
+      (<span class="kw">CONCAT</span>(<span class="str">'['</span>, <span class="kw">GROUP_CONCAT</span>(?pvtEntry ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>), <span class="str">']'</span>) <span class="kw">AS</span> ?pvtJson)
+    <span class="kw">WHERE</span> {
+      {
+        <span class="kw">SELECT</span> ?mat ?pvt
+          (<span class="kw">CONCAT</span>(<span class="str">'{'</span>, <span class="kw">GROUP_CONCAT</span>(
+            <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?p), <span class="str">'#'</span>), <span class="str">'":'</span>,
+                   <span class="kw">IF</span>(<span class="kw">REGEX</span>(<span class="kw">STR</span>(?v), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>),
+                      <span class="kw">STR</span>(?v), <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STR</span>(?v), <span class="str">'"'</span>)))
+            ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>)
+          , <span class="str">'}'</span>) <span class="kw">AS</span> ?pvtEntry)
+        <span class="kw">WHERE</span> {
+          ?mat <span class="kw">a</span> n1:MaterialData .
+          ?mat n1:thermophysicalProperty/n1:pvt ?pvt .
+          ?pvt ?p ?v .
+          <span class="kw">FILTER</span>(<span class="kw">isLiteral</span>(?v) &amp;&amp; ?p != rdf:type)
+        }
+        <span class="kw">GROUP BY</span> ?mat ?pvt
+      }
+    }
+    <span class="kw">GROUP BY</span> ?mat
+  }
+
+  <span class="cm"># linearThermalExpansionCoefficient scalars</span>
+  {
+    <span class="kw">SELECT</span> ?mat
+      (<span class="kw">GROUP_CONCAT</span>(
+        <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?p), <span class="str">'#'</span>), <span class="str">'":'</span>,
+               <span class="kw">IF</span>(<span class="kw">REGEX</span>(<span class="kw">STR</span>(?v), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>),
+                  <span class="kw">STR</span>(?v), <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STR</span>(?v), <span class="str">'"'</span>)))
+        ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?ltecJson)
+    <span class="kw">WHERE</span> {
+      ?mat <span class="kw">a</span> n1:MaterialData .
+      ?mat n1:thermophysicalProperty/n1:linearThermalExpansionCoefficient ?ltec .
+      ?ltec ?p ?v .
+      <span class="kw">FILTER</span>(<span class="kw">isLiteral</span>(?v) &amp;&amp; ?p != rdf:type)
+    }
+    <span class="kw">GROUP BY</span> ?mat
+  }
+
+  <span class="cm"># thermophysicalProperty scalars (humidity, meltingTemperature, glassTransitionTemperature, waterAbsorption)</span>
+  {
+    <span class="kw">SELECT</span> ?mat
+      (<span class="kw">GROUP_CONCAT</span>(
+        <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?p), <span class="str">'#'</span>), <span class="str">'":'</span>,
+               <span class="kw">IF</span>(<span class="kw">REGEX</span>(<span class="kw">STR</span>(?v), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>),
+                  <span class="kw">STR</span>(?v), <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STR</span>(?v), <span class="str">'"'</span>)))
+        ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?thermoScalarsJson)
+    <span class="kw">WHERE</span> {
+      ?mat <span class="kw">a</span> n1:MaterialData .
+      ?mat n1:thermophysicalProperty ?thermo .
+      ?thermo ?p ?v .
+      <span class="kw">FILTER</span>(<span class="kw">isLiteral</span>(?v) &amp;&amp; ?p != rdf:type)
+    }
+    <span class="kw">GROUP BY</span> ?mat
+  }
+
+  <span class="cm"># General sections via SAMM aspect model properties list
+  # (materialInformation, mechanicalProperty, physicalProperty)</span>
+  {
+    <span class="kw">SELECT</span> ?mat (<span class="kw">GROUP_CONCAT</span>(?sectionJson ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?sectionsJson)
+    <span class="kw">WHERE</span> {
+      {
+        <span class="kw">SELECT</span> ?mat ?sectionName
+          (<span class="kw">CONCAT</span>(<span class="str">'"'</span>, ?sectionName, <span class="str">'"":{"'</span>,
+            <span class="kw">GROUP_CONCAT</span>(
+              <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?p), <span class="str">'#'</span>), <span class="str">'":'</span>,
+                     <span class="kw">IF</span>(<span class="kw">REGEX</span>(<span class="kw">STR</span>(?v), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>),
+                        <span class="kw">STR</span>(?v), <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STR</span>(?v), <span class="str">'"'</span>)))
+              ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>),
+          <span class="str">'}'</span>) <span class="kw">AS</span> ?sectionJson)
+        <span class="kw">WHERE</span> {
+          ?mat <span class="kw">a</span> n1:MaterialData .
+          n1:MaterialData n3:properties/rdf:rest*/rdf:first ?sectionProp .
+          <span class="kw">BIND</span>(<span class="kw">STRAFTER</span>(<span class="kw">STR</span>(?sectionProp), <span class="str">'#'</span>) <span class="kw">AS</span> ?sectionName)
+          <span class="kw">FILTER</span>(?sectionName != <span class="str">'thermophysicalProperty'</span>)
+          ?mat ?sectionProp ?sectionInst .
+          ?sectionInst ?p ?v .
+          <span class="kw">FILTER</span>(<span class="kw">isLiteral</span>(?v) &amp;&amp; ?p != rdf:type)
+        }
+        <span class="kw">GROUP BY</span> ?mat ?sectionName
+      }
+    }
+    <span class="kw">GROUP BY</span> ?mat
+  }
+
+}</pre>
+    </div>
+
+    <div class="detail-section">
+      <h2>3. Expected result</h2>
+      <p>
+        A single row with binding <code>?json</code> containing a JSON object whose top-level keys
+        match the original payload. Object key order depends on <code>GROUP_CONCAT</code> evaluation
+        order (non-deterministic in SPARQL); the assertion uses canonical comparison (keys sorted
+        recursively, array-of-objects sorted by serialisation) so order differences do not cause
+        false failures.
+      </p>
+      <table class="result-table" style="font-size:0.82rem;">
+        <thead><tr><th>Section</th><th>Key</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>materialInformation</td><td>materialName</td><td>PA6GF30</td></tr>
+          <tr><td>materialInformation</td><td>materialIdentifier</td><td>Z1234</td></tr>
+          <tr><td>mechanicalProperty</td><td>youngsModulus</td><td>9800</td></tr>
+          <tr><td>mechanicalProperty</td><td>impactStrength</td><td>74</td></tr>
+          <tr><td>mechanicalProperty</td><td>stressAtBreak</td><td>140</td></tr>
+          <tr><td>mechanicalProperty</td><td>flexuralStrength</td><td>210</td></tr>
+          <tr><td>mechanicalProperty</td><td>flexuralModulus</td><td>8600</td></tr>
+          <tr><td>mechanicalProperty</td><td>strainAtBreak</td><td>3</td></tr>
+          <tr><td>physicalProperty</td><td>density</td><td>1530</td></tr>
+          <tr><td>thermophysicalProperty</td><td>humidity</td><td>2.1</td></tr>
+          <tr><td>thermophysicalProperty</td><td>meltingTemperature</td><td>223</td></tr>
+          <tr><td>thermophysicalProperty</td><td>glassTransitionTemperature</td><td>20</td></tr>
+          <tr><td>thermophysicalProperty</td><td>waterAbsorption</td><td>6.5</td></tr>
+          <tr><td>thermophysicalProperty → linearThermalExpansionCoefficient</td><td>Parallel</td><td>0.0025</td></tr>
+          <tr><td>thermophysicalProperty → linearThermalExpansionCoefficient</td><td>Transverse</td><td>0.0115</td></tr>
+          <tr><td>pvt</td><td>(547 entries)</td><td>temperature, specificVolume, pressure</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://dataportal.material-digital.de/dataset/pmd-x-cross-dataspace-demo" target="_blank" rel="noopener noreferrer">Source dataset</a>
+      <a href="https://www.material-digital.de" target="_blank" rel="noopener noreferrer">Platform MaterialDigital</a>
+      <a href="https://w3id.org/pmd/co" target="_blank" rel="noopener noreferrer">PMDCO ontology</a>
+    </div>
+    <div class="footer-built">
+      Built with: PMDCO · Oxigraph WASM · RDFConverter · YARRRML · AAS2KG
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -97,6 +97,13 @@
         YARRRML mappings for this pipeline are maintained at:
         <a href="https://futurecarproduction.materialsdata.space/group/mappings" target="_blank" rel="noopener noreferrer">futurecarproduction.materialsdata.space/group/mappings ↗</a>
       </p>
+      <p>
+        The pipeline is verified by a <strong>round-trip query</strong>: a SPARQL SELECT over
+        <code>urn:graph:catx-samm</code> reconstructs the original JSON sections via CONCAT
+        aggregation and the result is asserted against the reference file
+        <code>material_data_test_pa6gf30.json</code>. Run it from the KG Inspector panel
+        ("Catena-X: retrieve source JSON").
+      </p>
     </div>
 
     <!-- Section 3: SAMM/RDF → PMDCO -->

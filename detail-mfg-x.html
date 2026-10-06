@@ -44,25 +44,31 @@
         a dedicated transformation.
       </p>
       <pre class="code-block">{
-  <span class="str">"assetAdministrationShells"</span>: [{
-    <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProductsAAS"</span>,
-    <span class="str">"id"</span>: <span class="str">"https://pmdx.materials-data.space/.../AAS"</span>
-  }],
+  <span class="str">"assetAdministrationShells"</span>: [{ <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProductsAAS"</span> }],
   <span class="str">"submodels"</span>: [{
-    <span class="str">"semanticId"</span>: { <span class="str">"keys"</span>: [{
-      <span class="str">"value"</span>: <span class="str">"https://admin-shell.io/idta/SubmodelTemplate/
-        InspectionDocumentsOfSteelProducts/1/0"</span>
-    }]},
     <span class="str">"idShort"</span>: <span class="str">"InspectionDocumentsOfSteelProducts"</span>,
-    <span class="str">"submodelElements"</span>: [{
-      <span class="str">"idShort"</span>: <span class="str">"TensileStrengthMean"</span>,
-      <span class="str">"semanticId"</span>: { <span class="str">"keys"</span>: [{
-        <span class="str">"value"</span>: <span class="str">"https://admin-shell.io/idta/...TensileStrengthMean/1/0"</span>
-      }]},
-      <span class="str">"value"</span>: <span class="str">"632"</span>,
-      <span class="str">"displayName"</span>: [{ <span class="str">"language"</span>: <span class="str">"en"</span>, <span class="str">"text"</span>: <span class="str">"Tensile Strength Mean"</span> }],
-      <span class="str">"modelType"</span>: <span class="str">"Property"</span>
-    }]
+    <span class="str">"submodelElements"</span>: [
+      <span class="cm">/* MechanicalTests — TensileTest__00__ sub-collection */</span>
+      {
+        <span class="str">"idShort"</span>: <span class="str">"TensileStrengthMean"</span>,
+        <span class="str">"semanticId"</span>: { <span class="str">"keys"</span>: [{
+          <span class="str">"value"</span>: <span class="str">"https://admin-shell.io/idta/...TensileStrengthMean/1/0"</span>
+        }]},
+        <span class="str">"value"</span>: <span class="str">"632"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span>
+      },
+      { <span class="str">"idShort"</span>: <span class="str">"YieldOrProofStrengthMean"</span>, <span class="str">"value"</span>: <span class="str">"276"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"ElongationAfterFractureMean"</span>, <span class="str">"value"</span>: <span class="str">"60"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      <span class="cm">/* ChemicalAnalysis sub-collection — 9 mass fractions with values */</span>
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_C"</span>,  <span class="str">"value"</span>: <span class="str">"0.022"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_Cr"</span>, <span class="str">"value"</span>: <span class="str">"16.9"</span>,  <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_Mn"</span>, <span class="str">"value"</span>: <span class="str">"1.51"</span>,  <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_Mo"</span>, <span class="str">"value"</span>: <span class="str">"2.01"</span>,  <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_N"</span>,  <span class="str">"value"</span>: <span class="str">"0.024"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_Ni"</span>, <span class="str">"value"</span>: <span class="str">"10"</span>,    <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_P"</span>,  <span class="str">"value"</span>: <span class="str">"0.036"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_S"</span>,  <span class="str">"value"</span>: <span class="str">"0.002"</span>, <span class="str">"modelType"</span>: <span class="str">"Property"</span> },
+      { <span class="str">"idShort"</span>: <span class="str">"MassFraction_Si"</span>, <span class="str">"value"</span>: <span class="str">"0.4"</span>,   <span class="str">"modelType"</span>: <span class="str">"Property"</span> }
+    ]
   }]
 }</pre>
       <div class="section-note">
@@ -146,7 +152,10 @@
       <span class="str">"https://admin-shell.io/idta/…/TensileStrengthMean/1/0"</span> .
   }
   <span class="kw">BIND</span>(<span class="kw">COALESCE</span>(?tensileStrengthValue, <span class="str">"N/A"</span>) <span class="kw">AS</span> ?tensileStrengthValueFinal)
-  <span class="cm">/* … analogous blocks for yield strength and elongation … */</span>
+  <span class="cm">/* … analogous OPTIONAL blocks for yield strength (276) and elongation (60);
+     chemical composition mass fractions (C=0.022, Cr=16.9, Mn=1.51, Mo=2.01,
+     N=0.024, Ni=10, P=0.036, S=0.002, Si=0.4) are written to urn:graph:mfgx
+     as pmd:PMD_0025997 fraction individuals linked via obo:OBI_0001937 … */</span>
 } }</pre>
       <a href="https://dataportal.material-digital.de/dataset/a725c4a1-a463-47f8-bad3-fe84b73ef0d3/resource/93e50b44-f325-417b-80dd-83fc2664ce6b/download/inspectiondocument_aas2kg_mapping.sparql" class="source-link" target="_blank" rel="noopener noreferrer">View full SPARQL on data portal ↗</a>
     </div>
@@ -191,6 +200,38 @@
 <span class="cm"># Elongation at fracture: TTO_0000033</span>
 &lt;…/elon_af_qv&gt; qudt:numericValue <span class="str">"60"</span> .</pre>
       <a href="https://dataportal.material-digital.de/dataset/a725c4a1-a463-47f8-bad3-fe84b73ef0d3/resource/929c0b99-ebfb-4aaf-99c5-ae29285ace71/download/inspectiondocument_316_4401_alloy_pmdcore.ttl" class="source-link" target="_blank" rel="noopener noreferrer">View output TTL on data portal ↗</a>
+    </div>
+
+    <!-- Section 5: Round-trip verification -->
+    <div class="detail-section">
+      <h2>5. Round-trip verification</h2>
+      <p>
+        Because all values from the original AAS document are stored faithfully in
+        <code>urn:graph:mfgx-aas</code> as AAS-ontology RDF, a SPARQL SELECT can reconstruct
+        the source data directly from the graph — without consulting the original file.
+        The demo includes a <strong>Manufacturing-X: retrieve source JSON</strong> query (KG
+        Inspector panel) that traverses <code>MechanicalTests</code> and
+        <code>ChemicalAnalysis</code> SubmodelElementCollection nodes and assembles the values
+        back into JSON via SPARQL CONCAT aggregation:
+      </p>
+      <pre class="code-block"><span class="cm"># Reconstruct mechanical test results from AAS/RDF staging graph</span>
+<span class="kw">SELECT</span> (<span class="kw">CONCAT</span>(<span class="str">'{"mechanicalTests":{'</span>, ?mechJson, <span class="str">'},"chemicalAnalysis":{'</span>, ?chemJson, <span class="str">'}}'</span>) <span class="kw">AS</span> ?json)
+<span class="kw">FROM</span> &lt;urn:graph:mfgx-aas&gt;
+<span class="kw">WHERE</span> {
+  { <span class="kw">SELECT</span> (<span class="kw">GROUP_CONCAT</span>(<span class="kw">CONCAT</span>(<span class="str">'"'</span>, ?idShort, <span class="str">'":'</span>, ?val) ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?mechJson)
+    <span class="kw">WHERE</span> { ?mech aasRf:idShort <span class="str">"MechanicalTests"</span> ; aasSMC:value ?run .
+            ?run aasSMC:value ?prop . ?prop aasRf:idShort ?idShort ; aasP:value ?val .
+            <span class="kw">FILTER</span>(<span class="kw">REGEX</span>(?val, <span class="str">'^[0-9]'</span>)) } }
+  { <span class="kw">SELECT</span> (<span class="kw">GROUP_CONCAT</span>(<span class="kw">CONCAT</span>(<span class="str">'"'</span>, ?idShort, <span class="str">'":'</span>, ?val) ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?chemJson)
+    <span class="kw">WHERE</span> { ?chem aasRf:idShort <span class="str">"ChemicalAnalysis"</span> ; aasSMC:value ?prop .
+            ?prop aasRf:idShort ?idShort ; aasP:value ?val .
+            <span class="kw">FILTER</span>(<span class="kw">REGEX</span>(?val, <span class="str">'^[0-9]'</span>)) } }
+}</pre>
+      <p>
+        The reconstructed JSON is automatically asserted against the reference values extracted
+        from <code>inspectiondocument_316_4401_alloy.json</code>, confirming that the AAS → RDF
+        conversion preserves all numeric values without loss.
+      </p>
     </div>
 
   </div>

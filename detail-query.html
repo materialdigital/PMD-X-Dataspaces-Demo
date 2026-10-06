@@ -181,6 +181,13 @@
         into the query's default dataset — so the WHERE clause needs no <code>GRAPH</code> pattern
         to traverse across all three.
       </p>
+      <p style="margin-top:0.75rem;">
+        The two staging graphs are also queryable independently for round-trip verification:
+        <code>urn:graph:catx-samm</code> supports reconstruction of the original CatX SAMM JSON
+        payload; <code>urn:graph:mfgx-aas</code> supports reconstruction of the MfgX mechanical
+        test results and chemical composition. Both queries run from the KG Inspector panel and
+        assert the result against the reference files from the data portal.
+      </p>
     </div>
 
   </div>
