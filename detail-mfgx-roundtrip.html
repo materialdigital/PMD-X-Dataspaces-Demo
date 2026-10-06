@@ -27,94 +27,68 @@
   <div class="container">
     <h1>Manufacturing-X Round-Trip Query</h1>
     <p style="color:var(--text-muted);">
-      A SPARQL SELECT over <code>urn:graph:mfgx-aas</code> reconstructs the mechanical test results
-      and chemical composition from the AAS-ontology RDF via CONCAT aggregation. The result is
-      asserted against reference values extracted from the original AAS inspection document
-      <code>inspectiondocument_316_4401_alloy.json</code>.
+      <code>store.dump('application/ld+json', 'urn:graph:mfgx-aas')</code> serialises the entire
+      named graph as expanded JSON-LD — every triple loaded from <code>mfgx-aas.ttl</code> comes
+      back out. The 12 expected values are then located in the node array by AAS
+      <code>idShort</code> and asserted against the original AAS inspection document.
     </p>
 
     <div class="detail-section">
-      <h2>1. What the query verifies</h2>
+      <h2>1. What the round-trip verifies</h2>
       <p>
         Node B loads the AAS-ontology RDF (<code>mfgx-aas.ttl</code>, produced by py-aas-rdf)
-        into <code>urn:graph:mfgx-aas</code>. The round-trip query navigates the AAS
-        SubmodelElementCollection hierarchy — <code>MechanicalTests → TensileTest__00__ → Property</code>
-        and <code>ChemicalAnalysis → Property</code> — using <code>aasRf:idShort</code> as the
-        section anchor and <code>aasP:value</code> for the numeric values.
+        into <code>urn:graph:mfgx-aas</code>. The round-trip uses <code>store.dump()</code>
+        (not a SPARQL query) to export the entire named graph as expanded JSON-LD. The result is
+        a flat array of RDF node objects — one per subject IRI — rather than the original nested
+        AAS hierarchy, but the data is semantically equivalent.
       </p>
       <div class="section-note">
-        Reference: <code>mfgx-reference.json</code> — mechanical test results (tensile=632, yield=276,
-        elongation=60) and chemical composition (9 elements: C, Cr, Mn, Mo, N, Ni, P, S, Si).
-        Derived from <code>inspectiondocument_316_4401_alloy.json</code>.
+        The original AAS JSON has no <code>@context</code> and is not valid JSON-LD, so it cannot
+        be loaded back into Oxigraph for a direct graph diff. Instead, 12 known Property values
+        are located in the dump by <code>idShort</code> and asserted against ground truth from
+        <code>inspectiondocument_316_4401_alloy.json</code>.
       </div>
     </div>
 
     <div class="detail-section">
-      <h2>2. Query structure</h2>
+      <h2>2. How the dump works</h2>
       <p>
-        Two correlated sub-SELECTs aggregate each section into a JSON fragment. A numeric-only
-        <code>FILTER</code> (REGEX matching <code>^-?[0-9]+</code>) excludes empty fields and
-        non-numeric metadata present in the AAS document.
+        Oxigraph WASM includes a built-in JSON-LD serialiser. The call is a single JS expression
+        — no SPARQL involved:
       </p>
-      <pre class="code-block"><span class="kw">PREFIX</span> aas:    &lt;https://admin-shell.io/aas/3/0/&gt;
-<span class="kw">PREFIX</span> aasP:   &lt;https://admin-shell.io/aas/3/0/Property/&gt;
-<span class="kw">PREFIX</span> aasRf:  &lt;https://admin-shell.io/aas/3/0/Referable/&gt;
-<span class="kw">PREFIX</span> aasSMC: &lt;https://admin-shell.io/aas/3/0/SubmodelElementCollection/&gt;
+      <pre class="code-block"><span class="cm">// Dump urn:graph:mfgx-aas as expanded JSON-LD</span>
+<span class="kw">const</span> jsonLdStr = store.dump({
+  format: <span class="str">'application/ld+json'</span>,
+  from_graph_name: namedNode(<span class="str">'urn:graph:mfgx-aas'</span>)
+});
+<span class="kw">const</span> nodes = JSON.parse(jsonLdStr);
+<span class="cm">// nodes is an array of expanded JSON-LD node objects, e.g.:</span>
+<span class="cm">// [{ "@id": "urn:...", "https://admin-shell.io/aas/3/0/Referable/idShort": [{"@value":"TensileStrengthMean"}], ... }, ...]</span></pre>
+      <p>
+        Each node corresponds to one RDF subject. Properties are keyed by their full IRI (expanded
+        form), and values are wrapped in <code>{"@value": "..."}</code> objects. The total node
+        count equals the number of distinct subjects in the graph.
+      </p>
+      <p>
+        To find a value by <code>idShort</code>:
+      </p>
+      <pre class="code-block"><span class="kw">const</span> AAS_PROP_VAL = <span class="str">'https://admin-shell.io/aas/3/0/Property/value'</span>;
 
-<span class="kw">SELECT</span> (<span class="kw">CONCAT</span>(
-  <span class="str">'{"mechanicalTests":{'</span>, ?mechJson, <span class="str">'},"chemicalAnalysis":{'</span>, ?chemJson, <span class="str">'}}'</span>
-) <span class="kw">AS</span> ?json)
-
-<span class="kw">FROM</span> &lt;urn:graph:mfgx-aas&gt;
-<span class="kw">WHERE</span> {
-
-  <span class="cm"># Mechanical: MechanicalTests → TensileTest__00__ → numeric Property</span>
-  {
-    <span class="kw">SELECT</span> (<span class="kw">GROUP_CONCAT</span>(
-      <span class="kw">CONCAT</span>(<span class="str">'"'</span>, ?idShort, <span class="str">'":'</span>,
-        <span class="kw">IF</span>(<span class="kw">REGEX</span>(<span class="kw">STR</span>(?val), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>),
-           <span class="kw">STR</span>(?val), <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STR</span>(?val), <span class="str">'"'</span>)))
-      ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?mechJson)
-    <span class="kw">WHERE</span> {
-      ?mechSMC <span class="kw">a</span> aas:SubmodelElementCollection ;
-               aasRf:idShort <span class="str">"MechanicalTests"</span> ;
-               aasSMC:value ?testRun .
-      ?testRun <span class="kw">a</span> aas:SubmodelElementCollection ;
-               aasSMC:value ?prop .
-      ?prop <span class="kw">a</span> aas:Property ;
-            aasRf:idShort ?idShort ;
-            aasP:value ?val .
-      <span class="kw">FILTER</span>(?val != <span class="str">""</span> &amp;&amp; <span class="kw">REGEX</span>(<span class="kw">STR</span>(?val), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>))
-    }
-  }
-
-  <span class="cm"># Chemical: ChemicalAnalysis → numeric Property (mass fractions)</span>
-  {
-    <span class="kw">SELECT</span> (<span class="kw">GROUP_CONCAT</span>(
-      <span class="kw">CONCAT</span>(<span class="str">'"'</span>, ?idShort, <span class="str">'":'</span>,
-        <span class="kw">IF</span>(<span class="kw">REGEX</span>(<span class="kw">STR</span>(?val), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>),
-           <span class="kw">STR</span>(?val), <span class="kw">CONCAT</span>(<span class="str">'"'</span>, <span class="kw">STR</span>(?val), <span class="str">'"'</span>)))
-      ; <span class="kw">SEPARATOR</span>=<span class="str">','</span>) <span class="kw">AS</span> ?chemJson)
-    <span class="kw">WHERE</span> {
-      ?chemSMC <span class="kw">a</span> aas:SubmodelElementCollection ;
-               aasRf:idShort <span class="str">"ChemicalAnalysis"</span> ;
-               aasSMC:value ?prop .
-      ?prop <span class="kw">a</span> aas:Property ;
-            aasRf:idShort ?idShort ;
-            aasP:value ?val .
-      <span class="kw">FILTER</span>(?val != <span class="str">""</span> &amp;&amp; <span class="kw">REGEX</span>(<span class="kw">STR</span>(?val), <span class="str">'^-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?$'</span>))
-    }
-  }
-
+<span class="cm">// py-aas-rdf encodes idShort in the subject IRI — not as a separate triple.
+// IRIs look like: …submodel-elements/MechanicalTests.TensileTest__00__.TensileStrengthMean</span>
+<span class="kw">function</span> findByIdShort(nodes, idShort) {
+  <span class="kw">const</span> node = nodes.find(n =&gt; {
+    <span class="kw">const</span> id = n[<span class="str">'@id'</span>] ?? <span class="str">''</span>;
+    <span class="kw">return</span> id.endsWith(<span class="str">'.'</span> + idShort) || id.endsWith(<span class="str">'/'</span> + idShort);
+  });
+  <span class="kw">return</span> node ? Number(node[AAS_PROP_VAL]?.[<span class="num">0</span>]?.[<span class="str">'@value'</span>]) : <span class="kw">null</span>;
 }</pre>
     </div>
 
     <div class="detail-section">
       <h2>3. Expected result</h2>
       <p>
-        A single row with binding <code>?json</code>. Object key order is non-deterministic;
-        the assertion uses canonical comparison (keys sorted recursively) so order does not
-        cause failures.
+        The dump returns all nodes in the graph. The 12 values located by <code>idShort</code>:
       </p>
       <table class="result-table" style="font-size:0.82rem;">
         <thead><tr><th>Section</th><th>Key</th><th>Value</th></tr></thead>

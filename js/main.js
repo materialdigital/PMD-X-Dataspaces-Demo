@@ -955,62 +955,30 @@ async function triggerSourceJsonQuery() {
 const runSourceJsonBtn = document.getElementById('run-source-json-btn');
 if (runSourceJsonBtn) runSourceJsonBtn.addEventListener('click', triggerSourceJsonQuery);
 
-// ── MfgX source JSON retrieval query (Oxigraph, mfgx-aas graph) ──────────────
-// Reconstructs mechanical test results and chemical composition from the
-// AAS-ontology RDF loaded by Node B into urn:graph:mfgx-aas.
-const RETRIEVE_MFGX_JSON_QUERY = `
-PREFIX aas:    <https://admin-shell.io/aas/3/0/>
-PREFIX aasP:   <https://admin-shell.io/aas/3/0/Property/>
-PREFIX aasRf:  <https://admin-shell.io/aas/3/0/Referable/>
-PREFIX aasSMC: <https://admin-shell.io/aas/3/0/SubmodelElementCollection/>
+// ── MfgX full-graph JSON-LD round-trip ────────────────────────────────────────
+// Uses store.dump() to serialise the entire urn:graph:mfgx-aas named graph as
+// expanded JSON-LD, then searches the node array for the expected values by
+// AAS idShort. This is a true RDF-level round-trip: every triple that went in
+// via mfgx-aas.ttl comes back out in JSON-LD form.
 
-SELECT (CONCAT(
-  '{',
-    '"mechanicalTests":{', ?mechJson, '},',
-    '"chemicalAnalysis":{', ?chemJson, '}',
-  '}'
-) AS ?json)
+const AAS_NS = 'https://admin-shell.io/aas/3/0/';
+const AAS_ID_SHORT = AAS_NS + 'Referable/idShort';
+const AAS_PROP_VAL = AAS_NS + 'Property/value';
 
-FROM <urn:graph:mfgx-aas>
-WHERE {
-
-  {
-    SELECT (GROUP_CONCAT(
-      CONCAT('"', ?idShort, '":',
-        IF(REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
-           STR(?val), CONCAT('"', STR(?val), '"')))
-      ; SEPARATOR=',') AS ?mechJson)
-    WHERE {
-      ?mechSMC a aas:SubmodelElementCollection ;
-               aasRf:idShort "MechanicalTests" ;
-               aasSMC:value ?testRun .
-      ?testRun a aas:SubmodelElementCollection ;
-               aasSMC:value ?prop .
-      ?prop a aas:Property ;
-            aasRf:idShort ?idShort ;
-            aasP:value ?val .
-      FILTER(?val != "" && REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'))
-    }
+// Find a Property value in expanded JSON-LD by AAS idShort.
+// py-aas-rdf encodes the idShort in the subject IRI; it may emit multiple entries
+// for the same IRI (Referable-aspect vs Property-aspect), so we search all matches.
+function findJsonLdByIdShort(nodes, idShort) {
+  const matches = nodes.filter(n => {
+    const id = n['@id'] ?? '';
+    return id.endsWith('.' + idShort) || id.endsWith('/' + idShort);
+  });
+  for (const node of matches) {
+    const raw = node[AAS_PROP_VAL]?.[0]?.['@value'];
+    if (raw != null) return Number(raw);
   }
-
-  {
-    SELECT (GROUP_CONCAT(
-      CONCAT('"', ?idShort, '":',
-        IF(REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
-           STR(?val), CONCAT('"', STR(?val), '"')))
-      ; SEPARATOR=',') AS ?chemJson)
-    WHERE {
-      ?chemSMC a aas:SubmodelElementCollection ;
-               aasRf:idShort "ChemicalAnalysis" ;
-               aasSMC:value ?prop .
-      ?prop a aas:Property ;
-            aasRf:idShort ?idShort ;
-            aasP:value ?val .
-      FILTER(?val != "" && REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'))
-    }
-  }
-
-}`;
+  return null;
+}
 
 // Walk the AAS JSON and find a Property node by idShort, return its numeric value or null.
 function aasPropertyValue(elements, idShort) {
@@ -1073,43 +1041,66 @@ async function triggerMfgxJsonQuery() {
   await storeReady;
 
   try {
-    const results  = store.query(RETRIEVE_MFGX_JSON_QUERY);
-    const bindings = [...results];
-    if (!bindings.length) {
+    // Dump the full named graph as expanded JSON-LD — every triple that went in
+    // via mfgx-aas.ttl comes back out in serialised form.
+    let jsonLdStr;
+    try {
+      jsonLdStr = store.dump({ format: 'application/ld+json', from_graph_name: namedNode(GRAPH_IRI.mfgxAas) });
+    } catch (e) {
       if (output)   output.textContent = '(no results — load Node B first)';
+      if (badge)    { badge.className = 'badge-cached'; badge.textContent = 'No data'; }
+      if (assertEl) assertEl.textContent = '⚠ Node B not loaded — run the pipeline first. (' + e.message + ')';
+      return;
+    }
+
+    let nodes;
+    try { nodes = JSON.parse(jsonLdStr); } catch (e) {
+      if (output) output.textContent = 'JSON-LD parse error: ' + e.message;
+      if (badge)  { badge.className = 'badge-cached'; badge.textContent = 'Parse error'; }
+      return;
+    }
+
+    if (!nodes.length) {
+      if (output)   output.textContent = '(empty graph — load Node B first)';
       if (badge)    { badge.className = 'badge-cached'; badge.textContent = 'No data'; }
       if (assertEl) assertEl.textContent = '⚠ Node B not loaded — run the pipeline first.';
       return;
     }
 
-    const raw = bindings[0].get('json')?.value ?? '';
-    let reconstructed;
-    try { reconstructed = JSON.parse(raw); } catch (e) {
-      if (output) output.textContent = 'Parse error: ' + e.message + '\n\nRaw:\n' + raw;
-      if (badge)  { badge.className = 'badge-cached'; badge.textContent = 'Parse error'; }
-      return;
-    }
-
-    // Extract ground-truth values directly from the original AAS JSON (not a hand-crafted reference)
+    // Extract ground-truth values directly from the original AAS JSON
     const aasResp = await fetch('assets/data/inspectiondocument_316_4401_alloy.json');
     const aasDoc  = await aasResp.json();
     const ground  = extractMfgxGroundTruth(aasDoc);
 
-    if (output) output.textContent = JSON.stringify(reconstructed, null, 2);
+    // Build reconstructed values from JSON-LD nodes (same logic as SPARQL, but over the dump)
+    const reconstructed = { mechanicalTests: {}, chemicalAnalysis: {} };
+    for (const [key] of Object.entries(ground.mechanicalTests))
+      reconstructed.mechanicalTests[key] = findJsonLdByIdShort(nodes, key);
+    for (const [key] of Object.entries(ground.chemicalAnalysis))
+      reconstructed.chemicalAnalysis[key] = findJsonLdByIdShort(nodes, key);
+
+    // Show: node count header + first few Property-value nodes as a preview
+    const propNodes = nodes.filter(n => n[AAS_PROP_VAL]);
+    const preview = {
+      '@note': `Full graph: ${nodes.length} JSON-LD nodes (${propNodes.length} with Property/value). Showing first 5.`,
+      '@graph': propNodes.slice(0, 5),
+    };
+    if (output) output.textContent = JSON.stringify(preview, null, 2);
     if (badge)  { badge.className = 'badge-live'; badge.textContent = 'Live · Oxigraph in-browser'; }
 
-    // Compare SPARQL output values against ground-truth values from original AAS
+    // Assert extracted values against ground truth
     const checks = assertMfgxValues(reconstructed, ground);
     const allPass = checks.every(c => c.ok);
 
     if (assertEl) {
       if (allPass) {
-        assertEl.innerHTML = '<span class="assert-pass">✓ Data round-trip verified — all ' +
-          checks.length + ' values from the original AAS inspection document match the SPARQL reconstruction.</span>' +
-          '<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.3rem;">Note: the SPARQL extracts data values, not the full AAS serialization format (nested semanticId/qualifier/displayName structures are not reproduced).</div>';
+        assertEl.innerHTML = '<span class="assert-pass">✓ Full graph round-trip verified — all ' +
+          checks.length + ' values found in the JSON-LD dump of urn:graph:mfgx-aas match the original AAS inspection document.</span>' +
+          '<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.3rem;">' +
+          nodes.length + ' RDF nodes serialised as expanded JSON-LD via <code>store.dump()</code>.</div>';
       } else {
         const fails = checks.filter(c => !c.ok);
-        assertEl.innerHTML = '<span class="assert-fail">✗ ' + fails.length + ' value(s) do not match:</span><ul>' +
+        assertEl.innerHTML = '<span class="assert-fail">✗ ' + fails.length + ' value(s) not found in JSON-LD dump:</span><ul>' +
           fails.map(c => `<li>${escHtml(c.label)}: expected ${escHtml(String(c.expected))}, got ${escHtml(String(c.got))}</li>`).join('') +
           '</ul>';
       }

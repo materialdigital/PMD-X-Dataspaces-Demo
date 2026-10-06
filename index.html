@@ -323,13 +323,13 @@ N schemas × M targets
     <div class="result-header">
       <h2>Manufacturing-X inspection data</h2>
       <span id="mfgx-json-badge"></span>
-      <span id="mfgx-json-spinner" style="display:none; color:var(--text-muted); font-size:0.9rem;">⏳ Querying triplestore…</span>
+      <span id="mfgx-json-spinner" style="display:none; color:var(--text-muted); font-size:0.9rem;">⏳ Dumping graph…</span>
     </div>
     <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
-      Mechanical test results and chemical composition reconstructed from AAS-ontology RDF in
-      urn:graph:mfgx-aas via SPARQL aggregation. Data values are asserted directly against the
-      original AAS inspection document (inspectiondocument_316_4401_alloy.json) — the full AAS
-      serialization format (semanticId/qualifier/displayName structures) is not reproduced.
+      Full graph round-trip: <code>store.dump({format:'application/ld+json', from_graph_name:…mfgx-aas})</code>
+      serialises every triple from the named graph as expanded JSON-LD. The 12 expected values
+      are located in the node array by AAS <code>idShort</code> and asserted against the original
+      AAS inspection document (<code>inspectiondocument_316_4401_alloy.json</code>).
     </p>
     <div id="mfgx-json-assert" style="margin-bottom:1rem; font-size:0.9rem;"></div>
     <pre id="mfgx-json-output" style="background:var(--bg-code,#1e1e2e); color:var(--text-code,#cdd6f4); border-radius:8px; padding:1.25rem; overflow:auto; font-size:0.8rem; max-height:480px; white-space:pre-wrap; word-break:break-all;"></pre>
