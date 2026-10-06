@@ -732,6 +732,229 @@ async function refreshKGStats() {
 const kgRefreshBtn = document.getElementById('kg-refresh-btn');
 if (kgRefreshBtn) kgRefreshBtn.addEventListener('click', refreshKGStats);
 
+// ── Source JSON retrieval query (Oxigraph, catx-samm graph) ───────────────────
+// Reconstructs the original SAMM JSON payload from the triplestore via SPARQL
+// CONCAT aggregation — mirrors the structure ingested by Node A before RDF conversion.
+const RETRIEVE_JSON_QUERY = `
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX n1:  <urn:samm:io.catenax.material_data:1.0.0#>
+PREFIX n3:  <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#>
+
+SELECT (CONCAT(
+  '{',
+    ?sectionsJson, ',',
+    '"thermophysicalProperty":{', ?thermoScalarsJson,
+      ',"linearThermalExpansionCoefficient":{', ?ltecJson, '}}',',',
+    '"pvt":', ?pvtJson,
+  '}'
+) AS ?json)
+
+FROM <urn:graph:catx-samm>
+WHERE {
+
+  {
+    SELECT ?mat
+      (CONCAT('[', GROUP_CONCAT(?pvtEntry ; SEPARATOR=','), ']') AS ?pvtJson)
+    WHERE {
+      {
+        SELECT ?mat ?pvt
+          (CONCAT('{', GROUP_CONCAT(
+            CONCAT('"', STRAFTER(STR(?p), '#'), '":',
+                   IF(REGEX(STR(?v), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
+                      STR(?v),
+                      CONCAT('"', STR(?v), '"')))
+            ; SEPARATOR=',')
+          , '}') AS ?pvtEntry)
+        WHERE {
+          ?mat a n1:MaterialData .
+          ?mat n1:thermophysicalProperty/n1:pvt ?pvt .
+          ?pvt ?p ?v .
+          FILTER(isLiteral(?v) && ?p != rdf:type)
+        }
+        GROUP BY ?mat ?pvt
+      }
+    }
+    GROUP BY ?mat
+  }
+
+  {
+    SELECT ?mat
+      (GROUP_CONCAT(
+        CONCAT('"', STRAFTER(STR(?p), '#'), '":',
+               IF(REGEX(STR(?v), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
+                  STR(?v),
+                  CONCAT('"', STR(?v), '"')))
+        ; SEPARATOR=',') AS ?ltecJson)
+    WHERE {
+      ?mat a n1:MaterialData .
+      ?mat n1:thermophysicalProperty/n1:linearThermalExpansionCoefficient ?ltec .
+      ?ltec ?p ?v .
+      FILTER(isLiteral(?v) && ?p != rdf:type)
+    }
+    GROUP BY ?mat
+  }
+
+  {
+    SELECT ?mat
+      (GROUP_CONCAT(
+        CONCAT('"', STRAFTER(STR(?p), '#'), '":',
+               IF(REGEX(STR(?v), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
+                  STR(?v),
+                  CONCAT('"', STR(?v), '"')))
+        ; SEPARATOR=',') AS ?thermoScalarsJson)
+    WHERE {
+      ?mat a n1:MaterialData .
+      ?mat n1:thermophysicalProperty ?thermo .
+      ?thermo ?p ?v .
+      FILTER(isLiteral(?v) && ?p != rdf:type)
+    }
+    GROUP BY ?mat
+  }
+
+  {
+    SELECT ?mat (GROUP_CONCAT(?sectionJson ; SEPARATOR=',') AS ?sectionsJson)
+    WHERE {
+      {
+        SELECT ?mat ?sectionName
+          (CONCAT('"', ?sectionName, '":{',
+            GROUP_CONCAT(
+              CONCAT('"', STRAFTER(STR(?p), '#'), '":',
+                     IF(REGEX(STR(?v), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
+                        STR(?v),
+                        CONCAT('"', STR(?v), '"')))
+              ; SEPARATOR=','),
+          '}') AS ?sectionJson)
+        WHERE {
+          ?mat a n1:MaterialData .
+          n1:MaterialData n3:properties/rdf:rest*/rdf:first ?sectionProp .
+          BIND(STRAFTER(STR(?sectionProp), '#') AS ?sectionName)
+          FILTER(?sectionName != 'thermophysicalProperty')
+          ?mat ?sectionProp ?sectionInst .
+          ?sectionInst ?p ?v .
+          FILTER(isLiteral(?v) && ?p != rdf:type)
+        }
+        GROUP BY ?mat ?sectionName
+      }
+    }
+    GROUP BY ?mat
+  }
+
+}`;
+
+// Deep-compare two JSON values after canonicalisation: objects sorted by key,
+// arrays of objects sorted by their canonical JSON string (order-independent pvt check).
+function canonicalize(v) {
+  if (Array.isArray(v)) {
+    const items = v.map(canonicalize);
+    // sort arrays of objects so pvt entry order doesn't cause spurious mismatches
+    if (items.length && typeof items[0] === 'object' && items[0] !== null) {
+      items.sort((a, b) => JSON.stringify(a) < JSON.stringify(b) ? -1 : 1);
+    }
+    return items;
+  }
+  if (v !== null && typeof v === 'object') {
+    return Object.fromEntries(Object.keys(v).sort().map(k => [k, canonicalize(v[k])]));
+  }
+  // normalise numbers: coerce to Number so "223" === 223
+  const n = Number(v);
+  return Number.isFinite(n) ? n : v;
+}
+
+function diffKeys(a, b, path = '') {
+  const mismatches = [];
+  if (typeof a !== typeof b || Array.isArray(a) !== Array.isArray(b)) {
+    mismatches.push(`${path}: type mismatch`);
+    return mismatches;
+  }
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) mismatches.push(`${path}[]: length ${a.length} vs ${b.length}`);
+    return mismatches;
+  }
+  if (a !== null && typeof a === 'object') {
+    const allKeys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    for (const k of allKeys) {
+      if (!(k in a)) { mismatches.push(`${path}.${k}: missing in reconstructed`); continue; }
+      if (!(k in b)) { mismatches.push(`${path}.${k}: missing in reference`); continue; }
+      mismatches.push(...diffKeys(a[k], b[k], path ? `${path}.${k}` : k));
+    }
+    return mismatches;
+  }
+  if (a !== b) mismatches.push(`${path}: ${JSON.stringify(a)} ≠ ${JSON.stringify(b)}`);
+  return mismatches;
+}
+
+async function triggerSourceJsonQuery() {
+  const spinner  = document.getElementById('source-json-spinner');
+  const badge    = document.getElementById('source-json-badge');
+  const output   = document.getElementById('source-json-output');
+  const assertEl = document.getElementById('source-json-assert');
+  const section  = document.getElementById('source-json-result');
+
+  if (spinner) spinner.style.display = 'inline';
+  if (section) section.style.display = '';
+  if (assertEl) assertEl.textContent = '';
+
+  await storeReady;
+
+  try {
+    // 1. Reconstruct JSON from local Oxigraph (catx-samm graph)
+    const results  = store.query(RETRIEVE_JSON_QUERY);
+    const bindings = [...results];
+    if (!bindings.length) {
+      if (output)   output.textContent = '(no results — load Node A first)';
+      if (badge)    { badge.className = 'badge-cached'; badge.textContent = 'No data'; }
+      if (assertEl) assertEl.textContent = '⚠ Node A not loaded — run the pipeline first.';
+      return;
+    }
+
+    const raw = bindings[0].get('json')?.value ?? '';
+    let reconstructed;
+    try { reconstructed = JSON.parse(raw); } catch (e) {
+      if (output) output.textContent = 'Parse error: ' + e.message + '\n\nRaw:\n' + raw;
+      if (badge)  { badge.className = 'badge-cached'; badge.textContent = 'Parse error'; }
+      return;
+    }
+
+    // 2. Load reference JSON (original CatX payload)
+    const refResp = await fetch('assets/data/material_data_test_pa6gf30.json');
+    const reference = await refResp.json();
+
+    // 3. Canonicalise both and compare
+    const canRec = canonicalize(reconstructed);
+    const canRef = canonicalize(reference);
+    const mismatches = diffKeys(canRec, canRef);
+    const match = JSON.stringify(canRec) === JSON.stringify(canRef);
+
+    // 4. Show reconstructed JSON
+    if (output) output.textContent = JSON.stringify(reconstructed, null, 2);
+    if (badge)  { badge.className = 'badge-live'; badge.textContent = 'Live · Oxigraph in-browser'; }
+
+    // 5. Show assertion result
+    if (assertEl) {
+      if (match) {
+        assertEl.innerHTML = '<span class="assert-pass">✓ Round-trip verified — reconstructed JSON matches original CatX payload exactly.</span>';
+      } else {
+        assertEl.innerHTML = '<span class="assert-fail">✗ Mismatch detected:</span><ul>' +
+          mismatches.slice(0, 20).map(m => `<li>${escHtml(m)}</li>`).join('') +
+          (mismatches.length > 20 ? `<li>… and ${mismatches.length - 20} more</li>` : '') +
+          '</ul>';
+      }
+    }
+
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    if (output)   output.textContent = 'Error — see console';
+    if (badge)    { badge.className = 'badge-cached'; badge.textContent = 'Error'; }
+    if (assertEl) assertEl.textContent = '✗ ' + err.message;
+    console.error('Source JSON query failed:', err);
+  } finally {
+    if (spinner) spinner.style.display = 'none';
+  }
+}
+
+const runSourceJsonBtn = document.getElementById('run-source-json-btn');
+if (runSourceJsonBtn) runSourceJsonBtn.addEventListener('click', triggerSourceJsonQuery);
+
 // ── Cross-dataspace SPARQL query ──────────────────────────────────────────────
 function showResultTable(bindings, tableId, cols) {
   const table = document.getElementById(tableId);

@@ -259,6 +259,10 @@ N schemas × M targets
             <span class="kg-query-label">Cross-dataspace SPARQL<br><a href="detail-query.html" style="font-size:0.72rem;">view query →</a></span>
             <button type="button" class="kg-run-query-btn" id="run-query-btn">▶ Run</button>
           </div>
+          <div class="kg-query-row">
+            <span class="kg-query-label">Catena-X: retrieve source JSON<br><span style="font-size:0.72rem;color:var(--text-muted);">local graph → original CatX payload</span></span>
+            <button type="button" class="kg-run-query-btn" id="run-source-json-btn">▶ Run</button>
+          </div>
         </div>
       </div>
 
@@ -288,6 +292,24 @@ N schemas × M targets
       </tbody>
     </table>
     <button type="button" id="rerun-btn-full">↻ Re-run query</button>
+  </div>
+</section>
+
+<!-- ═══════════════════ SOURCE JSON RESULT ═══════════════════ -->
+<section id="source-json-result" style="padding:2rem 0 3rem; display:none;">
+  <div class="container">
+    <div class="result-header">
+      <h2>Source JSON payload</h2>
+      <span id="source-json-badge"></span>
+      <span id="source-json-spinner" style="display:none; color:var(--text-muted); font-size:0.9rem;">⏳ Querying triplestore…</span>
+    </div>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
+      SPARQL CONCAT aggregation reconstructs the original CatX JSON from the in-browser triplestore
+      (urn:graph:catx-samm). The result is compared against the reference payload from the dataportal
+      to verify the round-trip: CatX JSON → SAMM RDF → Oxigraph → SPARQL → JSON.
+    </p>
+    <div id="source-json-assert" style="margin-bottom:1rem; font-size:0.9rem;"></div>
+    <pre id="source-json-output" style="background:var(--bg-code,#1e1e2e); color:var(--text-code,#cdd6f4); border-radius:8px; padding:1.25rem; overflow:auto; font-size:0.8rem; max-height:480px; white-space:pre-wrap; word-break:break-all;"></pre>
   </div>
 </section>
 

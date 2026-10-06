@@ -80,7 +80,7 @@ ex:316-4401_tensile_strength_svs <span class="kw">a</span> obo:OBI_0001931 ;
 
 <span class="cm"># QUDT QuantityValue — same predicate chain as CatX output</span>
 ex:316-4401_tensile_strength_value <span class="kw">a</span> qudt:QuantityValue ;
-  qudt:unit         qudt:MegaPA ;
+  qudt:unit         unit:MegaPA ;
   qudt:numericValue <span class="str">"632"</span> .</pre>
       <p>
         The Catena-X INSERT produces exactly the same four-node chain for PA6GF30 in
@@ -102,12 +102,12 @@ ex:316-4401_tensile_strength_value <span class="kw">a</span> qudt:QuantityValue 
       <p>
         For the <strong>Catena-X</strong> path the property is identified directly by its SAMM IRI:
       </p>
-      <pre class="code-block"><span class="cm"># CatX path: match by SAMM property IRI</span>
+      <pre class="code-block"><span class="cm"># CatX path: match by SAMM property IRI  (unit: = https://qudt.org/vocab/unit/)</span>
 <span class="kw">VALUES</span> (?prop ?qualityClass ?qdtUnit) {
-  ( mat:stressAtBreak       pmd:PMD_0000952  qudt:MegaPA  )  <span class="cm"># tensile strength</span>
-  ( mat:youngsModulus       pmd:PMD_0000618  qudt:MegaPA  )  <span class="cm"># elastic modulus</span>
-  ( mat:impactStrength      pmd:PMD_0000518  qudt:J-PER-M2 ) <span class="cm"># impact strength</span>
-  ( mat:meltingTemperature  pmd:PMD_0000851  qudt:DEG_C   )  <span class="cm"># melting point</span>
+  ( mat:stressAtBreak       pmd:PMD_0000952  unit:MegaPA  )  <span class="cm"># tensile strength</span>
+  ( mat:youngsModulus       pmd:PMD_0000618  unit:MegaPA  )  <span class="cm"># elastic modulus</span>
+  ( mat:impactStrength      pmd:PMD_0000518  unit:J-PER-M2 ) <span class="cm"># impact strength</span>
+  ( mat:meltingTemperature  pmd:PMD_0000851  unit:DEG_C   )  <span class="cm"># melting point</span>
 }</pre>
       <p>
         For the <strong>Manufacturing-X</strong> path the property has no direct IRI — it is encoded as a

@@ -108,6 +108,11 @@ a:hover { text-decoration: none; }
 .badge-live    { background: var(--query-teal);   color: #fff; }
 .badge-cached  { background: var(--fuseki-amber); color: #fff; }
 
+.assert-pass { color: #16a34a; font-weight: 600; }
+.assert-fail { color: #dc2626; font-weight: 600; }
+#source-json-assert ul { margin: 0.4rem 0 0 1.2rem; color: #dc2626; font-size: 0.85rem; }
+#source-json-assert li { margin: 0.1rem 0; }
+
 /* ── Hero ── */
 #hero {
   padding: 5rem 0 4rem;

@@ -1,0 +1,2764 @@
+{
+  "thermophysicalProperty": {
+    "humidity": 2.1,
+    "linearThermalExpansionCoefficient": {
+      "linearThermalExpansionCoefficientTransverse": 0.0115,
+      "linearThermalExpansionCoefficientParallel": 0.0025
+    },
+    "glassTransitionTemperature": 20,
+    "meltingTemperature": 223,
+    "waterAbsorption": 6.5
+  },
+  "materialInformation": {
+    "materialName": "PA6GF30",
+    "materialIdentifier": "Z1234"
+  },
+  "mechanicalProperty": {
+    "flexuralStrength": 210,
+    "impactStrength": 74,
+    "youngsModulus": 9800,
+    "strainAtBreak": 3,
+    "stressAtBreak": 140,
+    "flexuralModulus": 8600
+  },
+  "physicalProperty": {
+    "density": 1530
+  },
+  "pvt": [
+    {
+      "temperature": 279.085,
+      "specificVolume": 0.8380747874627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 277.365,
+      "specificVolume": 0.8378174874627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 275.022,
+      "specificVolume": 0.8368560874627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 272.32,
+      "specificVolume": 0.8359159874627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 269.26,
+      "specificVolume": 0.8347852874627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 266.104,
+      "specificVolume": 0.8337915274627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 262.998,
+      "specificVolume": 0.8323746574627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 259.97,
+      "specificVolume": 0.8310588474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 257.18,
+      "specificVolume": 0.8298680374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 254.336,
+      "specificVolume": 0.8287079074627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 251.714,
+      "specificVolume": 0.8275450974627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 249.14,
+      "specificVolume": 0.8267085974627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 246.512,
+      "specificVolume": 0.8258261374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 244.02,
+      "specificVolume": 0.8248606474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 241.633,
+      "specificVolume": 0.8239570374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 239.175,
+      "specificVolume": 0.8231780374627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 236.914,
+      "specificVolume": 0.8222596674627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 234.38,
+      "specificVolume": 0.8213246274627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 232.145,
+      "specificVolume": 0.8202527374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 229.825,
+      "specificVolume": 0.8193623574627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 227.291,
+      "specificVolume": 0.8184197874627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 224.879,
+      "specificVolume": 0.8175328474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 222.31,
+      "specificVolume": 0.8167469774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 219.901,
+      "specificVolume": 0.8157840474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 217.42,
+      "specificVolume": 0.8148017174627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 214.824,
+      "specificVolume": 0.8138916374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 212.399,
+      "specificVolume": 0.8127872074627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 209.775,
+      "specificVolume": 0.8119758774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 207.28,
+      "specificVolume": 0.8110615274627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 204.865,
+      "specificVolume": 0.8102317774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 202.445,
+      "specificVolume": 0.8087716474627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 200.075,
+      "specificVolume": 0.8014493174627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 197.68,
+      "specificVolume": 0.7910279774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 195.235,
+      "specificVolume": 0.7850382474627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 192.598,
+      "specificVolume": 0.7814340574627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 190.045,
+      "specificVolume": 0.7790863674627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 187.475,
+      "specificVolume": 0.7773951274627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 185.015,
+      "specificVolume": 0.7757821774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 182.69,
+      "specificVolume": 0.7740745974627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 180.055,
+      "specificVolume": 0.7730794774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 177.46,
+      "specificVolume": 0.7716883474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 174.94,
+      "specificVolume": 0.7705515374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 172.43,
+      "specificVolume": 0.7692450174627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 169.92,
+      "specificVolume": 0.7681614174627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 167.429,
+      "specificVolume": 0.7670583074627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 164.921,
+      "specificVolume": 0.7659741374627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 162.52,
+      "specificVolume": 0.7648149774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 159.982,
+      "specificVolume": 0.7638068674627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 157.645,
+      "specificVolume": 0.7626093574627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 155.202,
+      "specificVolume": 0.7617588174627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 152.748,
+      "specificVolume": 0.7606184074627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 150.267,
+      "specificVolume": 0.7597253174627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 147.685,
+      "specificVolume": 0.7589595274627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 145.135,
+      "specificVolume": 0.7581144574627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 142.564,
+      "specificVolume": 0.7571152474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 140.068,
+      "specificVolume": 0.7562202974627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 137.715,
+      "specificVolume": 0.7553789874627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 135.243,
+      "specificVolume": 0.7542455474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 132.774,
+      "specificVolume": 0.7534660074627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 130.21,
+      "specificVolume": 0.7525396674627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 127.73,
+      "specificVolume": 0.7517774174627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 125.297,
+      "specificVolume": 0.7509020874627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 122.852,
+      "specificVolume": 0.7499586074627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 120.305,
+      "specificVolume": 0.7491570974627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 117.824,
+      "specificVolume": 0.7483042574627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 115.335,
+      "specificVolume": 0.7476835274627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 112.822,
+      "specificVolume": 0.7466989774627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 110.299,
+      "specificVolume": 0.7460317474627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 107.86,
+      "specificVolume": 0.7450632874627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 105.41,
+      "specificVolume": 0.7444755574627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 103.06,
+      "specificVolume": 0.7434473444627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 100.75,
+      "specificVolume": 0.7427610654627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 98.51001,
+      "specificVolume": 0.7421760904627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 96.31998,
+      "specificVolume": 0.7414052574627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 94.21999,
+      "specificVolume": 0.7407975594627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 92.19401,
+      "specificVolume": 0.7399120084627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 90.21,
+      "specificVolume": 0.7393066864627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 88.246,
+      "specificVolume": 0.7387673334627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 86.43001,
+      "specificVolume": 0.7383410914627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 84.62601,
+      "specificVolume": 0.7378395134627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 82.77,
+      "specificVolume": 0.7371842264627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 81.175,
+      "specificVolume": 0.7367432094627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 79.401,
+      "specificVolume": 0.7362006634627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 77.85999,
+      "specificVolume": 0.7360325794627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 76.255,
+      "specificVolume": 0.7356664624627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 74.78999,
+      "specificVolume": 0.7352002344627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 73.26001,
+      "specificVolume": 0.7347214781627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 71.832,
+      "specificVolume": 0.7341514726627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 70.40001,
+      "specificVolume": 0.7341661086627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 68.98,
+      "specificVolume": 0.7338583768627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 67.772,
+      "specificVolume": 0.7334514501627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 66.53999,
+      "specificVolume": 0.7328334754627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 65.24,
+      "specificVolume": 0.7328366604627304,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 64.08199,
+      "specificVolume": 0.7321943564627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 62.935,
+      "specificVolume": 0.7318119634627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 61.84,
+      "specificVolume": 0.7313703784627305,
+      "pressure": 10.0
+    },
+    {
+      "temperature": 278.005,
+      "specificVolume": 0.8231695374627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 276.583,
+      "specificVolume": 0.8229019774627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 274.665,
+      "specificVolume": 0.8222777174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 272.35,
+      "specificVolume": 0.8215074274627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 269.415,
+      "specificVolume": 0.8209489574627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 266.538,
+      "specificVolume": 0.8197178074627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 263.577,
+      "specificVolume": 0.8190293774627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 260.607,
+      "specificVolume": 0.8178487374627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 257.845,
+      "specificVolume": 0.8166664074627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 255.094,
+      "specificVolume": 0.8157941474627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 252.33,
+      "specificVolume": 0.8149868174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 249.612,
+      "specificVolume": 0.8142048874627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 247.0,
+      "specificVolume": 0.8132836974627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 244.396,
+      "specificVolume": 0.8122990574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 242.079,
+      "specificVolume": 0.8113222174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 239.535,
+      "specificVolume": 0.8107961074627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 236.9,
+      "specificVolume": 0.8101035974627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 234.536,
+      "specificVolume": 0.8090210074627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 231.968,
+      "specificVolume": 0.8084263374627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 229.601,
+      "specificVolume": 0.8074211074627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 227.202,
+      "specificVolume": 0.8067062574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 224.77,
+      "specificVolume": 0.8056602874627306,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 222.18,
+      "specificVolume": 0.8050719374627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 219.595,
+      "specificVolume": 0.8043442074627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 217.125,
+      "specificVolume": 0.8034027474627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 214.585,
+      "specificVolume": 0.8025748474627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 212.08,
+      "specificVolume": 0.8017124274627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 209.63,
+      "specificVolume": 0.8007442774627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 207.073,
+      "specificVolume": 0.7951914174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 204.66,
+      "specificVolume": 0.7852949174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 202.19,
+      "specificVolume": 0.7791407774627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 199.622,
+      "specificVolume": 0.7754545674627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 197.11,
+      "specificVolume": 0.7731849274627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 194.535,
+      "specificVolume": 0.7713350774627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 191.895,
+      "specificVolume": 0.7700348174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 189.35,
+      "specificVolume": 0.7686590274627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 186.915,
+      "specificVolume": 0.7676477874627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 184.54,
+      "specificVolume": 0.7661577574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 182.037,
+      "specificVolume": 0.7649629474627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 179.546,
+      "specificVolume": 0.7637126874627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 176.905,
+      "specificVolume": 0.7628324974627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 174.34,
+      "specificVolume": 0.7619134574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 171.81,
+      "specificVolume": 0.7606499574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 169.29,
+      "specificVolume": 0.7595393974627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 166.787,
+      "specificVolume": 0.7586417374627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 164.383,
+      "specificVolume": 0.7578004074627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 161.829,
+      "specificVolume": 0.7568687874627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 159.388,
+      "specificVolume": 0.7558450174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 156.906,
+      "specificVolume": 0.7548516074627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 154.439,
+      "specificVolume": 0.7540638974627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 151.91,
+      "specificVolume": 0.7529311574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 149.378,
+      "specificVolume": 0.7522580574627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 146.945,
+      "specificVolume": 0.7512281574627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 144.4,
+      "specificVolume": 0.7503367374627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 141.875,
+      "specificVolume": 0.7494343974627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 139.296,
+      "specificVolume": 0.7489258474627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 136.825,
+      "specificVolume": 0.7477637174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 134.295,
+      "specificVolume": 0.7472277874627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 131.76,
+      "specificVolume": 0.7462312774627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 129.163,
+      "specificVolume": 0.7455917674627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 126.686,
+      "specificVolume": 0.7448651174627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 124.255,
+      "specificVolume": 0.7438897274627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 121.775,
+      "specificVolume": 0.7430111004627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 119.295,
+      "specificVolume": 0.7423511664627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 116.74,
+      "specificVolume": 0.7415897724627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 114.134,
+      "specificVolume": 0.7410157914627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 111.676,
+      "specificVolume": 0.7401141974627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 109.23,
+      "specificVolume": 0.7392072714627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 106.78,
+      "specificVolume": 0.7385273234627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 104.365,
+      "specificVolume": 0.7377201374627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 102.05,
+      "specificVolume": 0.7370836844627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 99.775,
+      "specificVolume": 0.7363519464627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 97.62801,
+      "specificVolume": 0.7356749794627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 95.557,
+      "specificVolume": 0.7352696214627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 93.436,
+      "specificVolume": 0.7347070447627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 91.49199,
+      "specificVolume": 0.7341885259627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 89.54501,
+      "specificVolume": 0.7335264950627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 87.675,
+      "specificVolume": 0.7329048451627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 85.806,
+      "specificVolume": 0.7323671584627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 84.04601,
+      "specificVolume": 0.7319538584627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 82.34999,
+      "specificVolume": 0.7314185574627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 80.63501,
+      "specificVolume": 0.7310005514627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 79.02,
+      "specificVolume": 0.7305016094627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 77.4,
+      "specificVolume": 0.7303411874627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 75.91001,
+      "specificVolume": 0.7301584974627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 74.38,
+      "specificVolume": 0.7294675494627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 73.014,
+      "specificVolume": 0.7290872124627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 71.585,
+      "specificVolume": 0.7285671744627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 70.19,
+      "specificVolume": 0.7284376004627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 68.89001,
+      "specificVolume": 0.7280752304627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 67.61,
+      "specificVolume": 0.7276998234627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 66.34999,
+      "specificVolume": 0.7275209934627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 65.113,
+      "specificVolume": 0.7273618944627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 63.984,
+      "specificVolume": 0.7268868914627304,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 62.894,
+      "specificVolume": 0.7265238394627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 61.74,
+      "specificVolume": 0.7261067044627305,
+      "pressure": 40.0
+    },
+    {
+      "temperature": 279.076,
+      "specificVolume": 0.8100796574627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 277.5771,
+      "specificVolume": 0.8097593074627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 275.611,
+      "specificVolume": 0.8096919974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 273.15,
+      "specificVolume": 0.8089156674627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 270.698,
+      "specificVolume": 0.8079981874627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 267.655,
+      "specificVolume": 0.8073237274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 264.641,
+      "specificVolume": 0.8065325574627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 261.74,
+      "specificVolume": 0.8054248574627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 258.926,
+      "specificVolume": 0.8048225074627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 256.145,
+      "specificVolume": 0.8036952574627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 253.345,
+      "specificVolume": 0.8029415474627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 250.665,
+      "specificVolume": 0.8021847474627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 247.995,
+      "specificVolume": 0.8016329974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 245.446,
+      "specificVolume": 0.8006321874627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 242.885,
+      "specificVolume": 0.7997934974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 240.41,
+      "specificVolume": 0.7991143474627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 237.94,
+      "specificVolume": 0.7982760274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 235.419,
+      "specificVolume": 0.7977609074627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 233.005,
+      "specificVolume": 0.7968203674627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 230.425,
+      "specificVolume": 0.7961970574627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 227.94,
+      "specificVolume": 0.7955245074627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 225.455,
+      "specificVolume": 0.7946224774627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 222.855,
+      "specificVolume": 0.7940821174627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 220.41,
+      "specificVolume": 0.7933701174627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 217.885,
+      "specificVolume": 0.7924861974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 215.455,
+      "specificVolume": 0.7876682074627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 213.025,
+      "specificVolume": 0.7788233474627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 210.511,
+      "specificVolume": 0.7730072074627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 207.965,
+      "specificVolume": 0.7696430174627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 205.375,
+      "specificVolume": 0.7675330674627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 202.824,
+      "specificVolume": 0.7659683174627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 200.35,
+      "specificVolume": 0.7644569274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 197.736,
+      "specificVolume": 0.7631736274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 195.225,
+      "specificVolume": 0.7621055274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 192.74,
+      "specificVolume": 0.7608750674627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 190.255,
+      "specificVolume": 0.7596518174627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 187.71,
+      "specificVolume": 0.7586692774627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 185.25,
+      "specificVolume": 0.7577118474627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 182.765,
+      "specificVolume": 0.7567644774627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 180.3,
+      "specificVolume": 0.7558806874627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 177.618,
+      "specificVolume": 0.7550744374627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 175.158,
+      "specificVolume": 0.7538865874627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 172.645,
+      "specificVolume": 0.7529593174627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 170.07,
+      "specificVolume": 0.7522805274627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 167.496,
+      "specificVolume": 0.7512456574627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 164.905,
+      "specificVolume": 0.7504296474627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 162.455,
+      "specificVolume": 0.7495178574627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 160.04,
+      "specificVolume": 0.7485856174627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 157.465,
+      "specificVolume": 0.7478978074627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 155.075,
+      "specificVolume": 0.7471084174627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 152.506,
+      "specificVolume": 0.7461276074627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 150.006,
+      "specificVolume": 0.7453050774627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 147.46,
+      "specificVolume": 0.7447451974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 144.945,
+      "specificVolume": 0.7437267604627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 142.35,
+      "specificVolume": 0.7431342154627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 139.75,
+      "specificVolume": 0.7423000824627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 137.285,
+      "specificVolume": 0.7415333364627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 134.676,
+      "specificVolume": 0.7407145104627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 132.196,
+      "specificVolume": 0.7400246614627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 129.578,
+      "specificVolume": 0.7394245564627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 127.102,
+      "specificVolume": 0.7388084154627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 124.61,
+      "specificVolume": 0.7379035994627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 122.133,
+      "specificVolume": 0.7372887974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 119.64,
+      "specificVolume": 0.7362292994627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 117.145,
+      "specificVolume": 0.7355423634627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 114.604,
+      "specificVolume": 0.7349510464627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 112.042,
+      "specificVolume": 0.7342246749627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 109.502,
+      "specificVolume": 0.7334830176627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 106.973,
+      "specificVolume": 0.7329588727627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 104.569,
+      "specificVolume": 0.7321983184627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 102.245,
+      "specificVolume": 0.7316783364627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 99.94499,
+      "specificVolume": 0.7309258384627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 97.69801,
+      "specificVolume": 0.7304365834627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 95.50001,
+      "specificVolume": 0.7299005224627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 93.451,
+      "specificVolume": 0.7293027114627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 91.29999,
+      "specificVolume": 0.7290170694627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 89.355,
+      "specificVolume": 0.7286279644627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 87.437,
+      "specificVolume": 0.7279510124627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 85.624,
+      "specificVolume": 0.7271447884627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 83.72,
+      "specificVolume": 0.7271119074627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 82.01801,
+      "specificVolume": 0.7264780534627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 80.30501,
+      "specificVolume": 0.7260733754627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 78.62801,
+      "specificVolume": 0.7259376084627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 76.99501,
+      "specificVolume": 0.7254496044627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 75.53,
+      "specificVolume": 0.7249485254627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 73.96999,
+      "specificVolume": 0.7246279624627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 72.54801,
+      "specificVolume": 0.7240734214627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 71.064,
+      "specificVolume": 0.7237944974627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 69.65,
+      "specificVolume": 0.7236985474627304,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 68.35001,
+      "specificVolume": 0.7231069874627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 67.08001,
+      "specificVolume": 0.7230535774627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 65.84999,
+      "specificVolume": 0.7226435374627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 64.58801,
+      "specificVolume": 0.7223617274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 63.325,
+      "specificVolume": 0.7220685374627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 62.23,
+      "specificVolume": 0.7216779274627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 61.08601,
+      "specificVolume": 0.7216386374627305,
+      "pressure": 80.0
+    },
+    {
+      "temperature": 280.364,
+      "specificVolume": 0.7992963374627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 278.915,
+      "specificVolume": 0.7991698874627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 276.974,
+      "specificVolume": 0.7988815574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 274.585,
+      "specificVolume": 0.7982306874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 271.918,
+      "specificVolume": 0.7974047474627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 269.157,
+      "specificVolume": 0.7966380374627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 266.086,
+      "specificVolume": 0.7958563574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 262.99,
+      "specificVolume": 0.7952702774627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 260.09,
+      "specificVolume": 0.7942657774627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 257.2,
+      "specificVolume": 0.7936121874627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 254.582,
+      "specificVolume": 0.7927699374627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 251.844,
+      "specificVolume": 0.7922913574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 249.156,
+      "specificVolume": 0.7915070074627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 246.68,
+      "specificVolume": 0.7907141874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 244.09,
+      "specificVolume": 0.7901455374627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 241.52,
+      "specificVolume": 0.7893533274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 239.008,
+      "specificVolume": 0.7886535674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 236.536,
+      "specificVolume": 0.7880140374627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 234.005,
+      "specificVolume": 0.7872560674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 231.628,
+      "specificVolume": 0.7865425574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 229.073,
+      "specificVolume": 0.7860127974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 226.605,
+      "specificVolume": 0.7853517074627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 224.113,
+      "specificVolume": 0.7828782474627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 221.772,
+      "specificVolume": 0.7749374474627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 219.26,
+      "specificVolume": 0.7689305774627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 216.743,
+      "specificVolume": 0.7649026774627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 214.105,
+      "specificVolume": 0.7625056874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 211.552,
+      "specificVolume": 0.7609950074627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 208.935,
+      "specificVolume": 0.7593109674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 206.435,
+      "specificVolume": 0.7580608674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 203.92,
+      "specificVolume": 0.7571097774627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 201.372,
+      "specificVolume": 0.7561044674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 198.828,
+      "specificVolume": 0.7549507274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 196.195,
+      "specificVolume": 0.7542335374627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 193.745,
+      "specificVolume": 0.7533158474627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 191.252,
+      "specificVolume": 0.7521967274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 188.737,
+      "specificVolume": 0.7510805574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 186.15,
+      "specificVolume": 0.7505400474627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 183.522,
+      "specificVolume": 0.7495120674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 181.06,
+      "specificVolume": 0.7486580374627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 178.485,
+      "specificVolume": 0.7477267874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 175.965,
+      "specificVolume": 0.7471354574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 173.373,
+      "specificVolume": 0.7461366874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 170.816,
+      "specificVolume": 0.7454164974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 168.275,
+      "specificVolume": 0.7446840874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 165.795,
+      "specificVolume": 0.7438350994627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 163.29,
+      "specificVolume": 0.7430138654627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 160.619,
+      "specificVolume": 0.7421928454627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 158.2,
+      "specificVolume": 0.7414570664627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 155.67,
+      "specificVolume": 0.7407035854627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 153.192,
+      "specificVolume": 0.7400028734627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 150.61,
+      "specificVolume": 0.7392131974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 148.16,
+      "specificVolume": 0.7385522664627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 145.599,
+      "specificVolume": 0.7378825004627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 143.111,
+      "specificVolume": 0.7370965114627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 140.49,
+      "specificVolume": 0.7365598734627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 138.026,
+      "specificVolume": 0.7355228564627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 135.373,
+      "specificVolume": 0.7350614804627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 132.858,
+      "specificVolume": 0.7343653212627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 130.355,
+      "specificVolume": 0.7334989352627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 127.7,
+      "specificVolume": 0.7328101384627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 125.215,
+      "specificVolume": 0.7320079504627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 122.625,
+      "specificVolume": 0.7315134684627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 120.126,
+      "specificVolume": 0.7307837984627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 117.644,
+      "specificVolume": 0.7301256974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 115.08,
+      "specificVolume": 0.7294391284627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 112.49,
+      "specificVolume": 0.7291615564627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 110.004,
+      "specificVolume": 0.7281103744627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 107.5,
+      "specificVolume": 0.7276066204627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 105.03,
+      "specificVolume": 0.7273096824627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 102.6,
+      "specificVolume": 0.7265983004627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 100.369,
+      "specificVolume": 0.7260616434627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 98.11,
+      "specificVolume": 0.7255418694627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 95.94099,
+      "specificVolume": 0.7251110014627304,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 93.85,
+      "specificVolume": 0.7243523974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 91.78,
+      "specificVolume": 0.7240551834627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 89.77201,
+      "specificVolume": 0.7236758274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 87.80099,
+      "specificVolume": 0.7231446974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 85.91899,
+      "specificVolume": 0.7226715174627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 84.105,
+      "specificVolume": 0.7219705674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 82.342,
+      "specificVolume": 0.7219230274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 80.567,
+      "specificVolume": 0.7215305974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 78.94001,
+      "specificVolume": 0.7211400574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 77.30201,
+      "specificVolume": 0.7206949674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 75.785,
+      "specificVolume": 0.7202125974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 74.21,
+      "specificVolume": 0.7199437574627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 72.69499,
+      "specificVolume": 0.7195731874627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 71.259,
+      "specificVolume": 0.7192632274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 69.846,
+      "specificVolume": 0.7186986274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 68.55,
+      "specificVolume": 0.7185593774627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 67.225,
+      "specificVolume": 0.7183011974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 65.90999,
+      "specificVolume": 0.7180736974627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 64.748,
+      "specificVolume": 0.7178407274627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 63.48,
+      "specificVolume": 0.7175465674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 62.32,
+      "specificVolume": 0.7174434674627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 61.24,
+      "specificVolume": 0.7168840774627305,
+      "pressure": 120.0
+    },
+    {
+      "temperature": 280.674,
+      "specificVolume": 0.7897768074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 279.26,
+      "specificVolume": 0.7897607974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 277.11,
+      "specificVolume": 0.7892860774627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 274.698,
+      "specificVolume": 0.7886805774627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 271.885,
+      "specificVolume": 0.7879132274627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 268.965,
+      "specificVolume": 0.7871291774627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 266.04,
+      "specificVolume": 0.7864881374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 263.17,
+      "specificVolume": 0.7855277074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 260.335,
+      "specificVolume": 0.7849429974627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 257.45,
+      "specificVolume": 0.7841746174627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 254.718,
+      "specificVolume": 0.7835162374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 251.915,
+      "specificVolume": 0.7828291674627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 249.378,
+      "specificVolume": 0.7821299374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 246.786,
+      "specificVolume": 0.7814507674627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 244.15,
+      "specificVolume": 0.7811747874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 241.645,
+      "specificVolume": 0.7803590874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 239.146,
+      "specificVolume": 0.7796302874627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 236.535,
+      "specificVolume": 0.7793945974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 234.15,
+      "specificVolume": 0.7785760274627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 231.765,
+      "specificVolume": 0.7763078974627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 229.34,
+      "specificVolume": 0.7695329474627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 226.975,
+      "specificVolume": 0.7634436974627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 224.385,
+      "specificVolume": 0.7598716774627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 221.853,
+      "specificVolume": 0.7573570974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 219.185,
+      "specificVolume": 0.7558342974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 216.555,
+      "specificVolume": 0.7545534374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 214.09,
+      "specificVolume": 0.7532423874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 211.431,
+      "specificVolume": 0.7522911074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 208.946,
+      "specificVolume": 0.7512815374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 206.465,
+      "specificVolume": 0.7502019974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 203.915,
+      "specificVolume": 0.7494585374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 201.39,
+      "specificVolume": 0.7482676974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 198.915,
+      "specificVolume": 0.7476305274627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 196.364,
+      "specificVolume": 0.7467283274627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 193.862,
+      "specificVolume": 0.7461619474627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 191.315,
+      "specificVolume": 0.7450560574627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 188.795,
+      "specificVolume": 0.7444411974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 186.255,
+      "specificVolume": 0.7435151734627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 183.635,
+      "specificVolume": 0.7425156994627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 181.088,
+      "specificVolume": 0.7418993994627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 178.51,
+      "specificVolume": 0.7410232134627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 175.905,
+      "specificVolume": 0.7403790534627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 173.295,
+      "specificVolume": 0.7396386784627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 170.765,
+      "specificVolume": 0.7390222194627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 168.275,
+      "specificVolume": 0.7382806254627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 165.706,
+      "specificVolume": 0.7374462724627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 163.173,
+      "specificVolume": 0.7367551174627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 160.67,
+      "specificVolume": 0.7360427894627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 158.105,
+      "specificVolume": 0.7354977104627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 155.572,
+      "specificVolume": 0.7347121958627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 153.055,
+      "specificVolume": 0.7339812507627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 150.555,
+      "specificVolume": 0.7334065419627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 147.865,
+      "specificVolume": 0.7327076154627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 145.443,
+      "specificVolume": 0.7321504914627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 142.905,
+      "specificVolume": 0.7312020364627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 140.335,
+      "specificVolume": 0.7308128684627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 137.702,
+      "specificVolume": 0.7300823414627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 135.274,
+      "specificVolume": 0.7294457754627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 132.694,
+      "specificVolume": 0.7286596214627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 130.032,
+      "specificVolume": 0.7281025334627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 127.546,
+      "specificVolume": 0.7274170494627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 125.005,
+      "specificVolume": 0.7267609964627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 122.415,
+      "specificVolume": 0.7260622614627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 119.98,
+      "specificVolume": 0.7256528144627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 117.36,
+      "specificVolume": 0.7248886094627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 114.817,
+      "specificVolume": 0.7245371004627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 112.25,
+      "specificVolume": 0.7238029574627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 109.586,
+      "specificVolume": 0.7233782874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 107.124,
+      "specificVolume": 0.7226620574627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 104.697,
+      "specificVolume": 0.7222081474627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 102.324,
+      "specificVolume": 0.7216704074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 100.046,
+      "specificVolume": 0.7213532074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 97.74001,
+      "specificVolume": 0.7208380274627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 95.53999,
+      "specificVolume": 0.7204680074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 93.476,
+      "specificVolume": 0.7199344774627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 91.46899,
+      "specificVolume": 0.7193729974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 89.466,
+      "specificVolume": 0.7189389574627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 87.595,
+      "specificVolume": 0.7182184374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 85.701,
+      "specificVolume": 0.7181513374627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 83.83498,
+      "specificVolume": 0.7177766674627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 82.08001,
+      "specificVolume": 0.7170316874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 80.45499,
+      "specificVolume": 0.7166587874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 78.68201,
+      "specificVolume": 0.7166114074627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 77.08499,
+      "specificVolume": 0.7162370674627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 75.558,
+      "specificVolume": 0.7159991874627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 74.045,
+      "specificVolume": 0.7153634274627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 72.50999,
+      "specificVolume": 0.7150984074627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 71.11301,
+      "specificVolume": 0.7147466974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 69.675,
+      "specificVolume": 0.7146627674627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 68.38,
+      "specificVolume": 0.7141212074627304,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 67.11501,
+      "specificVolume": 0.7139758974627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 65.81999,
+      "specificVolume": 0.7136099474627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 64.63501,
+      "specificVolume": 0.7132698574627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 63.38,
+      "specificVolume": 0.7130512174627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 62.316,
+      "specificVolume": 0.7128845774627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 61.034,
+      "specificVolume": 0.7130246674627305,
+      "pressure": 160.0
+    },
+    {
+      "temperature": 281.18,
+      "specificVolume": 0.78093,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 279.568,
+      "specificVolume": 0.78055,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 277.25,
+      "specificVolume": 0.7804,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 274.615,
+      "specificVolume": 0.77975,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 271.845,
+      "specificVolume": 0.77919,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 268.925,
+      "specificVolume": 0.77828,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 265.855,
+      "specificVolume": 0.77759,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 262.905,
+      "specificVolume": 0.77696,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 260.035,
+      "specificVolume": 0.77651,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 257.175,
+      "specificVolume": 0.77575,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 254.535,
+      "specificVolume": 0.77523,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 251.925,
+      "specificVolume": 0.77462,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 249.32,
+      "specificVolume": 0.77399,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 246.67,
+      "specificVolume": 0.77324,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 244.15,
+      "specificVolume": 0.77255,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 241.505,
+      "specificVolume": 0.7721,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 239.025,
+      "specificVolume": 0.77043,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 236.61,
+      "specificVolume": 0.76396,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 234.29,
+      "specificVolume": 0.75826,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 231.72,
+      "specificVolume": 0.7547,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 229.096,
+      "specificVolume": 0.75259,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 226.615,
+      "specificVolume": 0.75088,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 224.058,
+      "specificVolume": 0.74967,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 221.486,
+      "specificVolume": 0.74864,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 218.955,
+      "specificVolume": 0.7474,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 216.463,
+      "specificVolume": 0.74652,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 213.884,
+      "specificVolume": 0.74555,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 211.25,
+      "specificVolume": 0.74474,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 208.777,
+      "specificVolume": 0.74379,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 206.175,
+      "specificVolume": 0.74313,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 203.649,
+      "specificVolume": 0.74218,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 201.093,
+      "specificVolume": 0.74134,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 198.552,
+      "specificVolume": 0.74077,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 195.995,
+      "specificVolume": 0.74,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 193.48,
+      "specificVolume": 0.73912,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 190.835,
+      "specificVolume": 0.73854,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 188.275,
+      "specificVolume": 0.73754,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 185.76,
+      "specificVolume": 0.7371,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 183.195,
+      "specificVolume": 0.73632,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 180.635,
+      "specificVolume": 0.73552,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 175.548,
+      "specificVolume": 0.73408,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 170.403,
+      "specificVolume": 0.73273,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 165.285,
+      "specificVolume": 0.73152,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 160.23,
+      "specificVolume": 0.7301,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 155.084,
+      "specificVolume": 0.72912,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 150.009,
+      "specificVolume": 0.72768,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 144.929,
+      "specificVolume": 0.7262,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 139.752,
+      "specificVolume": 0.72491,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 134.653,
+      "specificVolume": 0.72379,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 129.5,
+      "specificVolume": 0.72276,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 124.453,
+      "specificVolume": 0.72151,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 119.306,
+      "specificVolume": 0.72065,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 114.145,
+      "specificVolume": 0.71961,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 109.11,
+      "specificVolume": 0.71834,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 104.075,
+      "specificVolume": 0.71749,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 99.465,
+      "specificVolume": 0.71645,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 95.11,
+      "specificVolume": 0.71565,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 90.959,
+      "specificVolume": 0.71486,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 87.096,
+      "specificVolume": 0.71394,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 83.395,
+      "specificVolume": 0.71316,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 79.955,
+      "specificVolume": 0.71266,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 76.73,
+      "specificVolume": 0.7119,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 73.655,
+      "specificVolume": 0.71141,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 70.828,
+      "specificVolume": 0.71067,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 68.039,
+      "specificVolume": 0.71037,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 65.53,
+      "specificVolume": 0.7095,
+      "pressure": 200.0
+    },
+    {
+      "temperature": 63.14,
+      "specificVolume": 0.70897,
+      "pressure": 200.0
+    }
+  ]
+}

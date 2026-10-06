@@ -103,7 +103,8 @@
 <span class="kw">PREFIX</span> tto:  &lt;https://w3id.org/pmd/tto/&gt;
 <span class="kw">PREFIX</span> pmd:  &lt;https://w3id.org/pmd/co/&gt;
 <span class="kw">PREFIX</span> obo:  &lt;http://purl.obolibrary.org/obo/&gt;
-<span class="kw">PREFIX</span> qudt: &lt;http://qudt.org/schema/qudt/&gt;
+<span class="kw">PREFIX</span> qudt: &lt;https://qudt.org/schema/qudt/&gt;
+<span class="kw">PREFIX</span> unit: &lt;https://qudt.org/vocab/unit/&gt;
 
 <span class="kw">INSERT</span> { <span class="kw">GRAPH</span> &lt;urn:graph:mfgx&gt; {
   <span class="cm"># Component is a PMDCO Object</span>
@@ -119,20 +120,20 @@
     obo:OBI_0001938 ex:PLACEHOLDER_tensile_strength_value .
 
   ex:PLACEHOLDER_tensile_strength_value <span class="kw">a</span> qudt:QuantityValue ;
-    qudt:unit qudt:MegaPA ;
+    qudt:unit unit:MegaPA ;
     qudt:numericValue ?tensileStrengthValueFinal .
 
   <span class="cm"># Yield strength: TTO_0000009</span>
   ex:PLACEHOLDER_yield_strength <span class="kw">a</span> tto:TTO_0000009 ; <span class="cm"># yield strength</span>
     obo:OBI_0001938 ex:PLACEHOLDER_yield_strength_value .
   ex:PLACEHOLDER_yield_strength_value qudt:numericValue ?yieldStrengthValueFinal ;
-    qudt:unit qudt:MegaPA .
+    qudt:unit unit:MegaPA .
 
   <span class="cm"># Elongation at fracture: TTO_0000033</span>
   ex:PLACEHOLDER_elongation <span class="kw">a</span> tto:TTO_0000033 ;
     obo:OBI_0001938 ex:PLACEHOLDER_elongation_value .
   ex:PLACEHOLDER_elongation_value qudt:numericValue ?elongationAfterFractureValueFinal ;
-    qudt:unit qudt:PERCENT .
+    qudt:unit unit:PERCENT .
 } }
 <span class="kw">WHERE</span> { <span class="kw">GRAPH</span> &lt;urn:graph:mfgx-aas&gt; {
   <span class="cm"># Resolve AAS semanticId → property value</span>
