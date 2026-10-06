@@ -1,0 +1,18 @@
+{
+  "mechanicalTests": {
+    "YieldOrProofStrengthMean": 276,
+    "TensileStrengthMean": 632,
+    "ElongationAfterFractureMean": 60
+  },
+  "chemicalAnalysis": {
+    "MassFraction_C": 0.022,
+    "MassFraction_Cr": 16.9,
+    "MassFraction_Mn": 1.51,
+    "MassFraction_Mo": 2.01,
+    "MassFraction_N": 0.024,
+    "MassFraction_Ni": 10.0,
+    "MassFraction_P": 0.036,
+    "MassFraction_S": 0.002,
+    "MassFraction_Si": 0.4
+  }
+}

@@ -955,6 +955,130 @@ async function triggerSourceJsonQuery() {
 const runSourceJsonBtn = document.getElementById('run-source-json-btn');
 if (runSourceJsonBtn) runSourceJsonBtn.addEventListener('click', triggerSourceJsonQuery);
 
+// ── MfgX source JSON retrieval query (Oxigraph, mfgx-aas graph) ──────────────
+// Reconstructs mechanical test results and chemical composition from the
+// AAS-ontology RDF loaded by Node B into urn:graph:mfgx-aas.
+const RETRIEVE_MFGX_JSON_QUERY = `
+PREFIX aas:    <https://admin-shell.io/aas/3/0/>
+PREFIX aasP:   <https://admin-shell.io/aas/3/0/Property/>
+PREFIX aasRf:  <https://admin-shell.io/aas/3/0/Referable/>
+PREFIX aasSMC: <https://admin-shell.io/aas/3/0/SubmodelElementCollection/>
+
+SELECT (CONCAT(
+  '{',
+    '"mechanicalTests":{', ?mechJson, '},',
+    '"chemicalAnalysis":{', ?chemJson, '}',
+  '}'
+) AS ?json)
+
+FROM <urn:graph:mfgx-aas>
+WHERE {
+
+  {
+    SELECT (GROUP_CONCAT(
+      CONCAT('"', ?idShort, '":',
+        IF(REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
+           STR(?val), CONCAT('"', STR(?val), '"')))
+      ; SEPARATOR=',') AS ?mechJson)
+    WHERE {
+      ?mechSMC a aas:SubmodelElementCollection ;
+               aasRf:idShort "MechanicalTests" ;
+               aasSMC:value ?testRun .
+      ?testRun a aas:SubmodelElementCollection ;
+               aasSMC:value ?prop .
+      ?prop a aas:Property ;
+            aasRf:idShort ?idShort ;
+            aasP:value ?val .
+      FILTER(?val != "" && REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'))
+    }
+  }
+
+  {
+    SELECT (GROUP_CONCAT(
+      CONCAT('"', ?idShort, '":',
+        IF(REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'),
+           STR(?val), CONCAT('"', STR(?val), '"')))
+      ; SEPARATOR=',') AS ?chemJson)
+    WHERE {
+      ?chemSMC a aas:SubmodelElementCollection ;
+               aasRf:idShort "ChemicalAnalysis" ;
+               aasSMC:value ?prop .
+      ?prop a aas:Property ;
+            aasRf:idShort ?idShort ;
+            aasP:value ?val .
+      FILTER(?val != "" && REGEX(STR(?val), '^-?[0-9]+(\\\\.[0-9]+)?([eE][+-]?[0-9]+)?$'))
+    }
+  }
+
+}`;
+
+async function triggerMfgxJsonQuery() {
+  const spinner  = document.getElementById('mfgx-json-spinner');
+  const badge    = document.getElementById('mfgx-json-badge');
+  const output   = document.getElementById('mfgx-json-output');
+  const assertEl = document.getElementById('mfgx-json-assert');
+  const section  = document.getElementById('mfgx-json-result');
+
+  if (spinner) spinner.style.display = 'inline';
+  if (section) section.style.display = '';
+  if (assertEl) assertEl.textContent = '';
+
+  await storeReady;
+
+  try {
+    const results  = store.query(RETRIEVE_MFGX_JSON_QUERY);
+    const bindings = [...results];
+    if (!bindings.length) {
+      if (output)   output.textContent = '(no results — load Node B first)';
+      if (badge)    { badge.className = 'badge-cached'; badge.textContent = 'No data'; }
+      if (assertEl) assertEl.textContent = '⚠ Node B not loaded — run the pipeline first.';
+      return;
+    }
+
+    const raw = bindings[0].get('json')?.value ?? '';
+    let reconstructed;
+    try { reconstructed = JSON.parse(raw); } catch (e) {
+      if (output) output.textContent = 'Parse error: ' + e.message + '\n\nRaw:\n' + raw;
+      if (badge)  { badge.className = 'badge-cached'; badge.textContent = 'Parse error'; }
+      return;
+    }
+
+    const refResp = await fetch('assets/data/mfgx-reference.json');
+    const reference = await refResp.json();
+
+    const canRec = canonicalize(reconstructed);
+    const canRef = canonicalize(reference);
+    const mismatches = diffKeys(canRec, canRef);
+    const match = JSON.stringify(canRec) === JSON.stringify(canRef);
+
+    if (output) output.textContent = JSON.stringify(reconstructed, null, 2);
+    if (badge)  { badge.className = 'badge-live'; badge.textContent = 'Live · Oxigraph in-browser'; }
+
+    if (assertEl) {
+      if (match) {
+        assertEl.innerHTML = '<span class="assert-pass">✓ Round-trip verified — reconstructed JSON matches original MfgX inspection data exactly.</span>';
+      } else {
+        assertEl.innerHTML = '<span class="assert-fail">✗ Mismatch detected:</span><ul>' +
+          mismatches.slice(0, 20).map(m => `<li>${escHtml(m)}</li>`).join('') +
+          (mismatches.length > 20 ? `<li>… and ${mismatches.length - 20} more</li>` : '') +
+          '</ul>';
+      }
+    }
+
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    if (output)   output.textContent = 'Error — see console';
+    if (badge)    { badge.className = 'badge-cached'; badge.textContent = 'Error'; }
+    if (assertEl) assertEl.textContent = '✗ ' + err.message;
+    console.error('MfgX JSON query failed:', err);
+  } finally {
+    if (spinner) spinner.style.display = 'none';
+  }
+}
+
+const runMfgxJsonBtn = document.getElementById('run-mfgx-json-btn');
+if (runMfgxJsonBtn) runMfgxJsonBtn.addEventListener('click', triggerMfgxJsonQuery);
+
 // ── Cross-dataspace SPARQL query ──────────────────────────────────────────────
 function showResultTable(bindings, tableId, cols) {
   const table = document.getElementById(tableId);

@@ -263,6 +263,10 @@ N schemas × M targets
             <span class="kg-query-label">Catena-X: retrieve source JSON<br><span style="font-size:0.72rem;color:var(--text-muted);">local graph → original CatX payload</span></span>
             <button type="button" class="kg-run-query-btn" id="run-source-json-btn">▶ Run</button>
           </div>
+          <div class="kg-query-row">
+            <span class="kg-query-label">Manufacturing-X: retrieve source JSON<br><span style="font-size:0.72rem;color:var(--text-muted);">local graph → original MfgX inspection data</span></span>
+            <button type="button" class="kg-run-query-btn" id="run-mfgx-json-btn">▶ Run</button>
+          </div>
         </div>
       </div>
 
@@ -310,6 +314,24 @@ N schemas × M targets
     </p>
     <div id="source-json-assert" style="margin-bottom:1rem; font-size:0.9rem;"></div>
     <pre id="source-json-output" style="background:var(--bg-code,#1e1e2e); color:var(--text-code,#cdd6f4); border-radius:8px; padding:1.25rem; overflow:auto; font-size:0.8rem; max-height:480px; white-space:pre-wrap; word-break:break-all;"></pre>
+  </div>
+</section>
+
+<!-- ═══════════════════ MFGX JSON RESULT ═══════════════════ -->
+<section id="mfgx-json-result" style="padding:2rem 0 3rem; display:none;">
+  <div class="container">
+    <div class="result-header">
+      <h2>Manufacturing-X inspection data</h2>
+      <span id="mfgx-json-badge"></span>
+      <span id="mfgx-json-spinner" style="display:none; color:var(--text-muted); font-size:0.9rem;">⏳ Querying triplestore…</span>
+    </div>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
+      Mechanical test results and chemical composition reconstructed from AAS-ontology RDF in
+      urn:graph:mfgx-aas via SPARQL aggregation. Asserted against reference values from the
+      original AAS inspection document (inspectiondocument_316_4401_alloy.json).
+    </p>
+    <div id="mfgx-json-assert" style="margin-bottom:1rem; font-size:0.9rem;"></div>
+    <pre id="mfgx-json-output" style="background:var(--bg-code,#1e1e2e); color:var(--text-code,#cdd6f4); border-radius:8px; padding:1.25rem; overflow:auto; font-size:0.8rem; max-height:480px; white-space:pre-wrap; word-break:break-all;"></pre>
   </div>
 </section>
 
